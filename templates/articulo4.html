@@ -1,0 +1,40 @@
+
+{%load static%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Blog 4</title>
+  </head>
+  <body>
+    <nav>
+      {% include 'navegador.html' %}
+    </nav>
+    <img src="{% static 'images/art4.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block">
+      <div class="rectangulo m-5">
+        <div class="container mx-auto d-block">
+            <section>
+                <h1 class="title">Adoptar vs. Comprar: ¿Cuál es la Mejor Opción para Tu Nueva Mascota?</h1>
+                <p class="writer">Escrito por: Ignacio Covarrubias</p>
+                <p class="Cuerpo">¿Estás considerando la adquisición de una nueva mascota? En este artículo, Ignacio Covarrubias explora la importante decisión de adoptar o comprar una mascota y te ayuda a tomar una elección informada. Adoptar una mascota de un refugio o una organización de rescate es una opción ética y responsable. Miles de animales esperan en busca de un hogar, y la adopción les brinda una segunda oportunidad. Además, es una forma de desalentar la cría irresponsable.</p>
+                <p class="Cuerpo">Comprar una mascota de un criador puede ser una opción para aquellos que buscan una raza específica. Sin embargo, es crucial investigar y elegir criadores éticos que cuiden de la salud y el bienestar de los animales. La adopción es económicamente más accesible que la compra, y muchos animales adoptados ya están esterilizados y vacunados. Esto puede ahorrar dinero y tiempo.</p>
+                <p class="Cuerpo">Ambas opciones tienen ventajas y desventajas, por lo que es importante evaluar tus necesidades y valores personales antes de tomar una decisión. Lo más importante es brindar un hogar amoroso y responsable a tu nueva mascota, independientemente de su origen.</p>
+            </section>
+        </div>
+      </div>
+
+      <nav>
+        {% include 'footer.html' %}
+      </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

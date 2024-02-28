@@ -1,0 +1,29 @@
+.custom-alert-title{
+    background-color: #582a77;
+    color: white;
+    text-align: center;
+    font-family: "Luckiest Guy";
+    
+}
+
+.custom-alert-text {
+    background-color: rgb(169, 91, 163);
+    color: white;
+    text-align: center;
+    font-family: "Passion One";
+    
+}
+
+.preguntas-box {
+    border-width: 5px;
+        
+}
+
+.custom-input {
+    font-family: 'Passion One', sans-serif;
+    width: 100%; 
+    height: 200px;
+}
+
+
+

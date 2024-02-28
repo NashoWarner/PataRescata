@@ -1,0 +1,41 @@
+/* Estilos generales para el footer */
+footer {
+    background-color: #582a77;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 0px;
+    
+}
+
+/* Estilos para el contenido del footer */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo img {
+    max-width: 100px;
+}
+
+.footer-info {
+    flex: 1;
+    text-align: left;
+    margin-left: 10%;
+}
+
+.footer-info p {
+    margin: 5px 0;
+}
+
+.footer-social {
+    text-align: right;
+}
+
+.footer-social a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #fff;
+}

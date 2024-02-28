@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de la Búsqueda</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+ 
+</head>
+<body>
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
+    
+    <div class="preguntas-box p-5 m-5" style="background-color: #582a77; border-radius: 20px; border-color: #FCBF49; border-width: 5px;">
+        <h1 class="my-4" style="font-family: Passion One; font-size: 50px; text-align: center; color: white;">Resultados de la Búsqueda</h1>
+        {% if animales %}
+            <div class="table-responsive">
+                <table class="table table-borderless" style="color: white; font-family: Passion One; font-size: x-large; text-align: center;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Tamaño</th>
+                            <th>Informacion Adicional</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for animal in animales %}
+                            <tr>
+
+                                <td style="text-transform: capitalize;">{{ animal.nombre_mascota }}</td>
+                                <td style="text-transform: capitalize;">{{ animal.edad_mascota }}</td>
+                                <td style="text-transform: capitalize;">{{ animal.tamaño_mascota }}</td>
+
+                                <td>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#infoAnimal{{ forloop.counter }}" aria-expanded="false" aria-controls="infoAnimal{{ forloop.counter }}">
+                                        Ver Más
+                                    </button>
+                                    <div class="collapse px-3 m-5" id="infoAnimal{{ forloop.counter }}" style="background-color: #F0AEFA; border: 10px solid rgba(115, 82, 144); text-align: justify;">
+                                        <div class="mt-2">
+                                            {% if animal.imagen %}
+                                            <img src="{{ animal.imagen.url }}" class="img mx-5 my-3" width="800px" height="400px" style=" align-items: center; border-radius: 15%; border: 10px solid rgba(115, 82, 144);"> <br>
+                                          {% else %}
+                                            Sin imagen
+                                          {% endif %}
+                                          <div class="globo-text p-4 mx-5 mt-3" style="background-color: rgba(115, 82, 144);  border-radius: 20px; font-family: Passion One; font-size: x-large; color:white">
+                                            <p>{{ animal.descripcion }}</p>
+                                            <p>{{ animal.comuna_mascota }} , {{ animal.region }}</p>
+                                            <p>Me encuentro en la fundación:
+                                                {% with fundacion=animal.mascotafundacion_set.first.adoptante %}
+                                                    <span class="subrayado" style="text-decoration: underline;">{{ fundacion.nombre }} </span>
+                                                    - ({{ fundacion.rut_empresa }}).
+                                                    Te gustaría saber más sobre mí? llamame al +56 {{ fundacion.telefono }}. Estoy ansios@ por conocerte.
+                                                {% endwith %}
+                                            </p>
+                                            
+                                        
+                                          {% with fundacion=animal.mascotafundacion_set.first.adoptante %}
+                                          {% endwith %}
+                                          </div class="boton" style="align-items:center; text-align:center">
+                                            <a href="{% url 'realizar_adopcion' animal.id %}" class="btn btn-success btn-md px-5 mx-5 my-3 py-2 " style="border: 5px solid rgb(255, 255, 255); border-radius: 20px; font-size: 20px; margin-left: 10px; ">Contáctame</a>   
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">No se encontraron animales que coincidan con la búsqueda.</div>
+        {% endif %}
+    </div>
+
+    <div class="container text-center mt-4">
+        <a href="{% url 'buscar_animales' %}" class="btn btn-danger btn-md px-4 py-2" style="border: 5px solid rgb(255, 255, 255); border-radius: 20px; font-size: 20px;">Realizar otra búsqueda</a>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+

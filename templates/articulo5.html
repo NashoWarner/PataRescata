@@ -1,0 +1,39 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Blog 5</title>
+  </head>
+  <body>
+    <nav>
+      {% include 'navegador.html' %}
+    </nav>
+    <img src="{% static 'images/art5.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
+      <div class="rectangulo m-5">
+        <div class="container mx-auto d-block">
+            <section>
+                <h1 class="title">Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly</h1>
+                <p class="writer">Escrito por: Constanza Bravo</p>
+                <p class="Cuerpo">La tenencia responsable de mascotas no solo implica cuidar de nuestros amigos peludos, sino también ser conscientes del impacto ambiental que conlleva. En este artículo, Constanza Bravo te brinda consejos sobre cómo ser un dueño eco-friendly y reducir tu huella ecológica. Una de las formas más sencillas de ser más sostenible es mediante la elección de productos ecológicos para tus mascotas. Opta por alimentos y productos de cuidado que sean respetuosos con el medio ambiente y producidos de manera sostenible.</p>
+                <p class="Cuerpo">Reduce los desechos al comprar alimentos a granel y utilizar contenedores reutilizables para almacenarlos. Evita los productos desechables, como toallitas húmedas, y opta por opciones lavables y reutilizables. El reciclaje y la disposición adecuada de los desechos de tu mascota son fundamentales. Utiliza bolsas biodegradables para recoger las heces de tu perro y asegúrate de desecharlas correctamente. Además, considera la posibilidad de utilizar areneros ecológicos para gatos.</p>
+                <p class="Cuerpo">Finalmente, considera adoptar prácticas de movilidad sostenible al transportar a tu mascota, como caminar, andar en bicicleta o utilizar transporte público. Ser un dueño eco-friendly no solo beneficia al medio ambiente, sino que también proporciona un ejemplo a seguir para otros dueños de mascotas.</p>
+            </section>
+        </div>
+      </div>
+
+      <nav>
+        {% include 'footer.html' %}
+      </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

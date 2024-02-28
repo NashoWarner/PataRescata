@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/nosotros.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+    
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Pata rescata</title>
+</head>
+<nav>
+  {% include 'navegador.html' %}
+</nav>
+<body>
+  <div class="nosotros-box p-5 m-5" style="background-color: rgba(255, 255, 255, 0.852); border-radius: 20px;">
+    <h2 class="titulo text-center">Sobre Nosotros <br> Proyecto PataRescata</h2>
+
+    <h3 class="subtitulo">Nuestra Historia</h3>
+    <p class="texto">Somos un grupo de tres estudiantes de la carrera de Ingeniería en Informática con una pasión compartida por los animales y una visión clara de cómo la tecnología y la educación pueden marcar la diferencia en la vida de nuestras mascotas y en la sociedad en general. Nuestra iniciativa, titulada "PataRescata", es un proyecto nacido del corazón, cuyo propósito es promover la adopción de animales, concienciar sobre su importancia y dar visibilidad a las fundaciones que hacen posible este proceso.</p>
+
+    <h3 class="subtitulo">Nuestros Objetivos</h3>
+    <ul>
+      <li class="texto"><strong>Promover la Adopción Responsable:</strong> Creemos que la adopción es la forma más noble de dar un hogar a una mascota. Nuestro objetivo principal es fomentar la adopción responsable de animales en lugar de la compra, reduciendo así el número de animales sin hogar y brindando una segunda oportunidad a aquellos que más lo necesitan.</li>
+
+      <li class="texto"><strong>Sensibilizar sobre la Importancia de la Adopción:</strong> Deseamos concienciar a la sociedad sobre la importancia de la adopción, mostrando que cada mascota adoptada no solo cambia su propia vida, sino que también impacta positivamente en la vida de quienes las adoptan.</li>
+
+      <li class="texto"><strong>Dar Visibilidad a Fundaciones y Rescatistas:</strong> Reconocemos la labor incansable de las fundaciones y rescatistas que trabajan arduamente para salvar y cuidar de animales en situaciones precarias. Queremos brindarles el reconocimiento y el apoyo que merecen.</li>
+    </ul>
+
+    <h3 class="subtitulo">El Significado de "PataRescata"</h3>
+    <p class="texto">Nuestro nombre, "PataRescata," refleja nuestro enfoque en el rescate mutuo que se produce cuando un ser humano y una mascota se unen. No solo estamos salvando a una mascota dándole un nuevo hogar, sino que también estamos siendo rescatados por su amor, lealtad y alegría incondicional. La palabra "Pata" evoca la imagen de una huella, un rastro de amor y amistad que deja una mascota en nuestras vidas.</p>
+
+    <h3 class="subtitulo">Nuestra Misión</h3>
+    <p class="texto">Nuestra misión es educar a la población sobre la tenencia responsable de mascotas y mostrar que adoptar a un animal no es solo un acto de generosidad, sino una decisión que enriquece la vida de ambas partes. Queremos crear una comunidad comprometida con el bienestar animal y ser un puente entre aquellos que desean adoptar y las fundaciones que necesitan apoyo.</p>
+  </div>
+  <nav>
+    {% include 'faq.html' %}
+  </nav>
+  <nav>
+    {% include 'footer.html' %}
+  </nav>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+
+  
+  
+    
+  

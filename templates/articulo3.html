@@ -1,0 +1,41 @@
+
+{%load static%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Blog 4</title>
+  </head>
+  <body>
+    <nav>
+      {% include 'navegador.html' %}
+    </nav>
+    <img src="{% static 'images/art3.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
+      <div class="rectangulo m-5">
+        <div class="container mx-auto d-block">
+            <section>
+                <h1 class="title">Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar</h1>
+                <p class="writer">Escrito por: Francisca Rojas</p>
+                <p class="Cuerpo">¿Alguna vez has deseado que tu perro se comporte de manera ejemplar en la ciudad? En este artículo, Francisca Rojas te ofrece consejos prácticos sobre cómo entrenar a tu perro para que sea un ciudadano ejemplar. El adiestramiento es esencial para garantizar que tu perro se comporte adecuadamente en entornos urbanos. Comienza con comandos básicos como "sentado," "quieto" y "aquí." Refuerza estos comandos con recompensas y elogios cada vez que tu perro los obedezca.</p>
+                <p class="Cuerpo">El paseo con correa es una parte crucial del entrenamiento urbano. Enseña a tu perro a caminar sin jalar y a mantener la calma en presencia de otros perros y personas. Utiliza premios y refuerzo positivo para recompensar un buen comportamiento. La socialización es clave. Expone a tu perro a diversas situaciones, personas y lugares desde una edad temprana. Esto ayudará a reducir la ansiedad y el miedo en entornos urbanos.</p>
+                <p class="Cuerpo">Recuerda que la paciencia y la consistencia son esenciales en el entrenamiento de tu perro. Con dedicación y práctica regular, tu peludo amigo puede convertirse en un ciudadano ejemplar.</p>
+            </section>
+        </div>
+      </div>
+
+      <nav>
+        {% include 'footer.html' %}
+      </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
+

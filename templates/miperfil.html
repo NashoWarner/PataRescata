@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pata Rescata</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/perfil.css' %}">
+</head>
+<body>
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
+
+    <div class="container mt-5 p-5" style="background-color:#F0AEFA; border-radius: 20px;"> 
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <img class="img-fluid border border-light border-5"  src="{% static 'images/perfilmujer.png' %}" alt="mascotas" height="90%" width="80%" style="border-radius: 50%; border-color: white;">   
+            </div>
+            <div class="col-md-6 text-center" style="font-family: Passion One;">
+                <p class="titulo" style="font-size: 30pt;">Iniciar Sesión</p> <br>
+                <form method="post" action="{% url 'mi_login' %}" autocomplete="on">
+                    {% csrf_token %}
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label" style="font-size: x-large;">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label" style="font-size: x-large;">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div><br>
+                    <button type="submit" class="btn btn-lg btn-primary px-5 ">Iniciar Sesión</button>
+                </form>
+                <br>
+                <a href="{% url 'registro_usuario' %}" class="btn btn-lg btn-warning px-5">Crear una cuenta</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+

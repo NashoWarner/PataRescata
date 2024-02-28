@@ -1,0 +1,42 @@
+
+
+{%load static%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Blog 1</title>
+  </head>
+  <body>
+    <nav>
+      {% include 'navegador.html' %}
+    </nav>
+    <img src="{% static 'images/art1.jpeg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
+      <div class="rectangulo m-5">
+        <div class="container mx-auto d-block">
+            <section>
+                <h1 class="title">Cómo Preparar a Tu Mascota para Viajar en Avión</h1>
+                <p class="writer">Escrito por: Constanza Bravo</p>
+                <p class="Cuerpo">¿Te gustaría llevar a tu mascota en tu próximo viaje en avión? Preparar a tu compañero para un vuelo seguro y cómodo es esencial. A continuación, te presentamos algunos consejos clave para garantizar que tu mascota viaje sin estrés ni complicaciones. Cuando planificas un viaje en avión con tu mascota, lo primero que debes hacer es revisar los requisitos específicos de la aerolínea. Cada compañía aérea puede tener reglas y regulaciones diferentes en cuanto al transporte de mascotas. Asegúrate de conocer estas políticas con anticipación para evitar sorpresas desagradables.</p>
+                <p class="Cuerpo">Una parte crucial de la preparación es la documentación. La mayoría de las aerolíneas requieren un certificado de salud emitido por un veterinario. Asegúrate de que tu mascota esté al día con sus vacunas y exámenes médicos. Además, investiga los requisitos de transporte, como el tipo de transportadora permitida y las dimensiones necesarias. Esto asegurará que tu mascota viaje de manera segura y cómoda. Durante el vuelo, es importante mantener la calma y tranquilizar a tu mascota. Puedes llevar objetos familiares como mantas o juguetes para brindarle comodidad. En algunos casos, se pueden administrar sedantes, pero esto debe ser discutido previamente con un veterinario.</p>
+                <p class="Cuerpo">Después del vuelo, asegúrate de darle a tu mascota el tiempo necesario para adaptarse a su nuevo entorno. Proporciona una rutina y un lugar seguro para que se sienta cómoda.</p>
+            </section>
+        </div>
+      </div>
+
+      <nav>
+        {% include 'footer.html' %}
+      </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
+

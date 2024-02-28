@@ -1,0 +1,15 @@
+/* styles.css */
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"],
+.form textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: medium;
+    border-color: black;
+    
+}
+
+

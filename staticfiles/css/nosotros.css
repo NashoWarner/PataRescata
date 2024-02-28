@@ -1,0 +1,31 @@
+
+body {
+    background-image: url('../images/fondo3.png'); /* Ruta de tu imagen de fondo */
+    background-size: cover; /* Ajusta la imagen al tamaño de la ventana del navegador */
+    background-position: center; /* Centra la imagen en la ventana del navegador */
+    background-attachment:fixed ; /* Fija la imagen en su lugar mientras se desplaza la página */
+}
+
+.titulo {
+    font-family: "Luckiest Guy";
+    font-size: 44px;   
+    color:rgba(115, 82, 144, 0.80); 
+}
+
+.subtitulo {
+    font-family: "Passion One";
+    font-size: 24px;  
+    color:rgba(115, 82, 144, 0.80);
+}
+
+.texto {
+    font-family: "Passion One";
+    font-size: 18px;
+    text-align: justify;
+    color:rgba(115, 82, 144, 0.80);
+
+}
+
+
+
+

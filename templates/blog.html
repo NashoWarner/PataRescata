@@ -1,0 +1,114 @@
+{% load static %}
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
+
+    <title>Pata Rescata | blog</title>
+  </head>
+  <body>
+
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
+    <div class="row mx-5">
+        <div>
+            <p class="col offset-md-6 titulo text-center"><br>PataRescata <br> Blog</p>
+        </div>
+    </div>
+    <div class="row mx-5">
+        <div>
+            <p class="col offset-md-6 text-center subtitulo"><br>Bienvenidos a la sección educativa de PataRescata! ¡Aprende cómo cuidar y educar a tu mascota como un experto! ¿Qué esperas para aprender más?</p>
+        </div>
+    </div>
+   
+    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
+        <div class="col offset-md-6">
+            <div class="cuadrado-morado">
+                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
+                    <img src="{% static 'images/art5.jpg' %}" class="img-fluid" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
+                    <div class="card-body">
+                        <h5 class="card-title">"Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly"</h5>
+                        <p class="card-text"></p>
+                        <a href="/articulo5" class="btn btn-warning" style="width: 234px;">Leer</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
+        <div class="col offset-md-6">
+            <div class="cuadrado-morado">
+                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
+                    <img src="{% static 'images/art4.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
+                    <div class="card-body">
+                        <h5 class="card-title">"Adoptar vs. Comprar: ¿Cuál es la Mejor Opción para Tu Nueva Mascota?"</h5>
+                        <p class="card-text"></p>
+                        <a href="/articulo4" class="btn btn-warning" style="width: 234px;">Leer</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
+        <div class="col offset-md-6">
+            <div class="cuadrado-morado">
+                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
+                    <img src="{% static 'images/art3.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
+                    <div class="card-body">
+                        <h5 class="card-title">"Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar"</h5>
+                        <p class="card-text"></p>
+                        <a href="/articulo3" class="btn btn-warning" style="width: 234px;">Leer</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
+        <div class="col offset-md-6">
+            <div class="cuadrado-morado">
+                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
+                    <img src="{% static 'images/art2.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
+                    <div class="card-body">
+                        <h5 class="card-title">"La Alimentación Adecuada para Tu Mascota: Claves para una Vida Saludable"</h5>
+                        <p class="card-text"></p>
+                        <a href="/articulo2" class="btn btn-warning" style="width: 234px;">Leer</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
+        <div class="col offset-md-6">
+            <div class="cuadrado-morado">
+                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
+                    <img src="{% static 'images/art1.jpeg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
+                    <div class="card-body">
+                        <h5 class="card-title">"Cómo Preparar a Tu Mascota para Viajar en Avión"</h5>
+                        <p class="card-text"></p>
+                        <a href="/articulo1" class="btn btn-warning" style="width: 234px;">Leer</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+
+    
+    <nav>
+        {% include 'footer.html' %}
+    </nav>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

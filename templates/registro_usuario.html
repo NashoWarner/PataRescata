@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Luckiest+Guy" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Pata Rescata</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/registro_usuario.css' %}">
+</head>
+<body>
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
+    <div class="container mt-5 p-5 text-center" style="background-color: #a8e3f6;font-size: x-large; border-radius: 20px; ">
+        <div class="row">
+            <div class="col-md-5">
+                <img class="img-fluid border border-light border-5"  src="{% static 'images/perfil.jpeg' %}" alt="mascotas" height="90%" width="80%" style="border-radius: 50%; border-color: white;">   
+            </div>
+            <div class="col-md-7">
+                {% block content %}
+                <h2 class="text-center mt-3 text-center" style="font-family: Passion One; font-size: 40px; color:black;">Crear Cuenta</h2>
+    
+                <form method="post" action="{% url 'registro_usuario' %}" class="m-4">
+                    {% csrf_token %}
+                    <div class="form text-center" style="font-family: 'Passion One'; color: black; text-align: justify;">
+                        <p class="texto" style="text-align:center; font-size: medium;">Si deseas registrarte como Fundacion compártenos tu Rut de Empresa y El Nombre de la fundacion!</p>
+                        {% for field in form %}
+                            <div style="margin-bottom: 10px;">
+                                
+                                {% if field.name == 'rut_empresa' %}
+                                    <label for="{{ field.id_for_label }}">Rut Empresa</label>
+                                {% elif field.name == 'password1' %}
+                                    <label for="{{ field.id_for_label }}">Contraseña *</label>
+                                {% elif field.name == 'password2' %}
+                                    <label for="{{ field.id_for_label }}">Confirmar Contraseña *</label>
+                                {% elif field.name == 'nombre' %}
+                                    <label for="{{ field.id_for_label }}">Nombre *</label>
+                                {% elif field.name == 'telefono' %}
+                                    <label for="{{ field.id_for_label }}">Telefono *</label>
+                                {% elif field.name == 'email' %}
+                                    <label for="{{ field.id_for_label }}">Email *</label>    
+                                {% else %}
+                                    {{ field.label_tag }}
+                                {% endif %}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <p style="color: red;">{{ field.errors|striptags }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div> <br>
+                    <button type="submit" class="btn btn-lg btn-dark px-5">Registrarse</button>
+                </form>
+                
+                
+                {% endblock %}
+            </div> 
+            </div>
+        </div>
+        
+    <br>
+    <br>
+    <br>
+    
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+
