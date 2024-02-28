@@ -1,19 +1,15 @@
 from django.shortcuts import render, redirect
-from apppatarescata.models import FAQ, Mascota
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm
+from apppatarescata.models import FAQ, Mascota, MascotaFundacion, Usuario
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, ActualizarPerfilForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth, messages
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import MascotaFundacion, Mascota  
-
-
+from django.contrib.auth import authenticate, logout
+from .models import MascotaFundacion, Mascota, Mascota, Adopcion
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 
 
 def faq(request):
@@ -28,11 +24,6 @@ def faq(request):
     data = {'preguntas': preguntas, 'form': form}
     return render(request, 'nosotros.html', data)
 
-
-from django.shortcuts import render, redirect
-from apppatarescata.models import Mascota, MascotaFundacion
-from .forms import Formulario2
-from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def agregarMascota(request):
@@ -85,6 +76,7 @@ def buscar_animales(request):
     return render(request, 'index.html', data)
 
 
+
 def resultado_busqueda(request):
     animales = []
 
@@ -105,9 +97,6 @@ def resultado_busqueda(request):
     return render(request, 'resultado_busqueda.html', context)
 
 
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.contrib.sites.shortcuts import get_current_site
 
 def registro_usuario(request):
     if request.method == 'POST':
@@ -144,6 +133,7 @@ def registro_usuario(request):
     return render(request, 'registro_usuario.html', {'form': form})
 
 
+
 def mi_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -162,6 +152,7 @@ def mi_login(request):
             messages.add_message(request, messages.ERROR, error_message)
 
     return render(request, 'miperfil.html')
+
 
 
 def logout_view(request):
@@ -186,11 +177,6 @@ def info_perfil(request):
         return redirect('mi_login')
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import ActualizarPerfilForm
-
-
 
 @login_required(login_url='/login/')
 def actualizar_perfil(request):
@@ -205,7 +191,6 @@ def actualizar_perfil(request):
         form = ActualizarPerfilForm(instance=usuario)
 
     return render(request, 'edicionperfil.html', {'form': form})
-
 
 
 
@@ -224,10 +209,7 @@ def eliminar_cuenta(request):
     return render(request, 'eliminar_cuenta.html')
 
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .models import Mascota, Adopcion
+
 
 @login_required(login_url='/login/')
 def realizar_adopcion(request, animal_id):
@@ -265,26 +247,6 @@ def mis_solicitudes(request):
 
     context = {'adopciones': adopciones}
     return render(request, 'solicitudes.html', context)
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -340,11 +302,6 @@ def solicitudes_perfil(request):
 
 
 
-
-
-
-from django.http import HttpResponse
-from apppatarescata.models import Usuario  # Cambia esta línea
 
 def verificar_cuenta(request, token):
     try:
