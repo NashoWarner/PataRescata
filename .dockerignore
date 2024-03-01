@@ -2,3 +2,4 @@ jmeter.log
 wait-for-it.sh
 staticfiles
 venv
+.DS_Store
