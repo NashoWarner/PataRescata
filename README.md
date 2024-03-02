@@ -89,3 +89,23 @@ Estas funciones permiten a los usuarios autenticados solicitar la adopción de u
 ### Función `verificar_cuenta(request, token)`
 
 Verifica la cuenta de un usuario cuando hacen clic en el enlace de verificación que se les envió por correo electrónico.
+
+## Configuración para el Envío de Correos Electrónicos en Django con Gmail
+
+Estas son las configuraciones para el envío de correos electrónicos en Django utilizando el servidor SMTP de Gmail. A continuación, se explica el significado de cada configuración:
+
+- **EMAIL_BACKEND:** Esta es la clase que Django usará para enviar correos electrónicos. `'django.core.mail.backends.smtp.EmailBackend'` es el backend que Django proporciona para enviar correos electrónicos utilizando el protocolo SMTP.
+
+- **EMAIL_HOST:** Este es el nombre del host del servidor de correo. Para Gmail, es `'smtp.gmail.com'`.
+
+- **EMAIL_PORT:** Este es el puerto que se utilizará para conectar con el servidor de correo. Para conexiones seguras con Gmail, se utiliza el puerto 465.
+
+- **EMAIL_USE_TLS:** Esta es una bandera que indica si se debe utilizar una conexión segura TLS. Para conexiones seguras con Gmail, esto debe ser `False`.
+
+- **EMAIL_USE_SSL:** Esta es una bandera que indica si se debe utilizar una conexión segura SSL. Para conexiones seguras con Gmail, esto debe ser `True`.
+
+- **EMAIL_HOST_USER:** Esta es la dirección de correo electrónico que se utilizará para enviar correos electrónicos.
+
+- **EMAIL_HOST_PASSWORD:** Esta es la contraseña de la dirección de correo electrónico que se utilizará para enviar correos electrónicos. En este caso, es `'ajtu ffnj xllg gidg'` (Ya eliminada). Por razones de seguridad, es recomendable no guardar la contraseña en el código, sino utilizar variables de entorno o un servicio de almacenamiento de secretos.
+
+Por favor, ten en cuenta que para utilizar el servidor SMTP de Gmail, necesitarás habilitar la opción "Permitir aplicaciones menos seguras" en la configuración de tu cuenta de Gmail. Además, si tienes la verificación en dos pasos habilitada en tu cuenta de Gmail, necesitarás generar una contraseña de aplicación y usarla como `EMAIL_HOST_PASSWORD`.

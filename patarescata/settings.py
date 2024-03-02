@@ -92,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Santiago'
 USE_I18N = True
 USE_TZ = True
 
@@ -122,5 +122,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'Cambiar por correo de gmail'
-EMAIL_HOST_PASSWORD = 'Cambiar por contraseña de gmail'
+EMAIL_HOST_USER = 'jordan4retro142@gmail.com'
+EMAIL_HOST_PASSWORD = 'ajtu ffnj xllg gidg' #Explicado en README.MD su funcionamiento
