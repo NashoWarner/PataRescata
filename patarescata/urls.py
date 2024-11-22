@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django.urls import path
-from apppatarescata.views import faq, home, blog, nosotros, preguntas_frecuentes, agregarMascota, buscar_animales, resultado_busqueda, registro_usuario, mi_login, logout_view, info_perfil, articulo1, articulo2, articulo3, articulo4, articulo5, navegador, home_perfil, actualizar_perfil,eliminar_cuenta,realizar_adopcion,mis_solicitudes, verificar_cuenta
+from apppatarescata.views import (
+    faq, home, blog, nosotros, preguntas_frecuentes, agregarMascota, 
+    buscar_animales, resultado_busqueda, registro_usuario, mi_login, 
+    logout_view, info_perfil, articulo1, articulo2, articulo3, articulo4, 
+    articulo5, navegador, home_perfil, actualizar_perfil, eliminar_cuenta, 
+    realizar_adopcion, mis_solicitudes, verificar_cuenta, tienda  # Asegúrate de importar la vista de la tienda
+)
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -19,6 +25,7 @@ urlpatterns = [
     path('realizar_adopcion/<int:animal_id>/', realizar_adopcion, name='realizar_adopcion'),
     path('mis_solicitudes/', mis_solicitudes, name='mis_solicitudes'),
     path('', home),
+    path('tienda/', tienda, name='tienda'),  # Nueva ruta para la tienda
     path('home_perfil/', info_perfil, name='home_perfil'), 
     path('agregarmascota/', agregarMascota, name='agregarmascota'),
     path('buscar_animales/', buscar_animales, name='buscar_animales'),
@@ -33,7 +40,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

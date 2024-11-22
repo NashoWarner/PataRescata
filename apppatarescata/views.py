@@ -311,3 +311,8 @@ def verificar_cuenta(request, token):
         return HttpResponse('Cuenta verificada exitosamente')
     except Usuario.DoesNotExist:  # Cambia esta línea
         return HttpResponse('Token inválido')
+    
+
+    
+def tienda(request):
+    return render(request, 'tienda.html')
