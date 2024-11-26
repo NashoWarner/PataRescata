@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
+from .models import Producto
 
 
 def faq(request):
@@ -313,6 +314,7 @@ def verificar_cuenta(request, token):
         return HttpResponse('Token inválido')
     
 
-    
 def tienda(request):
-    return render(request, 'tienda.html')
+    # Recupera todos los productos de la base de datos
+    productos = Producto.objects.all()
+    return render(request, 'tienda.html', {'productos': productos})
