@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from apppatarescata import views
+
 from apppatarescata.views import (
     faq, home, blog, nosotros, preguntas_frecuentes, agregarMascota, 
     buscar_animales, resultado_busqueda, registro_usuario, mi_login, 
@@ -36,6 +38,7 @@ urlpatterns = [
     path('actualizar_perfil/', actualizar_perfil, name='actualizar_perfil'),
     path('eliminar-cuenta/', eliminar_cuenta, name='eliminar_cuenta'),
     path('verificar-cuenta/<str:token>/', verificar_cuenta, name='verificar-cuenta'),
+
 ]
 
 if settings.DEBUG:

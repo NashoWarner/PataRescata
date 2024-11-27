@@ -101,6 +101,7 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/')
+    enlace = models.URLField(max_length=500, blank=True, null=True)  # Campo para el enlace externo
 
     def __str__(self):
         return self.nombre

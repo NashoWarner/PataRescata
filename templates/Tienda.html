@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,18 +21,14 @@
   <div class="container-fluid py-3 px-4">
     <div class="d-flex justify-content-between align-items-center">
       <a href="/" class="navbar-brand d-flex align-items-center">
-        <img src="{% static 'img/logo.png' %}" alt="Pata Rescata Logo" width="40" height="40">
-        <span class="ms-2 fw-bold text-primary">Pata Rescata</span>
+        <!--<img src="{% static 'img/logo.png' %}" alt="Pata Rescata Logo" width="40" height="40">-->
+        <span class="ms-2 fw-bold text-primary"></span>
       </a>
       <div class="d-flex align-items-center">
         {% if user.is_authenticated %}
-          <a href="/carrito/" class="btn btn-outline-primary rounded-pill me-3">
-            <i class="bi bi-cart-fill"></i> Mi Carrito
-          </a>
           <span class="text-secondary me-3">Hola, {{ user.username }}</span>
-          <a href="/logout/" class="btn btn-danger rounded-pill">Cerrar sesión</a>
         {% else %}
-          <a href="/login/" class="btn btn-outline-primary rounded-pill">Iniciar sesión</a>
+          <!--<a href="/login/" class="btn btn-outline-primary rounded-pill">Iniciar sesión</a>-->
         {% endif %}
       </div>
     </div>
@@ -45,11 +42,13 @@
     <main class="col-md-12">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="text-primary">Productos disponibles</h4>
-        <select class="form-select w-auto">
-          <option selected>Ordenar por...</option>
-          <option value="1">Precio: Bajo a Alto</option>
-          <option value="2">Precio: Alto a Bajo</option>
-        </select>
+        <form method="get" id="ordenar-form">
+          <select name="ordenar_por" class="form-select w-auto" onchange="document.getElementById('ordenar-form').submit();">
+            <option value="" {% if not ordenar_por %}selected{% endif %}>Ordenar por...</option>
+            <option value="precio_asc" {% if ordenar_por == "precio_asc" %}selected{% endif %}>Precio: Bajo a Alto</option>
+            <option value="precio_desc" {% if ordenar_por == "precio_desc" %}selected{% endif %}>Precio: Alto a Bajo</option>
+          </select>
+        </form>
       </div>
 
       <div class="row g-4">
@@ -60,14 +59,11 @@
             <div class="card-body">
               <h5 class="card-title">{{ producto.nombre }}</h5>
               <p class="card-text text-muted">{{ producto.descripcion }}</p>
-              <p class="fw-bold text-success">Precio: ${{ producto.precio }}</p>
-              {% if user.is_authenticated %}
-                <form method="post" action="{% url 'agregar_carrito' producto.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-primary w-100">Agregar al carrito</button>
-                </form>
+              <p class="fw-bold text-success">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
+              {% if producto.enlace %}
+                <a href="{{ producto.enlace }}" target="_blank" class="btn btn-primary w-100">Comprar ahora</a>
               {% else %}
-                <a href="/login/" class="btn btn-outline-secondary w-100">Inicia sesión para comprar</a>
+                <p class="text-muted text-center">No disponible para compra</p>
               {% endif %}
             </div>
           </div>
@@ -78,10 +74,10 @@
   </div>
 </div>
 
-<footer class="bg-light py-4 mt-5">
-  <div class="container text-center">
-    <p class="mb-0">© 2024 Pata Rescata. Todos los derechos reservados.</p>
-  </div>
+<footer >
+  <nav>
+    {% include 'footer.html' %}
+  </nav>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

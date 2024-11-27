@@ -11,6 +11,10 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from .models import Producto
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
+
 
 
 def faq(request):
@@ -315,6 +319,17 @@ def verificar_cuenta(request, token):
     
 
 def tienda(request):
-    # Recupera todos los productos de la base de datos
-    productos = Producto.objects.all()
-    return render(request, 'tienda.html', {'productos': productos})
+    # Recupera el valor seleccionado en el desplegable
+    ordenar_por = request.GET.get('ordenar_por', None)
+
+    # Aplica la lógica de ordenamiento
+    if ordenar_por == "precio_asc":
+        productos = Producto.objects.all().order_by('precio')
+    elif ordenar_por == "precio_desc":
+        productos = Producto.objects.all().order_by('-precio')
+    else:
+        productos = Producto.objects.all()
+
+    return render(request, 'tienda.html', {'productos': productos, 'ordenar_por': ordenar_por})
+
+
