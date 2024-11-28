@@ -10,12 +10,26 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <style>
+    .card {
+      height: 100%; /* Permite que todas las tarjetas tengan la misma altura */
+      display: flex;
+      flex-direction: column; /* Asegura que el contenido interno esté alineado verticalmente */
+    }
     .card-img-top {
       height: 200px; /* Altura fija para las imágenes */
       width: 100%; /* Ocupa todo el ancho del contenedor */
       object-fit: contain; /* Mantiene la proporción de la imagen sin recortarla */
       background-color: #f8f9fa; /* Fondo gris claro para las imágenes */
       padding: 10px; /* Espaciado interno para evitar bordes muy ajustados */
+    }
+    .card-body {
+      flex-grow: 1; /* Ocupa el espacio restante para mantener el contenido alineado */
+      display: flex;
+      flex-direction: column; /* Permite alinear el botón al final */
+      justify-content: space-between; /* Asegura que el contenido esté distribuido */
+    }
+    .btn-primary {
+      margin-top: auto; /* Empuja el botón hacia el final del contenedor */
     }
   </style>
 </head>
