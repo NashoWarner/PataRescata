@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from .models import Producto
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from .forms import MascotaForm
 
 
 
@@ -317,19 +318,85 @@ def verificar_cuenta(request, token):
     except Usuario.DoesNotExist:  # Cambia esta línea
         return HttpResponse('Token inválido')
     
-
 def tienda(request):
-    # Recupera el valor seleccionado en el desplegable
+    # Obtener valores de los filtros
+    categoria = request.GET.get('categoria', None)
     ordenar_por = request.GET.get('ordenar_por', None)
 
-    # Aplica la lógica de ordenamiento
-    if ordenar_por == "precio_asc":
-        productos = Producto.objects.all().order_by('precio')
-    elif ordenar_por == "precio_desc":
-        productos = Producto.objects.all().order_by('-precio')
+    # Filtrar productos por categoría si se seleccionó una
+    if categoria:
+        productos = Producto.objects.filter(categoria=categoria)
     else:
         productos = Producto.objects.all()
 
-    return render(request, 'tienda.html', {'productos': productos, 'ordenar_por': ordenar_por})
+    # Aplicar ordenamiento
+    if ordenar_por == "precio_asc":
+        productos = productos.order_by('precio')
+    elif ordenar_por == "precio_desc":
+        productos = productos.order_by('-precio')
+
+    # Pasar los filtros seleccionados al template
+    return render(request, 'tienda.html', {
+        'productos': productos,
+        'categoria_seleccionada': categoria,
+        'ordenar_por': ordenar_por
+    })
 
 
+@login_required
+def eliminar_mascotas(request):
+    if request.user.rut_empresa:  # Verifica que el usuario sea un fundador
+        Mascota.objects.all().delete()
+        messages.success(request, "Todas las mascotas han sido eliminadas exitosamente.")
+    else:
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+    return redirect('home_perfil')
+@login_required
+def listar_mascotas(request):
+    if request.user.rut_empresa:  # Solo fundadores pueden listar y eliminar mascotas
+        mascotas = Mascota.objects.all()  # Obtiene todas las mascotas
+        return render(request, 'listar_mascotas.html', {'mascotas': mascotas})
+    else:
+        return redirect('home_perfil')  # Redirigir si no es fundador
+
+@login_required
+def eliminar_mascota(request, mascota_id):
+    if request.user.rut_empresa:  # Verifica que el usuario sea fundador
+        try:
+            mascota = Mascota.objects.get(id=mascota_id)  # Obtiene la mascota por ID
+            mascota.delete()  # Elimina la mascota
+            messages.success(request, f"La mascota '{mascota.nombre_mascota}' ha sido eliminada exitosamente.")
+        except Mascota.DoesNotExist:
+            messages.error(request, "La mascota no existe.")
+    else:
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+    return redirect('listar_mascotas')  # Redirige a la lista de mascotas
+
+@login_required
+def contar_mascotas(request):
+    if request.user.rut_empresa:  # Solo fundadores pueden ver la cantidad
+        cantidad = Mascota.objects.count()
+        return render(request, 'contar_mascotas.html', {'cantidad': cantidad})
+    else:
+        return redirect('home_perfil')
+
+@login_required
+def actualizar_mascota(request, mascota_id):
+    if not request.user.rut_empresa:  # Asegurar que solo fundadores puedan actualizar mascotas
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect('listar_mascotas')
+    
+    mascota = get_object_or_404(Mascota, id=mascota_id)
+
+    if request.method == 'POST':
+        form = MascotaForm(request.POST, request.FILES, instance=mascota)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"La información de '{mascota.nombre_mascota}' se ha actualizado correctamente.")
+            return redirect('listar_mascotas')
+        else:
+            messages.error(request, "Ocurrió un error al actualizar la mascota.")
+    else:
+        form = MascotaForm(instance=mascota)
+
+    return render(request, 'actualizar_mascota.html', {'form': form, 'mascota': mascota})

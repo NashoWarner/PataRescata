@@ -96,15 +96,25 @@ class Adopcion(models.Model):
         return f"{self.adoptante.nombre} adoptó a {self.mascota.nombre_mascota}"
     
 
+
+from django.db import models
+
 class Producto(models.Model):
+    CATEGORIAS = [
+        ('comida', 'Comida para Perros'),
+        ('juguetes', 'Juguetes para Perros'),
+    ]
+
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/')
-    enlace = models.URLField(max_length=500, blank=True, null=True)  # Campo para el enlace externo
+    enlace = models.URLField(max_length=500, blank=True, null=True)
+    categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='comida')  # Agregar campo de categoría
 
     def __str__(self):
         return self.nombre
+
 
 
 

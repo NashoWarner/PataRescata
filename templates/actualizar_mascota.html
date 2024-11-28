@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Mascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+        .form-container {
+            background-color: #ffc107; /* Fondo amarillo */
+            border-radius: 15px;
+            padding: 30px;
+            margin: 50px auto;
+            max-width: 600px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            width: 100%;
+        }
+        .btn-secondary {
+            margin-top: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
+    <div class="container mt-5">
+        <div class="form-container">
+            <h2>Actualizar información de {{ mascota.nombre_mascota }}</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre_mascota" class="form-label">Nombre mascota:</label>
+                    <input type="text" class="form-control" id="nombre_mascota" name="nombre_mascota" value="{{ form.nombre_mascota.value }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edad_mascota" class="form-label">Edad mascota:</label>
+                    {{ form.edad_mascota }}
+                </div>
+                <div class="mb-3">
+                    <label for="tamaño_mascota" class="form-label">Tamaño mascota:</label>
+                    {{ form.tamaño_mascota }}
+                </div>
+                <div class="mb-3">
+                    <label for="comuna_mascota" class="form-label">Comuna mascota:</label>
+                    {{ form.comuna_mascota }}
+                </div>
+                <div class="mb-3">
+                    <label for="region" class="form-label">Región:</label>
+                    {{ form.region }}
+                </div>
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción:</label>
+                    {{ form.descripcion }}
+                </div>
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen:</label>
+                    {{ form.imagen }}
+                </div>
+                <button type="submit" class="btn btn-success">Guardar cambios</button>
+                <a href="{% url 'listar_mascotas' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+    <footer>
+    {% include 'footer.html' %}
+</footer>
+</body>
+</html>

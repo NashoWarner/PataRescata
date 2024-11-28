@@ -5,10 +5,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda - Alimentos para Perros</title>
+  <title>Tienda - Productos para Mascotas</title>
   <link rel="stylesheet" href="{% static 'css/nosotros.css' %}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .card-img-top {
+      height: 200px; /* Altura fija para las imágenes */
+      width: 100%; /* Ocupa todo el ancho del contenedor */
+      object-fit: contain; /* Mantiene la proporción de la imagen sin recortarla */
+      background-color: #f8f9fa; /* Fondo gris claro para las imágenes */
+      padding: 10px; /* Espaciado interno para evitar bordes muy ajustados */
+    }
+  </style>
 </head>
 <body style="background-color: #f9f9f9; overflow-x: hidden;">
 
@@ -21,14 +30,11 @@
   <div class="container-fluid py-3 px-4">
     <div class="d-flex justify-content-between align-items-center">
       <a href="/" class="navbar-brand d-flex align-items-center">
-        <!--<img src="{% static 'img/logo.png' %}" alt="Pata Rescata Logo" width="40" height="40">-->
         <span class="ms-2 fw-bold text-primary"></span>
       </a>
       <div class="d-flex align-items-center">
         {% if user.is_authenticated %}
           <span class="text-secondary me-3">Hola, {{ user.username }}</span>
-        {% else %}
-          <!--<a href="/login/" class="btn btn-outline-primary rounded-pill">Iniciar sesión</a>-->
         {% endif %}
       </div>
     </div>
@@ -37,44 +43,47 @@
 
 <!-- Main Content -->
 <div class="container mt-4">
-  <div class="row">
-    <!-- Productos -->
-    <main class="col-md-12">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-primary">Productos disponibles</h4>
-        <form method="get" id="ordenar-form">
-          <select name="ordenar_por" class="form-select w-auto" onchange="document.getElementById('ordenar-form').submit();">
-            <option value="" {% if not ordenar_por %}selected{% endif %}>Ordenar por...</option>
-            <option value="precio_asc" {% if ordenar_por == "precio_asc" %}selected{% endif %}>Precio: Bajo a Alto</option>
-            <option value="precio_desc" {% if ordenar_por == "precio_desc" %}selected{% endif %}>Precio: Alto a Bajo</option>
-          </select>
-        </form>
-      </div>
+  <!-- Filtro de Categoría y Ordenamiento -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <form method="get" id="filtro-form" class="d-flex">
+      <select name="categoria" class="form-select me-2 w-auto" onchange="document.getElementById('filtro-form').submit();">
+        <option value="">Todas las categorías</option>
+        <option value="comida" {% if categoria_seleccionada == "comida" %}selected{% endif %}>Comida para Perros</option>
+        <option value="juguetes" {% if categoria_seleccionada == "juguetes" %}selected{% endif %}>Juguetes para Perros</option>
+      </select>
+      <select name="ordenar_por" class="form-select w-auto" onchange="document.getElementById('filtro-form').submit();">
+        <option value="">Ordenar por...</option>
+        <option value="precio_asc" {% if ordenar_por == "precio_asc" %}selected{% endif %}>Precio: Bajo a Alto</option>
+        <option value="precio_desc" {% if ordenar_por == "precio_desc" %}selected{% endif %}>Precio: Alto a Bajo</option>
+      </select>
+    </form>
+  </div>
 
-      <div class="row g-4">
-        {% for producto in productos %}
-        <div class="col-md-4">
-          <div class="card shadow-sm">
-            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ producto.nombre }}</h5>
-              <p class="card-text text-muted">{{ producto.descripcion }}</p>
-              <p class="fw-bold text-success">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
-              {% if producto.enlace %}
-                <a href="{{ producto.enlace }}" target="_blank" class="btn btn-primary w-100">Comprar ahora</a>
-              {% else %}
-                <p class="text-muted text-center">No disponible para compra</p>
-              {% endif %}
-            </div>
-          </div>
+  <!-- Productos -->
+  <div class="row g-4">
+    {% for producto in productos %}
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ producto.nombre }}</h5>
+          <p class="card-text text-muted">{{ producto.descripcion }}</p>
+          <p class="fw-bold text-success">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
+          {% if producto.enlace %}
+            <a href="{{ producto.enlace }}" target="_blank" class="btn btn-primary w-100">Comprar ahora</a>
+          {% else %}
+            <p class="text-muted text-center">No disponible para compra</p>
+          {% endif %}
         </div>
-        {% endfor %}
       </div>
-    </main>
+    </div>
+    {% empty %}
+    <p class="text-center">No se encontraron productos para esta categoría.</p>
+    {% endfor %}
   </div>
 </div>
 
-<footer >
+<footer>
   <nav>
     {% include 'footer.html' %}
   </nav>

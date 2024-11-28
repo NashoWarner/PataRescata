@@ -38,6 +38,11 @@ urlpatterns = [
     path('actualizar_perfil/', actualizar_perfil, name='actualizar_perfil'),
     path('eliminar-cuenta/', eliminar_cuenta, name='eliminar_cuenta'),
     path('verificar-cuenta/<str:token>/', verificar_cuenta, name='verificar-cuenta'),
+    path('listar_mascotas/', views.listar_mascotas, name='listar_mascotas'),
+    path('eliminar_mascota/<int:mascota_id>/', views.eliminar_mascota, name='eliminar_mascota'),
+    path('eliminar_mascotas/', views.eliminar_mascotas, name='eliminar_mascotas'),
+    path('contar_mascotas/', views.contar_mascotas, name='contar_mascotas'),
+    path('actualizar_mascota/<int:mascota_id>/', views.actualizar_mascota, name='actualizar_mascota'),
 
 ]
 
@@ -49,3 +54,4 @@ if settings.DEBUG:
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

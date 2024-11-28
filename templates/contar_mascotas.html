@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantidad de Mascotas</title>
+    <link rel="stylesheet" href="{% static 'css/nosotros.css' %}">
+</head>
+<body>
+    <h1 class="text-center mt-5">Cantidad de Mascotas</h1>
+    <div class="text-center mt-4">
+        <p class="fs-4">Actualmente hay <strong>{{ cantidad }}</strong> mascotas registradas.</p>
+        <a href="{% url 'home_perfil' %}" class="btn btn-primary">Regresar a Mi Perfil</a>
+    </div>
+</body>
+</html>

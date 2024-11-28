@@ -5,7 +5,7 @@ from apppatarescata.models import FAQ
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Usuario
-
+from .models import Mascota
 from .models import Numero,rut
 
 from django.core.exceptions import ValidationError
@@ -200,3 +200,12 @@ class ActualizarPerfilForm(forms.ModelForm):
 #         choices=opciones_edades,
 #         widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
 #     )
+
+
+class MascotaForm(forms.ModelForm):
+    class Meta:
+        model = Mascota
+        fields = ['nombre_mascota', 'edad_mascota', 'tamaño_mascota', 'comuna_mascota', 'region', 'descripcion', 'imagen']
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows': 3}),
+        }

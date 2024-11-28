@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
     <!-- Bootstrap Icons CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
- 
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,7 +35,6 @@
                             <a class="nav-link" href="/home_perfil/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mi Perfil</a>
                         </li>
                         {% if rut_empresa %}
-                        <!-- Mostrar el cuarto elemento de navegación -->
                         <li class="nav-item  m-1">
                             <a class="nav-link" href="/agregarmascota" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Añadir mascota</a>
                         </li>
@@ -43,7 +42,6 @@
                         <li class="nav-item  m-1">
                             <a class="nav-link" href="/mis_solicitudes/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mis Solicitudes</a>
                         </li>
-                        
                     </ul>
                 </div>
             </nav>
@@ -68,11 +66,18 @@
                         <a href="{% url 'actualizar_perfil' %}" class="btn btn-info btn-lg px-5 mt-3" style="border: 5px solid white; border-radius: 20px; font-size: 20px;">Actualizar perfil</a>
                    </div> 
                    <div class="col-md-6">
-                    <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger btn-lg px-5 mt-3" style="border: 5px solid white; border-radius: 20px; font-size: 20px;">Eliminar Cuenta</a>
-            
+                        <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger btn-lg px-5 mt-3" style="border: 5px solid white; border-radius: 20px; font-size: 20px;">Eliminar Cuenta</a>
                    </div>
                 </div>
+                
+                <div class="row text-center mt-5">
+                    {% if rut_empresa %}
+                    <div class="col-md-6">
+                        <a href="{% url 'listar_mascotas' %}" class="btn btn-warning btn-lg px-5" style="border: 5px solid white; border-radius: 20px; font-size: 20px;">Administrar Mascotas</a>
+                    </div>
+                    {% endif %}
                 </div>
+            </div>
             <br><br><br>
         </div>
     </div>
@@ -87,4 +92,3 @@
 </html>
 
 
-  
