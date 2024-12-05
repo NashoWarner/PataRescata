@@ -38,6 +38,16 @@
                         <li class="nav-item  m-1">
                             <a class="nav-link" href="/agregarmascota" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Añadir mascota</a>
                         </li>
+                        <div class="row text-center mt-5">
+                            {% if rut_empresa %}
+                            <li class="nav-item m-1">
+                                <a class="nav-link" href="{% url 'estadisticas' %}" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80); text-align: center;">Ver Estadísticas</a>
+                            </li>
+                            
+                            {% endif %}
+                        </div>
+                        
+                        
                         {% endif %}
                         <li class="nav-item  m-1">
                             <a class="nav-link" href="/mis_solicitudes/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mis Solicitudes</a>

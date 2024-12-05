@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from apppatarescata import views
-
+from apppatarescata.views import estadisticas
 from apppatarescata.views import (
     faq, home, blog, nosotros, preguntas_frecuentes, agregarMascota, 
     buscar_animales, resultado_busqueda, registro_usuario, mi_login, 
@@ -43,6 +43,7 @@ urlpatterns = [
     path('eliminar_mascotas/', views.eliminar_mascotas, name='eliminar_mascotas'),
     path('contar_mascotas/', views.contar_mascotas, name='contar_mascotas'),
     path('actualizar_mascota/<int:mascota_id>/', views.actualizar_mascota, name='actualizar_mascota'),
+    path('estadisticas/', estadisticas, name='estadisticas'),
 
 ]
 

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Estadísticas de Adopciones</h2>
+        <canvas id="graficoAdopciones" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Pasar datos desde Django a JavaScript de forma segura
+        var nombresMascotas = JSON.parse('{{ nombres_mascotas|safe }}');
+        var cantidadesAdopciones = JSON.parse('{{ cantidades_adopciones|safe }}');
+
+        var ctx = document.getElementById('graficoAdopciones').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: nombresMascotas,
+                datasets: [{
+                    label: 'Cantidad de Adopciones',
+                    data: cantidadesAdopciones,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -14,8 +14,9 @@ from .models import Producto
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from .forms import MascotaForm
-
-
+from django.db.models import Count
+import json
+from django.utils.safestring import mark_safe
 
 
 def faq(request):
@@ -400,3 +401,26 @@ def actualizar_mascota(request, mascota_id):
         form = MascotaForm(instance=mascota)
 
     return render(request, 'actualizar_mascota.html', {'form': form, 'mascota': mascota})
+
+@login_required(login_url='/login/')
+def estadisticas(request):
+    if not request.user.rut_empresa:
+        messages.error(request, "No tienes permisos para acceder a esta página.")
+        return redirect('home_perfil')
+    
+    # Obtener estadísticas
+    adopciones_por_mascota = (
+        Adopcion.objects.values('mascota__nombre_mascota')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+
+    # Convertir datos a listas
+    nombres_mascotas = [item['mascota__nombre_mascota'] for item in adopciones_por_mascota]
+    cantidades_adopciones = [item['total'] for item in adopciones_por_mascota]
+
+    context = {
+        'nombres_mascotas': mark_safe(json.dumps(nombres_mascotas)),
+        'cantidades_adopciones': mark_safe(json.dumps(cantidades_adopciones)),
+    }
+    return render(request, 'estadisticas.html', context)
