@@ -7,8 +7,9 @@ from apppatarescata.views import (
     buscar_animales, resultado_busqueda, registro_usuario, mi_login, 
     logout_view, info_perfil, articulo1, articulo2, articulo3, articulo4, 
     articulo5, navegador, home_perfil, actualizar_perfil, eliminar_cuenta, 
-    realizar_adopcion, mis_solicitudes, verificar_cuenta, tienda  # Asegúrate de importar la vista de la tienda
+    realizar_adopcion, mis_solicitudes, verificar_cuenta, tienda
 )
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -38,6 +39,19 @@ urlpatterns = [
     path('actualizar_perfil/', actualizar_perfil, name='actualizar_perfil'),
     path('eliminar-cuenta/', eliminar_cuenta, name='eliminar_cuenta'),
     path('verificar-cuenta/<str:token>/', verificar_cuenta, name='verificar-cuenta'),
+    # URLs para restablecimiento de contraseña
+    path('password_reset/',
+        auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'),
+        name='password_reset'),
+    path('password_reset/done/',
+        auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
+        name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
+        name='password_reset_confirm'),
+    path('reset/done/',
+        auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
+        name='password_reset_complete'),
     path('listar_mascotas/', views.listar_mascotas, name='listar_mascotas'),
     path('eliminar_mascota/<int:mascota_id>/', views.eliminar_mascota, name='eliminar_mascota'),
     path('eliminar_mascotas/', views.eliminar_mascotas, name='eliminar_mascotas'),
