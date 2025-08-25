@@ -85,7 +85,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 class MascotaFundacion(models.Model):
     id = models.AutoField(primary_key=True)
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
-    adoptante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    adoptante = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mascotas_fundacion')
+    
+    def __str__(self):
+        return f"{self.mascota.nombre_mascota} - {self.adoptante.nombre}"
 
 # Definición del modelo Adopcion
 class Adopcion(models.Model):

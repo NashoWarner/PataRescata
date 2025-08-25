@@ -68,16 +68,22 @@
             justify-content: center;
             gap: 3rem;
             margin-top: 2rem;
+            align-items: center;
         }
 
         .stat-item {
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: #10b981;
+            margin-bottom: 0.5rem;
         }
 
         .stat-label {
@@ -85,6 +91,8 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .profile-actions {
@@ -98,6 +106,47 @@
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -380,7 +429,7 @@
                     <div class="stat-label">Solicitudes</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">0</div>
+                    <div class="stat-number">{{ mascotas_adoptadas_count }}</div>
                     <div class="stat-label">Mascotas Adoptadas</div>
                 </div>
             </div>
@@ -513,6 +562,39 @@
                     </h4>
                     <p style="color: #6b7280;">{{ usuario.date_joined|date:"d/m/Y" }}</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Panel de Acciones -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-cogs"></i> Acciones
+            </h2>
+            
+            <div class="profile-actions">
+                <a href="{% url 'home' %}" class="btn btn-info">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+                
+                <a href="{% url 'buscador_mascotas' %}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Buscar Mascotas
+                </a>
+                
+                <a href="{% url 'mis_solicitudes' %}" class="btn btn-secondary">
+                    <i class="fas fa-heart"></i> Mis Solicitudes
+                </a>
+                
+                <a href="{% url 'actualizar_perfil_adoptante' %}" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+                
+                <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Eliminar Cuenta
+                </a>
+                
+                <a href="{% url 'logout' %}" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
             </div>
         </div>
     </div>

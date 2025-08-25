@@ -324,7 +324,7 @@
                 <a href="{% url 'home_perfil' %}" class="btn-secondary">
                     <i class="fas fa-home"></i> Volver al Perfil
                 </a>
-                <a href="{% url 'agregarMascota' %}" class="btn-secondary">
+                <a href="{% url 'agregarmascota' %}" class="btn-secondary">
                     <i class="fas fa-plus"></i> Agregar Mascota
                 </a>
                 <a href="{% url 'estadisticas' %}" class="btn-secondary">
@@ -401,6 +401,24 @@
                                 </div>
                             {% endif %}
                         </div>
+
+                        <!-- Botones de acción para fundaciones -->
+                        {% if request.user.rut_empresa and solicitud.estado == 'pendiente' %}
+                            <div class="solicitud-actions" style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+                                <form method="post" action="{% url 'aprobar_solicitud' solicitud.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-approve" style="background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-reject" style="background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}
@@ -414,9 +432,9 @@
                     {% endif %}</p>
                     
                     {% if request.user.rut_empresa %}
-                        <a href="{% url 'agregarMascota' %}" class="btn-primary">
-                            <i class="fas fa-plus"></i> Agregar Mascota
-                        </a>
+                                        <a href="{% url 'agregarmascota' %}" class="btn-primary">
+                    <i class="fas fa-plus"></i> Agregar Mascota
+                </a>
                     {% else %}
                         <a href="{% url 'buscar_animales' %}" class="btn-primary">
                             <i class="fas fa-search"></i> Buscar Mascotas
