@@ -124,7 +124,7 @@ EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'jordan4retro142@gmail.com'
-EMAIL_HOST_PASSWORD = 'ajtu ffnj xllg gidg' #Explicado en README.MD su funcionamiento
+EMAIL_HOST_PASSWORD = 'iclr fdzd inuc jaqy' #Explicado en README.MD su funcionamiento
 
 
 MEDIA_URL = '/media/'
