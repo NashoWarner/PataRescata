@@ -4,9 +4,10 @@ services:
   web:
     build: .
     command: >
-        sh -c "./wait-for-it.sh db:5432 &&
-              python manage.py migrate &&
-              python manage.py runserver 0.0.0.0:8000"
+      sh -c "./wait-for-it.sh db:5432 -t 30 &&
+            python manage.py migrate &&
+            python manage.py cargar_productos &&
+            python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     depends_on:
