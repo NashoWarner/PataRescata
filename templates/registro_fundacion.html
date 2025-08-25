@@ -1,0 +1,402 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Fundación - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .register-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .card-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group .help-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 8px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+        
+        .form-group .help-text br {
+            margin-bottom: 4px;
+        }
+
+        .form-group .errorlist {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            list-style: none;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: #8b5cf6;
+            border: 2px solid #8b5cf6;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-login:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-link a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link a:hover {
+            color: #374151;
+        }
+
+        .messages {
+            margin-bottom: 25px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .message.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .required-field {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .card-header,
+            .card-body {
+                padding: 30px 20px;
+            }
+            
+            .card-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <div class="card-header">
+                <h1><i class="fas fa-building"></i> Fundación</h1>
+                <p>Regístrate para comenzar a publicar mascotas</p>
+            </div>
+
+            <div class="card-body">
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% elif message.tags == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.nombre.id_for_label }}">
+                            <i class="fas fa-user"></i> Nombre Completo <span class="required-field">*</span>
+                        </label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.nombre.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">
+                            <i class="fas fa-envelope"></i> Correo Electrónico <span class="required-field">*</span>
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.telefono.id_for_label }}">
+                            <i class="fas fa-phone"></i> Teléfono <span class="required-field">*</span>
+                        </label>
+                        {{ form.telefono }}
+                        {% if form.telefono.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.telefono.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.rut_empresa.id_for_label }}">
+                            <i class="fas fa-id-card"></i> RUT de Empresa <span class="required-field">*</span>
+                        </label>
+                        {{ form.rut_empresa }}
+                        <div class="help-text">Ejemplo: 12.345.678-9</div>
+                        {% if form.rut_empresa.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.rut_empresa.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password1.id_for_label }}">
+                            <i class="fas fa-lock"></i> Contraseña <span class="required-field">*</span>
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.password1.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if form.password1.help_text %}
+                            <div class="help-text">{{ form.password1.help_text|safe }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password2.id_for_label }}">
+                            <i class="fas fa-lock"></i> Confirmar Contraseña <span class="required-field">*</span>
+                        </label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.password2.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn-register">
+                        <i class="fas fa-plus"></i> Crear Cuenta de Fundación
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>¿Ya tienes una cuenta?</span>
+                </div>
+
+                <a href="{% url 'login_fundacion' %}" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Inicia Sesión como Fundación
+                </a>
+
+                <div class="back-link">
+                    <a href="{% url 'seleccionar_tipo_cuenta' %}">
+                        <i class="fas fa-arrow-left"></i> Volver a selección de cuenta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de focus para los campos
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Animación de entrada
+            const registerCard = document.querySelector('.register-card');
+            registerCard.style.opacity = '0';
+            registerCard.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                registerCard.style.transition = 'all 0.6s ease';
+                registerCard.style.opacity = '1';
+                registerCard.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -2,83 +2,939 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar Mascotas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Listar Mascotas - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Configuración para garantizar que el footer esté al final */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header y Navegación */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #e0e7ff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #e0e7ff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paw" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="15" cy="8" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="12" cy="15" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="7" cy="12" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23paw)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            border-radius: 2px;
+        }
+
+        /* Filtros */
+        .filters-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .filter-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Grilla de Mascotas */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pet-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .pet-image-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .pet-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-card:hover .pet-image {
+            transform: scale(1.1);
+        }
+
+        .pet-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .pet-status.adopted {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .pet-info {
+            padding: 25px;
+        }
+
+        .pet-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pet-name i {
+            color: #8b5cf6;
+        }
+
+        .pet-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pet-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .pet-detail i {
+            color: #8b5cf6;
+            width: 16px;
+        }
+
+        .pet-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            border-color: #d1d5db;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: 2px solid #f59e0b;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            border-color: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: 2px solid #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Contador de Mascotas */
+        .pets-counter {
+            margin-bottom: 40px;
+        }
+
+        .counter-card {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .counter-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .counter-info h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .counter-number {
+            font-size: 3rem;
+            font-weight: 700;
             margin: 0;
         }
-        main {
-            flex: 1;
+
+        /* Paginación */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
         }
-        footer {
-            background-color: #4b286d;
+
+        .page-link {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .page-link:hover,
+        .page-link.active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
             color: white;
-            padding: 1em 0;
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Mensaje sin resultados */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            color: #8b5cf6;
+            margin-bottom: 20px;
+        }
+
+        .no-results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .no-results-text {
+            color: #6b7280;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .pets-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+
+            .filters-section {
+                padding: 25px 20px;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .pets-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pet-details {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .pet-info {
+                padding: 20px;
+            }
+
+            .pet-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Animaciones */
+        .pet-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .pet-card:nth-child(1) { animation-delay: 0.1s; }
+        .pet-card:nth-child(2) { animation-delay: 0.2s; }
+        .pet-card:nth-child(3) { animation-delay: 0.3s; }
+        .pet-card:nth-child(4) { animation-delay: 0.4s; }
+        .pet-card:nth-child(5) { animation-delay: 0.5s; }
+        .pet-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
         }
     </style>
 </head>
 <body>
-<nav>
-    {% include 'navegador.html' %}
-</nav>
-
-<main class="container mt-4">
-    <h1 class="text-center">Lista de Mascotas</h1>
-    
-    <!-- Contador de mascotas -->
-    <div class="text-center my-3">
-        <p class="fw-bold">Cantidad total de mascotas registradas: {{ mascotas|length }}</p>
-    </div>
-
-    <!-- Mensajes de éxito o error -->
-    {% if messages %}
-        <div class="mt-3">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} text-center" role="alert">
-                    {{ message }}
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paw"></i>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+                <span class="logo-text">PataRescata</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="{% url 'tienda' %}">Tienda</a></li>
+                <li><a href="{% url 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+            </ul>
+            
+                            <a href="{% url 'seleccionar_tipo_cuenta' %}" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </a>
+        </nav>
+    </header>
 
-    <div class="row">
-        {% for mascota in mascotas %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                {% if mascota.imagen %}
-                <img src="{{ mascota.imagen.url }}" class="card-img-top" alt="{{ mascota.nombre_mascota }}">
-                {% else %}
-                <img src="{% static 'img/default-mascota.png' %}" class="card-img-top" alt="Sin imagen">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ mascota.nombre_mascota }}</h5>
-                    <p class="card-text">
-                        Edad: {{ mascota.edad_mascota }}<br>
-                        Tamaño: {{ mascota.tamaño_mascota }}<br>
-                        Región: {{ mascota.region }}
-                    </p>
-                    <a href="{% url 'eliminar_mascota' mascota.id %}" class="btn btn-danger w-100">Eliminar</a>
-                    <a href="{% url 'actualizar_mascota' mascota.id %}" class="btn btn-primary w-100">Actualizar</a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Nuestras Mascotas</h1>
+            <p class="hero-subtitle">
+                Descubre a los increíbles compañeros que están esperando encontrar su hogar para siempre. 
+                Cada mascota tiene una historia única y está lista para llenar tu vida de amor.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <h2 class="section-title">Explora Nuestras Mascotas</h2>
+        
+        <!-- Filtros -->
+        <section class="filters-section">
+            <h3 class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h3>
+            <form method="GET" class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Nombre</label>
+                    <input type="text" name="nombre" class="filter-input" placeholder="Buscar por nombre..." value="{{ request.GET.nombre }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Tamaño</label>
+                    <select name="tamaño" class="filter-select">
+                        <option value="">Todos los tamaños</option>
+                        <option value="Miniatura" {% if request.GET.tamaño == 'Miniatura' %}selected{% endif %}>Miniatura</option>
+                        <option value="Pequeño" {% if request.GET.tamaño == 'Pequeño' %}selected{% endif %}>Pequeño</option>
+                        <option value="Mediano" {% if request.GET.tamaño == 'Mediano' %}selected{% endif %}>Mediano</option>
+                        <option value="Grande" {% if request.GET.tamaño == 'Grande' %}selected{% endif %}>Grande</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Región</label>
+                    <select name="region" class="filter-select">
+                        <option value="">Todas las regiones</option>
+                        <option value="Metropolitana" {% if request.GET.region == 'Metropolitana' %}selected{% endif %}>Metropolitana</option>
+                        <option value="Valparaíso" {% if request.GET.region == 'Valparaíso' %}selected{% endif %}>Valparaíso</option>
+                        <option value="O'Higgins" {% if request.GET.region == 'O\'Higgins' %}selected{% endif %}>O'Higgins</option>
+                        <option value="Maule" {% if request.GET.region == 'Maule' %}selected{% endif %}>Maule</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Edad</label>
+                    <select name="edad" class="filter-select">
+                        <option value="">Todas las edades</option>
+                        <option value="Cachorro" {% if request.GET.edad == 'Cachorro' %}selected{% endif %}>Cachorro</option>
+                        <option value="Joven" {% if request.GET.edad == 'Joven' %}selected{% endif %}>Joven</option>
+                        <option value="Adulto" {% if request.GET.edad == 'Adulto' %}selected{% endif %}>Adulto</option>
+                        <option value="Senior" {% if request.GET.edad == 'Senior' %}selected{% endif %}>Senior</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">&nbsp;</label>
+                    <button type="submit" class="filter-btn">
+                        <i class="fas fa-search"></i>
+                        Filtrar
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Contador de Mascotas -->
+        <div class="pets-counter">
+            <div class="counter-card">
+                <div class="counter-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <div class="counter-info">
+                    <h3>Total de Mascotas</h3>
+                    <p class="counter-number">{{ mascotas.count }}</p>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <p class="text-center">No hay mascotas registradas.</p>
-        {% endfor %}
-    </div>
-</main>
 
-<footer>
+        <!-- Grilla de Mascotas -->
+        {% if mascotas %}
+            <div class="pets-grid">
+                {% for mascota in mascotas %}
+                <div class="pet-card">
+                    <div class="pet-image-container">
+                        {% if mascota.imagen %}
+                            <img src="{{ mascota.imagen.url }}" alt="{{ mascota.nombre_mascota }}" class="pet-image">
+                        {% else %}
+                            <img src="{% static 'images/default-pet.jpg' %}" alt="Mascota por defecto" class="pet-image">
+                        {% endif %}
+                        
+                        <div class="pet-status {% if mascota.adopcion_solicitada %}adopted{% endif %}">
+                            {% if mascota.adopcion_solicitada %}
+                                <i class="fas fa-heart"></i> Adoptada
+                            {% else %}
+                                <i class="fas fa-home"></i> Disponible
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="pet-info">
+                        <h3 class="pet-name">
+                            <i class="fas fa-paw"></i>
+                            {{ mascota.nombre_mascota }}
+                        </h3>
+                        
+                        <div class="pet-details">
+                            <div class="pet-detail">
+                                <i class="fas fa-birthday-cake"></i>
+                                {{ mascota.edad_mascota }}
+                            </div>
+                            <div class="pet-detail">
+                                <i class="fas fa-ruler-vertical"></i>
+                                {{ mascota.tamaño_mascota }}
+                            </div>
+                            <div class="pet-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ mascota.comuna_mascota }}
+                            </div>
+                            <div class="pet-detail">
+                                <i class="fas fa-globe"></i>
+                                {{ mascota.region }}
+                            </div>
+                        </div>
+                        
+                        <p class="pet-description">
+                            {{ mascota.descripcion|truncatechars:100 }}
+                        </p>
+                        
+                        <div class="pet-actions">
+                            <!-- Solo mostrar botones de gestión para fundaciones -->
+                            <a href="{% url 'actualizar_mascota' mascota.id %}" class="action-btn btn-warning">
+                                <i class="fas fa-edit"></i>
+                                Editar
+                            </a>
+                            <a href="{% url 'eliminar_mascota' mascota.id %}" class="action-btn btn-danger" 
+                               onclick="return confirm('¿Estás seguro de que quieres eliminar a {{ mascota.nombre_mascota }}? Esta acción no se puede deshacer y se perderá toda la información de la mascota.')">
+                                <i class="fas fa-trash"></i>
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Paginación -->
+            {% if mascotas.has_other_pages %}
+            <div class="pagination">
+                {% if mascotas.has_previous %}
+                    <a href="?page={{ mascotas.previous_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                {% endif %}
+                
+                {% for num in mascotas.paginator.page_range %}
+                    {% if mascotas.number == num %}
+                        <span class="page-link active">{{ num }}</span>
+                    {% elif num > mascotas.number|add:'-3' and num < mascotas.number|add:'3' %}
+                        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if mascotas.has_next %}
+                    <a href="?page={{ mascotas.next_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% else %}
+            <!-- Sin resultados -->
+            <div class="no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h3 class="no-results-title">No tienes mascotas registradas</h3>
+                <p class="no-results-text">Comienza agregando tu primera mascota para encontrarle un hogar amoroso.</p>
+                <a href="{% url 'agregarmascota' %}" class="btn btn-primary" style="margin-top: 20px; display: inline-block; text-decoration: none;">
+                    <i class="fas fa-plus-circle"></i> Agregar Primera Mascota
+                </a>
+            </div>
+        {% endif %}
+        
+        <!-- Botón Volver -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{% url 'home_perfil' %}" class="btn btn-secondary" style="text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Volver al Perfil
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
     {% include 'footer.html' %}
-</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
+                }
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Efectos hover para las tarjetas de mascotas
+            const petCards = document.querySelectorAll('.pet-card');
+            petCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Efectos para los botones de filtro
+            const filterBtn = document.querySelector('.filter-btn');
+            if (filterBtn) {
+                filterBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                });
+                
+                filterBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            }
+
+            // Efectos para los botones de acción
+            const actionBtns = document.querySelectorAll('.action-btn');
+            actionBtns.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    if (this.classList.contains('btn-primary')) {
+                        this.style.transform = 'translateY(-2px) scale(1.05)';
+                    }
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    if (this.classList.contains('btn-primary')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+
+            // Animación de carga para las imágenes
+            const petImages = document.querySelectorAll('.pet-image');
+            petImages.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                img.addEventListener('error', function() {
+                    this.src = '{% static "images/default-pet.jpg" %}';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

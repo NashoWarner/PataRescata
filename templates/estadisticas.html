@@ -1,43 +1,763 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Estadísticas - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header y Navegación */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #e0e7ff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #e0e7ff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paw" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="15" cy="8" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="12" cy="15" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="7" cy="12" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23paw)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            border-radius: 2px;
+        }
+
+        /* Banner informativo */
+        .info-banner {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .info-banner i {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .info-banner p {
+            color: #1e40af;
+            font-weight: 500;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Tarjetas de Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #8b5cf6;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        /* Estilos para estadísticas secundarias */
+        .secondary-stats {
+            margin-top: 30px;
+        }
+
+        .stat-card.secondary {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #e2e8f0;
+        }
+
+        .stat-card.secondary .stat-icon {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+        }
+
+        .stat-card.secondary .stat-number {
+            color: #4b5563;
+        }
+
+        /* Estilos para estadísticas de fundación */
+        .foundation-stats {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            border: 2px solid #0ea5e9;
+        }
+
+        .foundation-stats .chart-title {
+            color: #0369a1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stat-card.foundation {
+            background: white;
+            border: 2px solid #0ea5e9;
+        }
+
+        .stat-card.foundation .stat-icon {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+        }
+
+        .stat-card.foundation .stat-number {
+            color: #0ea5e9;
+        }
+
+        /* Gráficos */
+        .charts-section {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 60px;
+        }
+
+
+
+
+
+
+
+        /* Tabla de Datos */
+        .data-table-section {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #f8fafc, #e0e7ff);
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .data-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .data-table td {
+            color: #6b7280;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+
+            .charts-section,
+            .data-table-section {
+                padding: 30px 20px;
+            }
+
+            .stat-card {
+                padding: 25px 20px;
+            }
+
+            .secondary-stats {
+                margin-top: 20px;
+            }
+
+            .foundation-stats {
+                padding: 30px 20px;
+                margin: 30px 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .info-banner {
+                padding: 15px;
+                margin-bottom: 30px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .info-banner p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .foundation-stats {
+                padding: 20px 15px;
+            }
+
+            .info-banner {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .info-banner p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animaciones */
+        .stat-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stat-card:nth-child(6) { animation-delay: 0.6s; }
+        .stat-card:nth-child(7) { animation-delay: 0.7s; }
+
+        .foundation-stats {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .info-banner {
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Estadísticas de Adopciones</h2>
-        <canvas id="graficoAdopciones" width="400" height="200"></canvas>
-    </div>
+    {% include 'navegador.html' %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Estadísticas de PataRescata</h1>
+            <p class="hero-subtitle">
+                Descubre el impacto que hemos tenido en la vida de las mascotas y familias. 
+                Nuestras estadísticas muestran el éxito de nuestro programa de adopción.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <h2 class="section-title">Resumen de Actividad</h2>
+        <div class="info-banner">
+            <i class="fas fa-info-circle"></i>
+            <p>Estas estadísticas se actualizan en tiempo real basándose en las adopciones reales registradas en PataRescata.</p>
+        </div>
+        
+        <!-- Tarjetas de Estadísticas Generales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <span class="stat-number">{{ total_mascotas }}</span>
+                <div class="stat-label">Total Mascotas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <span class="stat-number">{{ total_adopciones }}</span>
+                <div class="stat-label">Mascotas Adoptadas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <span class="stat-number">{{ total_fundaciones }}</span>
+                <div class="stat-label">Fundaciones Aliadas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="stat-number">{{ total_adoptantes }}</span>
+                <div class="stat-label">Adoptantes Registrados</div>
+            </div>
+        </div>
+
+        <!-- Estadísticas Adicionales -->
+        <div class="stats-grid secondary-stats">
+            <div class="stat-card secondary">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="stat-number">{{ tasa_exito }}%</span>
+                <div class="stat-label">Tasa de Éxito</div>
+            </div>
+            
+            <div class="stat-card secondary">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <span class="stat-number">{{ promedio_adopciones_mes }}</span>
+                <div class="stat-label">Promedio/Mes</div>
+            </div>
+            
+            <div class="stat-card secondary">
+                <div class="stat-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <span class="stat-number">{{ mascotas_disponibles }}</span>
+                <div class="stat-label">Mascotas Disponibles</div>
+            </div>
+        </div>
+
+        <!-- Estadísticas de la Fundación (solo para fundaciones) -->
+        {% if user.rut_empresa %}
+        <div class="foundation-stats">
+            <h3 class="chart-title">Estadísticas de tu Fundación</h3>
+            <div class="stats-grid">
+                <div class="stat-card foundation">
+                    <div class="stat-icon">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <span class="stat-number">{{ mascotas_fundacion }}</span>
+                    <div class="stat-label">Mascotas Registradas</div>
+                </div>
+                
+                <div class="stat-card foundation">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <span class="stat-number">{{ adopciones_fundacion }}</span>
+                    <div class="stat-label">Mascotas Adoptadas</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+
+        <!-- Tabla de Datos -->
+        <section class="data-table-section">
+            <h3 class="chart-title">Estadísticas Detalladas</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Valor</th>
+                        <th>Cambio</th>
+                        <th>Tendencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mascotas Disponibles</td>
+                        <td>{{ mascotas_disponibles }}</td>
+                        <td>Real</td>
+                        <td><i class="fas fa-info-circle" style="color: #3b82f6;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Total Adopciones</td>
+                        <td>{{ total_adopciones }}</td>
+                        <td>Real</td>
+                        <td><i class="fas fa-info-circle" style="color: #3b82f6;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Fundaciones Activas</td>
+                        <td>{{ total_fundaciones }}</td>
+                        <td>Real</td>
+                        <td><i class="fas fa-info-circle" style="color: #3b82f6;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Tasa de Éxito</td>
+                        <td>{{ tasa_exito }}%</td>
+                        <td>Real</td>
+                        <td><i class="fas fa-info-circle" style="color: #3b82f6;"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
 
     <script>
-        // Pasar datos desde Django a JavaScript de forma segura
-        var nombresMascotas = JSON.parse('{{ nombres_mascotas|safe }}');
-        var cantidadesAdopciones = JSON.parse('{{ cantidades_adopciones|safe }}');
-
-        var ctx = document.getElementById('graficoAdopciones').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: nombresMascotas,
-                datasets: [{
-                    label: 'Cantidad de Adopciones',
-                    data: cantidadesAdopciones,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
                 }
-            }
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Efectos hover para las tarjetas
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Los gráficos ahora se renderizan con HTML y CSS puro
+            // No se necesita JavaScript adicional
+
+            // Contador animado para estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                const increment = target / 50;
+                let current = 0;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        stat.textContent = Math.ceil(current) + (stat.textContent.includes('%') ? '%' : '');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        stat.textContent = target + (stat.textContent.includes('%') ? '%' : '');
+                    }
+                };
+                
+                // Iniciar contador cuando sea visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(stat);
+            });
         });
     </script>
 </body>

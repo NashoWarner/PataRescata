@@ -1,71 +1,799 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/nosotros.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
-    <!-- Bootstrap Icons CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
- 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Cuenta - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Pata rescata - Eliminar Cuenta</title>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
 
+        /* Header y Navegación */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #e0e7ff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #e0e7ff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="warning" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 0L20 20H0L10 0Z" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23warning)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #dc2626, #b91c1c);
+            border-radius: 2px;
+        }
+
+        /* Tarjeta de Confirmación */
+        .confirmation-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .confirmation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #dc2626, #b91c1c);
+        }
+
+        .warning-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 4px solid #fecaca;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 3rem;
+            color: #dc2626;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(220, 38, 38, 0);
+            }
+        }
+
+        .confirmation-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-text {
+            color: #6b7280;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .warning-list {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 1px solid #fecaca;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .warning-list h4 {
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-list li {
+            color: #7f1d1d;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+        }
+
+        .confirmation-form {
+            margin-top: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input.error {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Mensajes de alerta */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+
+            .confirmation-card {
+                padding: 30px 20px;
+            }
+
+            .warning-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+
+            .confirmation-title {
+                font-size: 1.6rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .confirmation-card {
+                padding: 25px 15px;
+            }
+
+            .warning-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+
+            .confirmation-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Animaciones */
+        .confirmation-card {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Efectos de hover para inputs */
+        .form-input:hover {
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        /* Estilos para campos requeridos */
+        .form-label.required::after {
+            content: ' *';
+            color: #dc2626;
+            font-weight: 700;
+        }
+    </style>
 </head>
-<body style="overflow-x: hidden;">
-<nav>
-    {% include 'navegador.html' %}
-</nav>
-
-<div class="row">
-    <div class="col-md-3 my-5 mx-2">
-        <nav class="navbar navbar-expand-lg navbar-light" style="font-family: 'Passion One', sans-serif;">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav flex-column text-center">
-                        <li class="nav-item m-1">
-                            <a class="nav-link" href="/home_perfil/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mi Perfil</a>
-                        </li>
-                        <li class="nav-item  m-1">
-                            <a class="nav-link" href="/solicitudes/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mis Solicitudes</a>
-                        </li>
-                        <li class="nav-item  m-1">
-                            <a class="nav-link" href="home_perfil/adopciones/" style="color: white; border: 5px solid rgba(115, 82, 144); border-radius: 20%; font-size: larger; background-color: rgba(115, 82, 144, 0.80);">Mis Adopciones</a>
-                        </li>
-                    </ul>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paw"></i>
                 </div>
-            </div>
+                <span class="logo-text">PataRescata</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="{% url 'tienda' %}">Tienda</a></li>
+                <li><a href="{% url 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+            </ul>
+            
+                            <a href="{% url 'seleccionar_tipo_cuenta' %}" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </a>
         </nav>
-    </div>
-    <div class="col-md-8 my-5 mx-2" style="background-color: white; border-radius: 10%;border: 5px solid rgba(115, 82, 144);">
-        <p class="titulo my-4 mx-4 text-center">Eliminar Cuenta</p>
-        <div class="container mt-5 p-5" style="background-color:#F0AEFA; border-radius: 20px; ">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center" style="font-family: Passion One;">
-                    <form method="post">
-                        {% csrf_token %}
-                        <p class="text-danger" style="font-size: 25px;" >¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
-                        <div class="mb-3">
-                            <label for="confirmacion" class="form-label" style="font-size: x-large;">Escribe "confirmar" para confirmar:</label>
-                            <input type="text" class="form-control" id="confirmacion" name="confirmacion" required>
-                        </div>
-                        <button type="submit" class="btn btn-lg btn-danger px-5">Eliminar Cuenta</button>
-                    </form>
-                </div>
-            </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Eliminar Cuenta</h1>
+            <p class="hero-subtitle">
+                Esta es una acción irreversible que eliminará permanentemente tu cuenta 
+                y todos los datos asociados. Por favor, lee cuidadosamente antes de proceder.
+            </p>
         </div>
-        <br><br><br>
-    </div>
-</div>
+    </section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <h2 class="section-title">Confirmación Requerida</h2>
+        
+        <!-- Tarjeta de Confirmación -->
+        <div class="confirmation-card">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <h3 class="confirmation-title">¿Estás seguro de que quieres eliminar tu cuenta?</h3>
+            
+            <p class="confirmation-text">
+                Esta acción eliminará permanentemente tu cuenta de PataRescata y todos los datos asociados. 
+                Esta operación no se puede deshacer.
+            </p>
+
+            <!-- Lista de Advertencias -->
+            <div class="warning-list">
+                <h4>
+                    <i class="fas fa-exclamation-circle"></i>
+                    Lo que se perderá permanentemente:
+                </h4>
+                <ul>
+                    <li>Toda tu información personal y de contacto</li>
+                    <li>Historial de adopciones y solicitudes</li>
+                    <li>Mascotas registradas (si eres fundación)</li>
+                    <li>Preferencias y configuraciones de la cuenta</li>
+                    <li>Acceso a todas las funcionalidades de la plataforma</li>
+                </ul>
+            </div>
+
+            <!-- Formulario de Confirmación -->
+            <form method="POST" class="confirmation-form">
+                {% csrf_token %}
+                
+                <!-- Mensajes de alerta -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="confirmacion" class="form-label required">
+                        Para confirmar, escribe "ELIMINAR" en el campo de abajo
+                    </label>
+                    <input type="text" id="confirmacion" name="confirmacion" class="form-input" 
+                           required placeholder="Escribe ELIMINAR para confirmar"
+                           pattern="ELIMINAR">
+                    {% if form.confirmacion.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ form.confirmacion.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger" id="deleteBtn" disabled>
+                        <i class="fas fa-trash"></i>
+                        Eliminar Cuenta Permanentemente
+                    </button>
+                    
+                    <a href="{% url 'edicionperfil' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Cancelar
+                    </a>
+                    
+                    <a href="{% url 'home_perfil' %}" class="btn btn-primary">
+                        <i class="fas fa-home"></i>
+                        Volver al Perfil
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
+                }
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Validación del campo de confirmación
+            const confirmacionInput = document.getElementById('confirmacion');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const errorMessage = document.querySelector('.error-message');
+
+            confirmacionInput.addEventListener('input', function() {
+                const value = this.value.trim();
+                
+                if (value === 'ELIMINAR') {
+                    this.classList.remove('error');
+                    deleteBtn.disabled = false;
+                    deleteBtn.style.opacity = '1';
+                    deleteBtn.style.cursor = 'pointer';
+                    
+                    if (errorMessage) {
+                        errorMessage.style.display = 'none';
+                    }
+                } else {
+                    this.classList.add('error');
+                    deleteBtn.disabled = true;
+                    deleteBtn.style.opacity = '0.6';
+                    deleteBtn.style.cursor = 'not-allowed';
+                }
+            });
+
+            // Confirmación adicional antes de eliminar
+            deleteBtn.addEventListener('click', function(e) {
+                if (!confirm('¿Estás completamente seguro? Esta acción eliminará permanentemente tu cuenta y no se puede deshacer.')) {
+                    e.preventDefault();
+                } else {
+                    // Segunda confirmación
+                    if (!confirm('ÚLTIMA ADVERTENCIA: ¿Estás 100% seguro de que quieres eliminar tu cuenta? Esta es tu última oportunidad para cancelar.')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            // Efectos para los botones
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    if (!this.disabled) {
+                        if (this.classList.contains('btn-danger')) {
+                            this.style.transform = 'translateY(-3px) scale(1.02)';
+                        } else if (this.classList.contains('btn-primary')) {
+                            this.style.transform = 'translateY(-3px) scale(1.02)';
+                        }
+                    }
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    if (this.classList.contains('btn-danger') || this.classList.contains('btn-primary')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+
+            // Efectos para el icono de advertencia
+            const warningIcon = document.querySelector('.warning-icon');
+            warningIcon.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            warningIcon.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Validación en tiempo real
+            confirmacionInput.addEventListener('blur', function() {
+                const value = this.value.trim();
+                if (value !== 'ELIMINAR') {
+                    this.classList.add('error');
+                    showError('Debes escribir exactamente "ELIMINAR" para confirmar');
+                } else {
+                    this.classList.remove('error');
+                    hideError();
+                }
+            });
+
+            function showError(message) {
+                let errorDiv = document.querySelector('.error-message');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    confirmacionInput.parentNode.appendChild(errorDiv);
+                }
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+                errorDiv.style.display = 'flex';
+            }
+
+            function hideError() {
+                const errorDiv = document.querySelector('.error-message');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            }
+        });
+    </script>
 </body>
-
 </html>

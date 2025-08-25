@@ -1,0 +1,526 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Mascota - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-control.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .image-preview {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .current-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .current-image:hover {
+            transform: scale(1.05);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .file-input-wrapper:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper i {
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .buttons-container {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-control {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 16px;
+                margin: 5px;
+                min-width: 100px;
+            }
+
+            .current-image {
+                max-width: 250px;
+                max-height: 250px;
+            }
+
+            .buttons-container {
+                text-align: center;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .current-image {
+                max-width: 200px;
+                max-height: 200px;
+            }
+        }
+
+        /* Animaciones */
+        .form-group {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-paw"></i> Actualizar Mascota</h1>
+            <p>Modifica la información de {{ mascota.nombre_mascota }}</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Alertas -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> {{ message }}
+                        </div>
+                    {% elif message.tags == 'error' %}
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i> {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" id="update-form">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.nombre_mascota.id_for_label }}">
+                            <i class="fas fa-tag"></i> Nombre de la Mascota
+                        </label>
+                        {{ form.nombre_mascota }}
+                        <div class="error-message" id="nombre-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.edad_mascota.id_for_label }}">
+                            <i class="fas fa-birthday-cake"></i> Edad
+                        </label>
+                        {{ form.edad_mascota }}
+                        <div class="error-message" id="edad-error"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.tamaño_mascota.id_for_label }}">
+                            <i class="fas fa-ruler-combined"></i> Tamaño
+                        </label>
+                        {{ form.tamaño_mascota }}
+                        <div class="error-message" id="tamaño-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.comuna_mascota.id_for_label }}">
+                            <i class="fas fa-map-marker-alt"></i> Comuna
+                        </label>
+                        {{ form.comuna_mascota }}
+                        <div class="error-message" id="comuna-error"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.region.id_for_label }}">
+                        <i class="fas fa-globe-americas"></i> Región
+                    </label>
+                    {{ form.region }}
+                    <div class="error-message" id="region-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.descripcion.id_for_label }}">
+                        <i class="fas fa-align-left"></i> Descripción
+                    </label>
+                    {{ form.descripcion }}
+                    <div class="error-message" id="descripcion-error"></div>
+                </div>
+
+                <!-- Imagen actual -->
+                {% if mascota.imagen %}
+                <div class="image-preview">
+                    <h4><i class="fas fa-image"></i> Imagen Actual</h4>
+                    <img src="{{ mascota.imagen.url }}" alt="{{ mascota.nombre_mascota }}" class="current-image">
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.imagen.id_for_label }}">
+                        <i class="fas fa-camera"></i> Nueva Imagen (opcional)
+                    </label>
+                    <div class="file-input-wrapper">
+                        <i class="fas fa-upload"></i>
+                        Seleccionar Imagen
+                        {{ form.imagen }}
+                    </div>
+                    <div class="error-message" id="imagen-error"></div>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Actualizando mascota...</p>
+                </div>
+
+                <div class="buttons-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <a href="{% url 'listar_mascotas' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    <a href="{% url 'eliminar_mascota' mascota.id %}" class="btn btn-danger" 
+                       onclick="return confirm('¿Estás seguro de que quieres eliminar esta mascota?')">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('update-form');
+            const loading = document.getElementById('loading');
+
+            // Aplicar estilos a los campos del formulario
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.classList.add('form-control');
+            });
+
+            // Manejo del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Mostrar loading
+                loading.style.display = 'block';
+                form.style.opacity = '0.5';
+                
+                // Simular envío
+                setTimeout(() => {
+                    form.submit();
+                }, 1000);
+            });
+
+            // Validación en tiempo real
+            formControls.forEach(control => {
+                control.addEventListener('blur', function() {
+                    validateField(this);
+                });
+            });
+
+            function validateField(field) {
+                const errorElement = document.getElementById(field.name + '-error');
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = 'Este campo es requerido';
+                } else {
+                    field.classList.remove('error');
+                    errorElement.style.display = 'none';
+                }
+            }
+
+            // Previsualización de imagen
+            const imageInput = document.querySelector('input[type="file"]');
+            if (imageInput) {
+                imageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.querySelector('.current-image');
+                            if (preview) {
+                                preview.src = e.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

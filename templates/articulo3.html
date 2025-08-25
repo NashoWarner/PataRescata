@@ -1,41 +1,568 @@
 
-{%load static%}
-<!doctype html>
-<html lang="en">
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar - Pata Rescata</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Blog 4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .article-title {
+            font-family: 'Merriweather', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .meta-icon {
+            font-size: 1.2rem;
+        }
+        
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .article-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .article-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .article-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .article-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .article-text {
+            font-size: 1.1rem;
+            color: #34495e;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight-text {
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+        
+        .training-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .training-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .training-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .training-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .training-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        
+        .training-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .training-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .training-text {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .steps-list {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .step-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .step-content p {
+            color: #7f8c8d;
+            margin: 0;
+        }
+        
+        .article-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+        
+        .footer-text {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 1rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .article-content {
+                padding: 2rem;
+            }
+            
+            .training-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 5%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            bottom: 30%;
+            left: 5%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+    </style>
   </head>
+
   <body>
+    <!-- Floating background shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Navigation -->
     <nav>
       {% include 'navegador.html' %}
     </nav>
-    <img src="{% static 'images/art3.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
-      <div class="rectangulo m-5">
-        <div class="container mx-auto d-block">
-            <section>
-                <h1 class="title">Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar</h1>
-                <p class="writer">Escrito por: Diego Fuentes</p>
-                <p class="Cuerpo">¿Alguna vez has deseado que tu perro se comporte de manera ejemplar en la ciudad? En este artículo, Diego Fuentes te ofrece consejos prácticos sobre cómo entrenar a tu perro para que sea un ciudadano ejemplar. El adiestramiento es esencial para garantizar que tu perro se comporte adecuadamente en entornos urbanos. Comienza con comandos básicos como "sentado," "quieto" y "aquí." Refuerza estos comandos con recompensas y elogios cada vez que tu perro los obedezca.</p>
-                <p class="Cuerpo">El paseo con correa es una parte crucial del entrenamiento urbano. Enseña a tu perro a caminar sin jalar y a mantener la calma en presencia de otros perros y personas. Utiliza premios y refuerzo positivo para recompensar un buen comportamiento. La socialización es clave. Expone a tu perro a diversas situaciones, personas y lugares desde una edad temprana. Esto ayudará a reducir la ansiedad y el miedo en entornos urbanos.</p>
-                <p class="Cuerpo">Recuerda que la paciencia y la consistencia son esenciales en el entrenamiento de tu perro. Con dedicación y práctica regular, tu peludo amigo puede convertirse en un ciudadano ejemplar.</p>
-            </section>
+
+    <div class="article-container">
+        <!-- Article Header -->
+        <div class="article-header">
+            <h1 class="article-title">Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar</h1>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <i class="bi bi-person-circle meta-icon"></i>
+                    <span>Escrito por: Diego Fuentes</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-calendar3 meta-icon"></i>
+                    <span>Diciembre 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-clock meta-icon"></i>
+                    <span>7 min de lectura</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Image -->
+        <img src="{% static 'images/art3.jpg' %}" alt="Perro bien entrenado en la ciudad" class="article-image">
+
+        <!-- Article Content -->
+        <div class="article-content">
+            <div class="article-section">
+                <h2 class="section-title">Introducción</h2>
+                <p class="article-text">
+                    ¿Alguna vez has deseado que tu perro se comporte de manera ejemplar en la ciudad? En este artículo, Diego Fuentes te ofrece consejos prácticos sobre cómo entrenar a tu perro para que sea un ciudadano ejemplar.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-lightbulb me-2"></i>Consejo Clave
+                </h3>
+                <p class="highlight-text">
+                    El entrenamiento exitoso requiere paciencia, consistencia y refuerzo positivo. Cada perro aprende a su propio ritmo.
+                </p>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Fundamentos del Adiestramiento</h2>
+                <p class="article-text">
+                    El adiestramiento es esencial para garantizar que tu perro se comporte adecuadamente en entornos urbanos. Comienza con comandos básicos como "sentado," "quieto" y "aquí." Refuerza estos comandos con recompensas y elogios cada vez que tu perro los obedezca.
+                </p>
+            </div>
+
+            <div class="training-grid">
+                <div class="training-card">
+                    <div class="training-icon">
+                        <i class="bi bi-command"></i>
+                    </div>
+                    <h4 class="training-title">Comandos Básicos</h4>
+                    <p class="training-text">
+                        Enseña primero "sentado", "quieto" y "aquí". Estos son la base para un comportamiento urbano adecuado.
+                    </p>
+                </div>
+
+                <div class="training-card">
+                    <div class="training-icon">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <h4 class="training-title">Refuerzo Positivo</h4>
+                    <p class="training-text">
+                        Utiliza premios, elogios y caricias para recompensar el buen comportamiento de tu perro.
+                    </p>
+                </div>
+
+                <div class="training-card">
+                    <div class="training-icon">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <h4 class="training-title">Consistencia</h4>
+                    <p class="training-text">
+                        Mantén las mismas reglas y comandos en todo momento para evitar confusión en tu perro.
+                    </p>
+                </div>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Paseo con Correa</h2>
+                <p class="article-text">
+                    El paseo con correa es una parte crucial del entrenamiento urbano. Enseña a tu perro a caminar sin jalar y a mantener la calma en presencia de otros perros y personas. Utiliza premios y refuerzo positivo para recompensar un buen comportamiento.
+                </p>
+            </div>
+
+            <div class="steps-list">
+                <h3 class="section-title">Pasos para un Paseo Perfecto</h3>
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Enseña a Caminar Sin Jalar</h4>
+                        <p>Detente cuando tu perro jale la correa y recompensa cuando camine a tu lado.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Mantén la Calma</h4>
+                        <p>Tu perro debe permanecer tranquilo ante otros perros, personas y estímulos urbanos.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Refuerza el Comportamiento</h4>
+                        <p>Premia cada vez que tu perro mantenga un comportamiento adecuado durante el paseo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Socialización Urbana</h2>
+                <p class="article-text">
+                    La socialización es clave. Expone a tu perro a diversas situaciones, personas y lugares desde una edad temprana. Esto ayudará a reducir la ansiedad y el miedo en entornos urbanos.
+                </p>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Paciencia y Consistencia</h2>
+                <p class="article-text">
+                    Recuerda que la paciencia y la consistencia son esenciales en el entrenamiento de tu perro. Con dedicación y práctica regular, tu peludo amigo puede convertirse en un ciudadano ejemplar.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-shield-check me-2"></i>Consejo Final
+                </h3>
+                <p class="highlight-text">
+                    Celebra cada pequeño logro de tu perro. El entrenamiento es un viaje que fortalece el vínculo entre tú y tu mejor amigo.
+                </p>
+            </div>
+        </div>
+
+        <!-- Article Footer -->
+        <div class="article-footer">
+            <p class="footer-text">¿Te gustó este artículo? Compártelo con otros amantes de las mascotas</p>
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
         </div>
       </div>
 
+    <!-- Footer -->
       <nav>
         {% include 'footer.html' %}
       </nav>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
 

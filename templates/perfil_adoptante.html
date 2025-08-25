@@ -1,0 +1,537 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Adoptante - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+        }
+
+
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .btn-secondary:hover {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .solicitudes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .solicitud-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .solicitud-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .mascota-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .mascota-avatar {
+            width: 70px;
+            height: 70px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .mascota-details h4 {
+            color: #1f2937;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .mascota-details p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.4;
+        }
+
+        .solicitud-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pendiente {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-aprobada {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-rechazada {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .fundacion-info {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .fundacion-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+        }
+        
+        .fundacion-info h5 {
+            color: #065f46;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .fundacion-info .fas {
+            color: #10b981;
+        }
+        
+        .fundacion-info .fundacion-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .fundacion-info .fundacion-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+        }
+        
+        .fundacion-info .fundacion-detail span {
+            color: #6b7280;
+            font-weight: 500;
+            word-break: break-word;
+            flex: 1;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        
+        .fundacion-info .fundacion-detail i {
+            color: #10b981;
+            width: 20px;
+            flex-shrink: 0;
+        }
+
+        .fecha-solicitud {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .no-solicitudes {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .no-solicitudes i {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+
+        .no-solicitudes h3 {
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .no-solicitudes p {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .profile-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .solicitudes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navegador.html' %}
+
+    <div class="container">
+        <!-- Header del Perfil -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h1 class="profile-name">{{ usuario.nombre }}</h1>
+            <p class="profile-email">{{ usuario.email }}</p>
+            <p class="profile-phone">
+                <i class="fas fa-phone"></i> {{ usuario.telefono }}
+            </p>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-number">{{ solicitudes_count }}</div>
+                    <div class="stat-label">Solicitudes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Mascotas Adoptadas</div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <a href="{% url 'home' %}" class="btn btn-info" style="background: #17a2b8; border-color: #17a2b8;">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+                <a href="{% url 'buscador_mascotas' %}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Buscar Mascotas
+                </a>
+                <a href="{% url 'actualizar_perfil_adoptante' %}" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección de Solicitudes de Adopción -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i> Mis Solicitudes de Adopción
+            </h2>
+            
+            {% if solicitudes %}
+                <div class="solicitudes-grid">
+                    {% for solicitud in solicitudes %}
+                    <div class="solicitud-card">
+                        <div class="mascota-info">
+                            <div class="mascota-avatar">
+                                <i class="fas fa-paw"></i>
+                            </div>
+                            <div class="mascota-details">
+                                <h4>{{ solicitud.mascota.nombre_mascota }}</h4>
+                                <p>{{ solicitud.mascota.edad_mascota }} años • {{ solicitud.mascota.tamaño_mascota }}</p>
+                                <p>{{ solicitud.mascota.comuna_mascota }}, {{ solicitud.mascota.region }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de la Fundación -->
+                        <div class="fundacion-info">
+                            {% for mascota_fundacion in solicitud.mascota.mascotafundacion_set.all %}
+                                {% if forloop.first %}
+                                    {% with fundacion=mascota_fundacion.adoptante %}
+                                    <div class="fundacion-details">
+                                        <div class="fundacion-detail">
+                                            <i class="fas fa-building"></i>
+                                            <span>{{ fundacion.nombre }}</span>
+                                        </div>
+                                        <div class="fundacion-detail">
+                                            <i class="fas fa-envelope"></i>
+                                            <span>{{ fundacion.email }}</span>
+                                        </div>
+                                        <div class="fundacion-detail">
+                                            <i class="fas fa-phone"></i>
+                                            <span>{{ fundacion.telefono }}</span>
+                                        </div>
+                                    </div>
+                                    {% endwith %}
+                                {% endif %}
+                            {% empty %}
+                                <div style="color: #6b7280; font-style: italic;">
+                                    <i class="fas fa-exclamation-triangle"></i> Información de fundación no disponible
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="solicitud-status">
+                            <span class="status-badge 
+                                {% if solicitud.estado == 'aprobada' %}status-aprobada
+                                {% elif solicitud.estado == 'rechazada' %}status-rechazada
+                                {% else %}status-pendiente{% endif %}">
+                                {% if solicitud.estado == 'aprobada' %}
+                                    ¡Aprobada! 🎉
+                                {% elif solicitud.estado == 'rechazada' %}
+                                    Rechazada
+                                {% else %}
+                                    Pendiente
+                                {% endif %}
+                            </span>
+                            <span class="fecha-solicitud">
+                                {{ solicitud.fecha_adopcion|date:"d/m/Y" }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-solicitudes">
+                    <i class="fas fa-heart-broken"></i>
+                    <h3>No tienes solicitudes de adopción</h3>
+                    <p>¡Comienza tu búsqueda para encontrar a tu compañero perfecto!</p>
+                    <a href="{% url 'buscador_mascotas' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar Mascotas
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sección de Información Personal -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-user"></i> Información Personal
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #374151; margin-bottom: 0.5rem;">
+                        <i class="fas fa-user" style="color: #10b981;"></i> Nombre Completo
+                    </h4>
+                    <p style="color: #6b7280;">{{ usuario.nombre }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #374151; margin-bottom: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: #10b981;"></i> Correo Electrónico
+                    </h4>
+                    <p style="color: #6b7280;">{{ usuario.email }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #374151; margin-bottom: 0.5rem;">
+                        <i class="fas fa-phone" style="color: #10b981;"></i> Teléfono
+                    </h4>
+                    <p style="color: #6b7280;">{{ usuario.telefono }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #374151; margin-bottom: 0.5rem;">
+                        <i class="fas fa-calendar" style="color: #10b981;"></i> Fecha de Registro
+                    </h4>
+                    <p style="color: #6b7280;">{{ usuario.date_joined|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para las tarjetas
+            const cards = document.querySelectorAll('.solicitud-card, .content-section');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

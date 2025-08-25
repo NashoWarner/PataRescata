@@ -1,48 +1,640 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/nuevamascota.css' %}">
-    <link href='https://fonts.googleapis.com/css?family=Passion One' rel='stylesheet'>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Mascota - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
 
-    <title>Pata Rescata</title>
-  </head>
-  <body>
-    <nav>
-      {% include 'navegador.html' %}
-    </nav>
-    <div class="row">
-      <div class="col">
-        <div class="card p-3">
-          <h5 class="card-title p-2 m-1"  style="font-family:'Passion One'; background-color: #FCBF49; text-align: center; font-size: x-large; ">Agregar Nueva Mascota</h5>
-          <form method="post" enctype="multipart/form-data" >
-            {% csrf_token %}
-            <div class="box p-4 m-2" style="font-family:'Passion One'; background-color: #FCBF49; font-size: x-large;">
-              {{ form2.as_p }}
-            </div>
-            <div class="row text-center">
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-lg btn-success px-5 m-2">Agregar Mascota</button><br>
-              </div>
-              <div class="col-md-6">
-                <a href="{% url 'buscar_animales' %}" class="btn btn-lg btn-warning btn-outline-dark px-5 m-2">Buscar Animales</a>
-              </div>
-            </div>
-          </form>
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #8b5cf6 100%);
+            color: white;
+            padding: 30px 0;
+            box-shadow: 0 4px 20px rgba(30, 27, 75, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            font-size: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Contenedor Principal */
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Formulario */
+        .form-container {
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1e1b4b, #8b5cf6, #7c3aed);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #1e1b4b, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .required::after {
+            content: ' *';
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 20px 25px;
+            border: 2px solid #e5e7eb;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            color: #374151;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 16px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 50px;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* Campo de imagen mejorado */
+        .image-upload-container {
+            border: 2px dashed #d1d5db;
+            border-radius: 30px;
+            padding: 50px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .image-upload-container:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
+        }
+
+        .image-upload-container.dragover {
+            border-color: #8b5cf6;
+            background: #f0f9ff;
+            transform: scale(1.02);
+        }
+
+        .image-upload-icon {
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-container:hover .image-upload-icon {
+            color: #8b5cf6;
+            transform: scale(1.1);
+        }
+
+        .image-upload-text {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .image-upload-hint {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 3px solid #8b5cf6;
+        }
+
+        .form-file {
+            display: none;
+        }
+
+        /* Grid de campos */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-grid .form-group:last-child {
+            grid-column: 1 / -1;
+        }
+
+        /* Botones */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 180px;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e1b4b 0%, #8b5cf6 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(107, 114, 128, 0.4);
+        }
+
+        /* Mensajes de error */
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 3px solid #dc2626;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.2rem;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .form-group:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-paw header-icon"></i>
+                Agregar Nueva Mascota
+            </h1>
+            <p class="header-subtitle">Ayuda a una mascota a encontrar su hogar perfecto</p>
         </div>
-      </div>
-    </div>
-    <footer>
-      {% include 'footer.html' %}
-    </footer>
+    </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
+    <!-- Contenedor Principal -->
+    <main class="main-container">
+        <div class="form-container">
+            <h2 class="form-title">Información de la Mascota</h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form2.nombre_mascota.id_for_label }}" class="form-label required">
+                            Nombre de la Mascota
+                        </label>
+                        {{ form2.nombre_mascota }}
+                        {% if form2.nombre_mascota.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.nombre_mascota.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form2.edad_mascota.id_for_label }}" class="form-label required">
+                            Edad
+                        </label>
+                        {{ form2.edad_mascota }}
+                        {% if form2.edad_mascota.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.edad_mascota.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form2.tamaño_mascota.id_for_label }}" class="form-label required">
+                            Tamaño
+                        </label>
+                        {{ form2.tamaño_mascota }}
+                        {% if form2.tamaño_mascota.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.tamaño_mascota.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form2.region.id_for_label }}" class="form-label required">
+                            Región
+                        </label>
+                        {{ form2.region }}
+                        {% if form2.region.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.region.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form2.comuna_mascota.id_for_label }}" class="form-label required">
+                            Comuna
+                        </label>
+                        {{ form2.comuna_mascota }}
+                        {% if form2.comuna_mascota.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.comuna_mascota.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form2.imagen.id_for_label }}" class="form-label required">
+                            Imagen de la Mascota
+                        </label>
+                        <div class="image-upload-container" id="imageUploadContainer">
+                            <i class="fas fa-cloud-upload-alt image-upload-icon"></i>
+                            <div class="image-upload-text">Arrastra y suelta una imagen aquí</div>
+                            <div class="image-upload-hint">o haz clic para seleccionar un archivo</div>
+                            {{ form2.imagen }}
+                        </div>
+                        {% if form2.imagen.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.imagen.errors.0 }}
+                            </div>
+                        {% endif %}
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="Vista previa">
+                        </div>
+                    </div>
+                </div>
+                    
+                <div class="form-group">
+                    <label for="{{ form2.descripcion.id_for_label }}" class="form-label required">
+                        Descripción
+                    </label>
+                    {{ form2.descripcion }}
+                    {% if form2.descripcion.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form2.descripcion.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar Mascota
+                    </button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver al Inicio
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Funcionalidad de drag & drop para imágenes
+        const imageUploadContainer = document.getElementById('imageUploadContainer');
+        const fileInput = document.getElementById('{{ form2.imagen.id_for_label }}');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        // Prevenir comportamiento por defecto del navegador
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            imageUploadContainer.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Efectos visuales durante el drag
+        ['dragenter', 'dragover'].forEach(eventName => {
+            imageUploadContainer.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            imageUploadContainer.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            imageUploadContainer.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            imageUploadContainer.classList.remove('dragover');
+        }
+
+        // Manejar el drop
+        imageUploadContainer.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFiles(files[0]);
+            }
+        }
+
+        // Click para seleccionar archivo
+        imageUploadContainer.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Manejar cambio de archivo
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFiles(file);
+            }
+        });
+
+        function handleFiles(file) {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    
+                    // Cambiar el texto del contenedor
+                    const uploadText = imageUploadContainer.querySelector('.image-upload-text');
+                    const uploadHint = imageUploadContainer.querySelector('.image-upload-hint');
+                    uploadText.textContent = file.name;
+                    uploadHint.textContent = 'Imagen seleccionada correctamente';
+                    
+                    // Cambiar el icono
+                    const icon = imageUploadContainer.querySelector('.image-upload-icon');
+                    icon.className = 'fas fa-check-circle image-upload-icon';
+                    icon.style.color = '#10b981';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert('Por favor selecciona un archivo de imagen válido.');
+            }
+        }
+
+        // Validación en tiempo real
+        const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    this.style.borderColor = '#dc2626';
+                } else {
+                    this.style.borderColor = '#8b5cf6';
+                }
+            });
+        });
+
+        // Efectos hover para botones
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animación de entrada para los campos
+        const formGroups = document.querySelectorAll('.form-group');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        formGroups.forEach(group => {
+            group.style.opacity = '0';
+            group.style.transform = 'translateY(20px)';
+            group.style.transition = 'all 0.6s ease';
+            observer.observe(group);
+        });
+    </script>
+</body>
 </html>

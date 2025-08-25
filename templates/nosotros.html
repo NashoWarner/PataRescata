@@ -1,52 +1,764 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/nosotros.css' %}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
-    
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <title>Pata rescata</title>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paw" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="15" cy="8" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="12" cy="15" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="7" cy="12" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23paw)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .mission-card, .vision-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before, .vision-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+        }
+
+        .mission-card:hover, .vision-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .card-description {
+            color: #6b7280;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .values-section {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 60px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .value-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .team-section {
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 3rem;
+        }
+
+        .member-info {
+            padding: 25px;
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .member-role {
+            color: #8b5cf6;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .member-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, #f8fafc, #e0e7ff);
+            padding: 80px 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-radius: 20px;
+        }
+
+        .contact-container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-section .section-title {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .contact-section .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .contact-section:hover .section-title::after {
+            width: 120px;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 50px;
+            justify-items: center;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover .contact-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        }
+
+        .contact-text {
+            color: #374151;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Animaciones para la sección de contactos */
+        .contact-item {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .contact-item:nth-child(1) { animation-delay: 0.1s; }
+        .contact-item:nth-child(2) { animation-delay: 0.2s; }
+        .contact-item:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .mission-vision {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+
+            .mission-card, .vision-card {
+                padding: 30px 20px;
+            }
+
+            .values-section {
+                padding: 40px 20px;
+            }
+
+            .contact-section {
+                padding: 40px 20px;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .contact-item {
+                min-width: auto;
+                padding: 25px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .contact-section {
+                padding: 30px 15px;
+            }
+
+            .contact-info {
+                gap: 20px;
+            }
+
+            .contact-item {
+                padding: 20px 15px;
+            }
+
+            .contact-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .contact-text {
+                font-size: 1.1rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
+        .mission-card, .vision-card, .value-item, .team-member {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .mission-card:nth-child(1) { animation-delay: 0.1s; }
+        .mission-card:nth-child(2) { animation-delay: 0.2s; }
+        .value-item:nth-child(1) { animation-delay: 0.3s; }
+        .value-item:nth-child(2) { animation-delay: 0.4s; }
+        .value-item:nth-child(3) { animation-delay: 0.5s; }
+        .value-item:nth-child(4) { animation-delay: 0.6s; }
+        .team-member:nth-child(1) { animation-delay: 0.7s; }
+        .team-member:nth-child(2) { animation-delay: 0.8s; }
+        .team-member:nth-child(3) { animation-delay: 0.9s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .main-content {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    </style>
 </head>
-<nav>
-  {% include 'navegador.html' %}
-</nav>
 <body>
-  <div class="nosotros-box p-5 m-5" style="background-color: rgba(255, 255, 255, 0.852); border-radius: 20px;">
-    <h2 class="titulo text-center">Sobre Nosotros <br> Proyecto PataRescata</h2>
+    {% include 'navegador.html' %}
 
-    <h3 class="subtitulo">Nuestra Historia</h3>
-    <p class="texto">Somos un grupo de tres estudiantes de la carrera de Ingeniería en Informática con una pasión compartida por los animales y una visión clara de cómo la tecnología y la educación pueden marcar la diferencia en la vida de nuestras mascotas y en la sociedad en general. Nuestra iniciativa, titulada "PataRescata", es un proyecto nacido del corazón, cuyo propósito es promover la adopción de animales, concienciar sobre su importancia y dar visibilidad a las fundaciones que hacen posible este proceso.</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Sobre PataRescata</h1>
+            <p class="hero-subtitle">
+                Somos estudiantes de Ingeniería en Informática comprometidos con el bienestar animal, 
+                conectando mascotas necesitadas con familias amorosas. 
+                Nuestra misión es crear un mundo donde cada animal tenga un hogar.
+            </p>
+        </div>
+    </section>
 
-    <h3 class="subtitulo">Nuestros Objetivos</h3>
-    <ul>
-      <li class="texto"><strong>Promover la Adopción Responsable:</strong> Creemos que la adopción es la forma más noble de dar un hogar a una mascota. Nuestro objetivo principal es fomentar la adopción responsable de animales en lugar de la compra, reduciendo así el número de animales sin hogar y brindando una segunda oportunidad a aquellos que más lo necesitan.</li>
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Misión y Visión -->
+        <section class="section">
+            <div class="mission-vision">
+                <div class="mission-card">
+                    <div class="card-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="card-title">Nuestra Misión</h3>
+                    <p class="card-description">
+                        Facilitar la adopción responsable de mascotas, promoviendo el 
+                        bienestar animal y creando conexiones duraderas entre animales 
+                        y familias comprometidas con su cuidado.
+                    </p>
+                </div>
+                
+                <div class="vision-card">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="card-title">Nuestra Visión</h3>
+                    <p class="card-description">
+                        Ser la plataforma líder en adopción de mascotas, 
+                        contribuyendo a un mundo donde no existan animales 
+                        sin hogar y todas las mascotas encuentren familias amorosas.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-      <li class="texto"><strong>Sensibilizar sobre la Importancia de la Adopción:</strong> Deseamos concienciar a la sociedad sobre la importancia de la adopción, mostrando que cada mascota adoptada no solo cambia su propia vida, sino que también impacta positivamente en la vida de quienes las adoptan.</li>
+        <!-- Valores -->
+        <section class="section">
+            <h2 class="section-title">Nuestros Valores</h2>
+            <div class="values-section">
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3 class="value-title">Compasión</h3>
+                        <p class="value-description">
+                            Tratamos a cada animal con amor, respeto y comprensión
+                        </p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="value-title">Responsabilidad</h3>
+                        <p class="value-description">
+                            Nos comprometemos con el bienestar de cada mascota
+                        </p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="value-title">Comunidad</h3>
+                        <p class="value-description">
+                            Construimos una red de apoyo para animales y familias
+                        </p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="value-title">Innovación</h3>
+                        <p class="value-description">
+                            Utilizamos tecnología para mejorar el proceso de adopción
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <li class="texto"><strong>Dar Visibilidad a Fundaciones y Rescatistas:</strong> Reconocemos la labor incansable de las fundaciones y rescatistas que trabajan arduamente para salvar y cuidar de animales en situaciones precarias. Queremos brindarles el reconocimiento y el apoyo que merecen.</li>
-    </ul>
+        <!-- Equipo -->
+        <section class="section team-section">
+            <h2 class="section-title">Nuestro Equipo</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Nicolás Herrera</h3>
+                        <p class="member-role">Back End Developer</p>
+                        <p class="member-description">
+                            Desarrollador especializado en la lógica del servidor, 
+                            APIs y gestión de datos para la plataforma Pata Rescata.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Ignacio Covarrubias</h3>
+                        <p class="member-role">Front End Developer</p>
+                        <p class="member-description">
+                            Desarrollador enfocado en la experiencia del usuario, 
+                            interfaces atractivas y diseño responsive de la aplicación.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Diego Fuentes</h3>
+                        <p class="member-role">DBM - Administrador de Base de Datos</p>
+                        <p class="member-description">
+                            Especialista en gestión y optimización de bases de datos, 
+                            asegurando la integridad y eficiencia de la información.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <h3 class="subtitulo">El Significado de "PataRescata"</h3>
-    <p class="texto">Nuestro nombre, "PataRescata," refleja nuestro enfoque en el rescate mutuo que se produce cuando un ser humano y una mascota se unen. No solo estamos salvando a una mascota dándole un nuevo hogar, sino que también estamos siendo rescatados por su amor, lealtad y alegría incondicional. La palabra "Pata" evoca la imagen de una huella, un rastro de amor y amistad que deja una mascota en nuestras vidas.</p>
+        <!-- Contacto -->
+        <section class="section contact-section">
+            <div class="contact-container">
+                <h2 class="section-title">Contáctanos</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <p class="contact-text">info@patarescata.cl</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <p class="contact-text">+56 9 6448 4168</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <p class="contact-text">Santiago, Chile</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <h3 class="subtitulo">Nuestra Misión</h3>
-    <p class="texto">Nuestra misión es educar a la población sobre la tenencia responsable de mascotas y mostrar que adoptar a un animal no es solo un acto de generosidad, sino una decisión que enriquece la vida de ambas partes. Queremos crear una comunidad comprometida con el bienestar animal y ser un puente entre aquellos que desean adoptar y las fundaciones que necesitan apoyo.</p>
-  </div>
-  <nav>
-    {% include 'faq.html' %}
-  </nav>
-  <nav>
+    <!-- Footer -->
     {% include 'footer.html' %}
-  </nav>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
+                }
+            });
+
+            // Efectos hover para las tarjetas
+            const cards = document.querySelectorAll('.mission-card, .vision-card, .value-item, .team-member');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Animaciones para elementos
+            const elements = document.querySelectorAll('.mission-card, .vision-card, .value-item, .team-member');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Efectos de shimmer para elementos interactivos
+        const interactiveElements = document.querySelectorAll('.card-icon, .value-icon, .contact-icon');
+        interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
+</body>
 </html>
 
 

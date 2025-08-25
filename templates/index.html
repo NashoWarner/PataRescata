@@ -1,46 +1,1002 @@
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Luckiest+Guy" />
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PataRescata - Adopción de Mascotas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
 
-    <title>Pata Rescata</title>
-  </head>
-  <body>
-    <nav>
-        {% include 'navegador.html' %}
-    </nav>
-    <div class="container-fluid">
-      <div class="row">
-        <!-- <div class="col-md-6 d-flex align-items-center">
-          <div class="texto-home text-center m-5">
+        /* Header y Navegación */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #e0e7ff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #e0e7ff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .register-btn {
+            background: transparent;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('{% static "images/dog1.jpg" %}') center/cover no-repeat;
+            opacity: 0.4;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-3px);
+        }
+
+        /* Sección de Estadísticas */
+        .stats-section {
+            background: white;
+            padding: 80px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #8b5cf6;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        /* Sección de Características */
+        .features-section {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .feature-description {
+            color: #6b7280;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Sección de Mascotas Destacadas */
+        .pets-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .pets-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pet-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .pet-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+
+        .pet-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-card:hover .pet-image {
+            transform: scale(1.1);
+        }
+
+        .pet-info {
+            padding: 25px;
+        }
+
+        .pet-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .pet-details {
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .adopt-button {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .adopt-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .adopt-button:hover::before {
+            left: 100%;
+        }
+
+        .adopt-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+            }
+
+            .pets-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 30px;
+            }
+
+            .feature-card {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
+        .feature-card, .pet-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .pet-card:nth-child(1) { animation-delay: 0.4s; }
+        .pet-card:nth-child(2) { animation-delay: 0.5s; }
+        .pet-card:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .stats-section {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .features-section {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .pets-section {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Estado vacío para cuando no hay mascotas */
+        .empty-state {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state:hover {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #f1f5f9 0%, #dbeafe 100%);
+        }
+
+        .empty-state .cta-button {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .empty-state .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Mejoras para las tarjetas de mascotas */
+        .pet-card {
+            position: relative;
+        }
+
+        .pet-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .pet-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Estilos para los botones de acción */
+        .pet-actions {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .info-button {
+            background: #6b7280 !important;
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+
+        .info-button:hover {
+            background: #4b5563 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        /* Responsive para los botones de acción */
+        @media (max-width: 480px) {
+            .pet-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
             
-          </div>
-        </div> -->
-        <div class="col-md-12 home">
-          <img src="{% static 'images/fondoanimales.png' %}" alt="home" class="img-fluid float-end">
-          <div class="float-start my-5" style="font-family:Luckiest Guy; font-size: 40px;color: #582a77;"><p>EL AMOR <br> INCONDICIONAL <br> TE ESPERA</div><br>
-        </div>
-      </div>
-    </div>
-    
-    <div class="box p-5 my-2" style="border-radius:20px; ;background: linear-gradient(to right,#FCBF49, #F0AEFA ,#FCBF49, #F0AEFA);">
+            .info-button {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'navegador.html' %}
 
-    </div>
-    
-    <div>
-      {% include 'buscador_mascotas.html' %}
-    </div>
-    <foter>
-      {% include 'footer.html' %}
-    </foter>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Encuentra tu Compañero Perfecto</h1>
+            <p class="hero-subtitle">
+                Conectamos mascotas necesitadas con familias amorosas. 
+                Únete a nuestra comunidad y ayuda a dar un hogar a un animal 
+                que lo necesita.
+            </p>
+            <div class="hero-buttons">
+                <a href="#mascotas-destacadas" class="cta-button cta-primary" onclick="scrollToMascotas(event)">
+                    <i class="fas fa-search"></i>
+                    Buscar Mascotas
+                </a>
+                <a href="{% url 'nosotros' %}" class="cta-button cta-secondary">
+                    <i class="fas fa-info-circle"></i>
+                    Conoce Más
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Estadísticas -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">150+</span>
+                <div class="stat-label">Mascotas Adoptadas</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <div class="stat-label">Familias Felices</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">25+</span>
+                <div class="stat-label">Fundaciones Aliadas</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <div class="stat-label">Tasa de Éxito</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Características -->
+    <section class="features-section">
+        <div class="features-container">
+            <h2 class="section-title">¿Por qué elegir PataRescata?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="feature-title">Adopción Responsable</h3>
+                    <p class="feature-description">
+                        Nos aseguramos de que cada adopción sea una decisión 
+                        bien pensada y que tanto la mascota como la familia 
+                        estén preparados para esta nueva aventura.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Mascotas Verificadas</h3>
+                    <p class="feature-description">
+                        Todas nuestras mascotas pasan por un proceso de 
+                        verificación médica y de comportamiento para garantizar 
+                        su salud y bienestar.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Soporte Continuo</h3>
+                    <p class="feature-description">
+                        Te acompañamos durante todo el proceso de adopción 
+                        y después, con consejos y recursos para el cuidado 
+                        de tu nueva mascota.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Mascotas Destacadas -->
+    <section class="pets-section" id="mascotas-destacadas">
+                 <div class="pets-container">
+             <h2 class="section-title">Mascotas Destacadas</h2>
+             {% if mascotas_destacadas %}
+             <p class="section-subtitle" style="text-align: center; color: #6b7280; margin-bottom: 2rem; font-size: 1.1rem;">
+                 <i class="fas fa-paw"></i> 
+                 {{ mascotas_destacadas|length }} mascota{{ mascotas_destacadas|length|pluralize:"s" }} disponible{{ mascotas_destacadas|length|pluralize:"s" }} para adopción
+             </p>
+             {% endif %}
+            <div class="pets-grid">
+                {% if mascotas_destacadas %}
+                    {% for mascota in mascotas_destacadas %}
+                    <div class="pet-card">
+                        <div class="pet-image-container">
+                            {% if mascota.imagen %}
+                                <img src="{{ mascota.imagen.url }}" alt="{{ mascota.nombre_mascota }}" class="pet-image">
+                            {% else %}
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #9ca3af; font-size: 3rem;">
+                                    <i class="fas fa-paw"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="pet-info">
+                            <h3 class="pet-name">{{ mascota.nombre_mascota }}</h3>
+                            <p class="pet-details">
+                                <i class="fas fa-birthday-cake"></i> {{ mascota.edad_mascota }}<br>
+                                <i class="fas fa-ruler-vertical"></i> {{ mascota.tamaño_mascota }}<br>
+                                <i class="fas fa-map-marker-alt"></i> {{ mascota.comuna_mascota }}<br>
+                                <i class="fas fa-globe"></i> {{ mascota.region }}
+                            </p>
+                            <p class="pet-foundation" style="color: #8b5cf6; font-weight: 600; margin: 10px 0; font-size: 0.9rem;">
+                                <i class="fas fa-building"></i> 
+                                {% for mascota_fundacion in mascota.mascotafundacion_set.all %}
+                                    {% if forloop.first %}
+                                        {{ mascota_fundacion.adoptante.nombre }}
+                                    {% endif %}
+                                {% empty %}
+                                    Fundación
+                                {% endfor %}
+                            </p>
+                            
+                            <div class="pet-actions" style="display: flex; gap: 10px;">
+                                <button class="adopt-button" onclick="adoptPet('{{ mascota.id }}')" style="flex: 1;">
+                                    <i class="fas fa-heart"></i>
+                                    Adoptar
+                                </button>
+                                <button class="info-button" onclick="verMasMascota('{{ mascota.id }}')" style="flex: 0 0 auto; background: #6b7280; border: none; color: white; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Estado vacío cuando no hay mascotas -->
+                    <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; color: #9ca3af; margin-bottom: 1rem;">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <h3 style="color: #6b7280; margin-bottom: 1rem;">No hay mascotas disponibles</h3>
+                        <p style="color: #9ca3af; margin-bottom: 2rem;">
+                            {% if user.is_authenticated and user.rut_empresa %}
+                                Aún no has agregado mascotas para adopción. ¡Comienza ahora!
+                            {% else %}
+                                Las fundaciones aún no han agregado mascotas para adopción. ¡Sé la primera en hacerlo!
+                            {% endif %}
+                        </p>
+                        {% if user.is_authenticated and user.rut_empresa %}
+                            <!-- Solo mostrar para fundaciones autenticadas -->
+                            <a href="{% url 'agregarmascota' %}" class="cta-button cta-primary" style="display: inline-flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-plus"></i>
+                                Agregar Primera Mascota
+                            </a>
+                        {% else %}
+                            <!-- Para usuarios no autenticados o adoptantes -->
+                            <a href="{% url 'seleccionar_tipo_cuenta' %}" class="cta-button cta-primary" style="display: inline-flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-building"></i>
+                                Registrarse como Fundación
+                            </a>
+                        {% endif %}
+                        
+                        <!-- Debug: mostrar información del usuario -->
+                        {% if debug %}
+                        <div style="background: #f0f0f0; padding: 10px; margin-top: 10px; border-radius: 5px; font-size: 12px;">
+                            <strong>Debug Info:</strong><br>
+                            Usuario autenticado: {{ user.is_authenticated }}<br>
+                            Tiene RUT empresa: {{ user.rut_empresa|yesno:"Sí,No" }}<br>
+                            Nombre: {{ user.nombre|default:"No disponible" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
+                }
+            });
+
+            // Efectos hover para las tarjetas
+            const cards = document.querySelectorAll('.feature-card, .pet-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Animaciones para elementos
+            const elements = document.querySelectorAll('.feature-card, .pet-card');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Contador animado para estadísticas
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                const increment = target / 50;
+                let current = 0;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        stat.textContent = Math.ceil(current) + (stat.textContent.includes('+') ? '+' : '') + (stat.textContent.includes('%') ? '%' : '');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        stat.textContent = stat.textContent.replace(stat.textContent, target + (stat.textContent.includes('+') ? '+' : '') + (stat.textContent.includes('%') ? '%' : ''));
+                    }
+                };
+                
+                // Iniciar contador cuando sea visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(stat);
+            });
+        });
+
+        // Funciones de la página
+        function adoptPet(petId) {
+            // Verificar si el usuario está autenticado
+            if (typeof userAuthenticated !== 'undefined' && userAuthenticated) {
+                // Usuario autenticado, redirigir a generar solicitud
+                window.location.href = `/generar-solicitud-adopcion/${petId}/`;
+            } else {
+                // Usuario no autenticado, preparar adopción y redirigir al login
+                window.location.href = `/preparar-adopcion/${petId}/`;
+            }
+        }
+
+        // Función para mostrar más información de la mascota
+        function verMasMascota(petId) {
+            // Aquí puedes implementar la lógica para mostrar más detalles
+            alert(`Mostrando detalles completos de la mascota ID: ${petId}`);
+            // Redirigir a la página de detalles o mostrar modal
+            // window.location.href = `/mascota/${petId}`;
+        }
+
+        // Función para scroll suave a la sección de mascotas destacadas
+        function scrollToMascotas(event) {
+            event.preventDefault();
+            const mascotasSection = document.getElementById('mascotas-destacadas');
+            if (mascotasSection) {
+                mascotasSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Efectos de shimmer para botones
+        const buttons = document.querySelectorAll('.adopt-button, .cta-button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
 </html>

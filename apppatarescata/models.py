@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager 
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.utils.text import slugify 
 
 
 
@@ -20,6 +21,7 @@ class Mascota(models.Model):
     descripcion = models.CharField(max_length=100)
     imagen = models.ImageField(upload_to='imagenes_mascotas/', blank=True, null=True)
     adopcion_solicitada = models.BooleanField(default=False)
+    disponible = models.BooleanField(default=True)  # True = disponible para adopción, False = no disponible
 
 # Definición del modelo FAQ
 class FAQ(models.Model):
@@ -68,7 +70,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     telefono = models.CharField(max_length=15, validators=[Numero])
     rut_empresa = models.CharField(max_length=20, null=True, blank=True, validators=[rut])
     email_verificado = models.BooleanField(default=False)
-    token_verificacion = models.CharField(max_length=40, default=generar_token)
+    token_verificacion = models.CharField(max_length=100, default=generar_token)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -86,13 +89,23 @@ class MascotaFundacion(models.Model):
 
 # Definición del modelo Adopcion
 class Adopcion(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('aprobada', 'Aprobada'),
+        ('rechazada', 'Rechazada'),
+        ('cancelada', 'Cancelada'),
+    ]
+    
     adoptante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='adopciones_solicitadas')
     fecha_adopcion = models.DateField(auto_now_add=True)
+    fecha_solicitud = models.DateField(auto_now_add=True)
     solicitada = models.BooleanField(default=True)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    fecha_resolucion = models.DateField(null=True, blank=True)
+    comentario_fundacion = models.TextField(blank=True, null=True)
 
     def __str__(self):
-
         return f"{self.adoptante.nombre} adoptó a {self.mascota.nombre_mascota}"
     
 
@@ -114,6 +127,55 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+# Modelo para Artículos del Blog
+class ArticuloBlog(models.Model):
+    CATEGORIAS = [
+        ('adopcion', 'Adopción'),
+        ('cuidados', 'Cuidados'),
+        ('entrenamiento', 'Entrenamiento'),
+        ('salud', 'Salud'),
+        ('medioambiente', 'Medio Ambiente'),
+        ('viajes', 'Viajes con Mascotas'),
+    ]
+
+    titulo = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
+    contenido = models.TextField()
+    resumen = models.TextField(max_length=300, blank=True)
+    imagen = models.ImageField(upload_to='blog/', blank=True, null=True)
+    categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='cuidados')
+    autor = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_publicacion = models.DateTimeField(blank=True, null=True)
+    publicado = models.BooleanField(default=False)
+    destacado = models.BooleanField(default=False)
+    visitas = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['-fecha_publicacion', '-fecha_creacion']
+        verbose_name = 'Artículo del Blog'
+        verbose_name_plural = 'Artículos del Blog'
+
+    def __str__(self):
+        return self.titulo
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.titulo)
+        super().save(*args, **kwargs)
+
+    @property
+    def tiempo_lectura(self):
+        """Calcula el tiempo estimado de lectura en minutos"""
+        palabras = len(self.contenido.split())
+        return max(1, round(palabras / 200))  # 200 palabras por minuto
+
+    def incrementar_visitas(self):
+        """Incrementa el contador de visitas"""
+        self.visitas += 1
+        self.save(update_fields=['visitas'])
 
 
 

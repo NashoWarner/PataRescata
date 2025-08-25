@@ -1,39 +1,637 @@
-{%load static%}
-<!doctype html>
-<html lang="en">
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly - Pata Rescata</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Blog 5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .article-title {
+            font-family: 'Merriweather', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .meta-icon {
+            font-size: 1.2rem;
+        }
+        
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .article-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .article-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .article-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .article-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .article-text {
+            font-size: 1.1rem;
+            color: #34495e;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight-text {
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+        
+        .eco-tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .eco-tip-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .eco-tip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .eco-tip-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .eco-tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: #27ae60;
+        }
+        
+        .eco-tip-icon {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+        
+        .eco-tip-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .eco-tip-text {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .impact-section {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .impact-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .impact-stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .product-recommendations {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .recommendations-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .product-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .product-icon {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .article-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+        
+        .footer-text {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 1rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .article-content {
+                padding: 2rem;
+            }
+            
+            .eco-tips-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 5%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            bottom: 30%;
+            left: 5%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+    </style>
   </head>
+
   <body>
+    <!-- Floating background shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Navigation -->
     <nav>
       {% include 'navegador.html' %}
     </nav>
-    <img src="{% static 'images/art5.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
-      <div class="rectangulo m-5">
-        <div class="container mx-auto d-block">
-            <section>
-                <h1 class="title">Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly</h1>
-                <p class="writer">Escrito por: Nicolás Herrera</p>
-                <p class="Cuerpo">La tenencia responsable de mascotas no solo implica cuidar de nuestros amigos peludos, sino también ser conscientes del impacto ambiental que conlleva. En este artículo, Nicolás Herrera te brinda consejos sobre cómo ser un dueño eco-friendly y reducir tu huella ecológica. Una de las formas más sencillas de ser más sostenible es mediante la elección de productos ecológicos para tus mascotas. Opta por alimentos y productos de cuidado que sean respetuosos con el medio ambiente y producidos de manera sostenible.</p>
-                <p class="Cuerpo">Reduce los desechos al comprar alimentos a granel y utilizar contenedores reutilizables para almacenarlos. Evita los productos desechables, como toallitas húmedas, y opta por opciones lavables y reutilizables. El reciclaje y la disposición adecuada de los desechos de tu mascota son fundamentales. Utiliza bolsas biodegradables para recoger las heces de tu perro y asegúrate de desecharlas correctamente. Además, considera la posibilidad de utilizar areneros ecológicos para gatos.</p>
-                <p class="Cuerpo">Finalmente, considera adoptar prácticas de movilidad sostenible al transportar a tu mascota, como caminar, andar en bicicleta o utilizar transporte público. Ser un dueño eco-friendly no solo beneficia al medio ambiente, sino que también proporciona un ejemplo a seguir para otros dueños de mascotas.</p>
-            </section>
+
+    <div class="article-container">
+        <!-- Article Header -->
+        <div class="article-header">
+            <h1 class="article-title">Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly</h1>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <i class="bi bi-person-circle meta-icon"></i>
+                    <span>Escrito por: Nicolás Herrera</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-calendar3 meta-icon"></i>
+                    <span>Diciembre 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-clock meta-icon"></i>
+                    <span>6 min de lectura</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Image -->
+        <img src="{% static 'images/art5.jpg' %}" alt="Mascotas y medio ambiente" class="article-image">
+
+        <!-- Article Content -->
+        <div class="article-content">
+            <div class="article-section">
+                <h2 class="section-title">Introducción</h2>
+                <p class="article-text">
+                    La tenencia responsable de mascotas no solo implica cuidar de nuestros amigos peludos, sino también ser conscientes del impacto ambiental que conlleva. En este artículo, Nicolás Herrera te brinda consejos sobre cómo ser un dueño eco-friendly y reducir tu huella ecológica.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-lightbulb me-2"></i>Consejo Verde
+                </h3>
+                <p class="highlight-text">
+                    Ser un dueño eco-friendly no solo beneficia al medio ambiente, sino que también puede mejorar la salud de tu mascota y ahorrar dinero a largo plazo.
+                </p>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Productos Ecológicos</h2>
+                <p class="article-text">
+                    Una de las formas más sencillas de ser más sostenible es mediante la elección de productos ecológicos para tus mascotas. Opta por alimentos y productos de cuidado que sean respetuosos con el medio ambiente y producidos de manera sostenible.
+                </p>
+            </div>
+
+            <div class="eco-tips-grid">
+                <div class="eco-tip-card">
+                    <div class="eco-tip-icon">
+                        <i class="bi bi-recycle"></i>
+                    </div>
+                    <h4 class="eco-tip-title">Reduce los Desechos</h4>
+                    <p class="eco-tip-text">
+                        Compra alimentos a granel y utiliza contenedores reutilizables para almacenarlos. Evita los productos desechables.
+                    </p>
+                </div>
+
+                <div class="eco-tip-card">
+                    <div class="eco-tip-icon">
+                        <i class="bi bi-bag-check"></i>
+                    </div>
+                    <h4 class="eco-tip-title">Bolsas Biodegradables</h4>
+                    <p class="eco-tip-text">
+                        Utiliza bolsas biodegradables para recoger las heces de tu perro y asegúrate de desecharlas correctamente.
+                    </p>
+                </div>
+
+                <div class="eco-tip-card">
+                    <div class="eco-tip-icon">
+                        <i class="bi bi-leaf"></i>
+                    </div>
+                    <h4 class="eco-tip-title">Productos Naturales</h4>
+                    <p class="eco-tip-text">
+                        Elige productos de cuidado natural y considera areneros ecológicos para gatos.
+                    </p>
+                </div>
+            </div>
+
+            <div class="impact-section">
+                <h3 class="impact-title">
+                    <i class="bi bi-graph-up me-2"></i>Impacto Ambiental Positivo
+                </h3>
+                <p>Al seguir estas prácticas, puedes reducir significativamente tu huella ecológica</p>
+                
+                <div class="impact-stats">
+                    <div class="impact-stat">
+                        <div class="stat-number">40%</div>
+                        <div class="stat-label">Menos desechos</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">Menos plástico</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="stat-number">30%</div>
+                        <div class="stat-label">Menos emisiones</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Movilidad Sostenible</h2>
+                <p class="article-text">
+                    Finalmente, considera adoptar prácticas de movilidad sostenible al transportar a tu mascota, como caminar, andar en bicicleta o utilizar transporte público. Ser un dueño eco-friendly no solo beneficia al medio ambiente, sino que también proporciona un ejemplo a seguir para otros dueños de mascotas.
+                </p>
+            </div>
+
+            <div class="product-recommendations">
+                <h3 class="recommendations-title">
+                    <i class="bi bi-star me-2"></i>Productos Eco-Friendly Recomendados
+                </h3>
+                <div class="product-list">
+                    <div class="product-item">
+                        <div class="product-icon">
+                            <i class="bi bi-cup-hot"></i>
+                        </div>
+                        <h4 class="product-name">Alimentos Orgánicos</h4>
+                        <p class="product-description">Alimentos sin pesticidas ni químicos dañinos</p>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-icon">
+                            <i class="bi bi-brush"></i>
+                        </div>
+                        <h4 class="product-name">Juguetes Naturales</h4>
+                        <p class="product-description">Juguetes hechos de materiales biodegradables</p>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-icon">
+                            <i class="bi bi-droplet"></i>
+                        </div>
+                        <h4 class="product-name">Shampoo Natural</h4>
+                        <p class="product-description">Productos de higiene sin químicos agresivos</p>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-icon">
+                            <i class="bi bi-box"></i>
+                        </div>
+                        <h4 class="product-name">Camas Recicladas</h4>
+                        <p class="product-description">Camas hechas de materiales reciclados</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-shield-check me-2"></i>Compromiso Ambiental
+                </h3>
+                <p class="highlight-text">
+                    Cada pequeña acción cuenta. Al hacer cambios en la forma en que cuidas a tu mascota, estás contribuyendo a un futuro más sostenible para todos.
+                </p>
+            </div>
+        </div>
+
+        <!-- Article Footer -->
+        <div class="article-footer">
+            <p class="footer-text">¿Te gustó este artículo? Compártelo con otros amantes de las mascotas</p>
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
         </div>
       </div>
 
+    <!-- Footer -->
       <nav>
         {% include 'footer.html' %}
       </nav>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

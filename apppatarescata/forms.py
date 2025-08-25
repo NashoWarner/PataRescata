@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import render
-from apppatarescata.models import FAQ
+from django.utils import timezone
+from apppatarescata.models import FAQ, ArticuloBlog
 
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -148,16 +149,32 @@ def mi_vista(request):
 
 class RegistroUsuarioForm(UserCreationForm):
     email = forms.EmailField()
-    rut_empresa = forms.CharField(max_length=20, required=False)
+    rut_empresa = forms.CharField(max_length=20, required=False, label="RUT de Empresa (opcional)")
+    
+    # Personalizar mensajes de ayuda para contraseñas en español
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].help_text = (
+            '• Tu contraseña no puede ser muy similar a tu información personal.<br>'
+            '• Tu contraseña debe contener al menos 8 caracteres.<br>'
+            '• Tu contraseña no puede ser una contraseña comúnmente utilizada.<br>'
+            '• Tu contraseña no puede ser completamente numérica.'
+        )
+        self.fields['password1'].label = "Contraseña"
+        self.fields['password2'].label = "Confirmar Contraseña"
 
-    def telefono(self):
+    def clean_telefono(self):
         telefono = self.cleaned_data['telefono']
         Numero(telefono)
         return telefono
 
-    def rut_empresa(self):
-        rut_empresa = self.cleaned_data['rut_empresa']
-        rut(rut_empresa)
+    def clean_rut_empresa(self):
+        rut_empresa = self.cleaned_data.get('rut_empresa')
+        
+        # El RUT de empresa es opcional, pero si se proporciona debe ser válido
+        if rut_empresa:
+            rut(rut_empresa)
+        
         return rut_empresa
 
     class Meta:
@@ -166,12 +183,13 @@ class RegistroUsuarioForm(UserCreationForm):
         
 
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Usuario
 
 class ActualizarPerfilForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['email', 'telefono']
+        fields = ['email', 'nombre', 'telefono']
 
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -183,6 +201,15 @@ class ActualizarPerfilForm(forms.ModelForm):
         email = self.cleaned_data.get('email')
         # Puedes agregar otras validaciones de correo electrónico según tus requisitos
         return email
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if nombre:
+            # Limpiar espacios extra y capitalizar
+            nombre = ' '.join(nombre.strip().split())
+            if len(nombre) < 2:
+                raise ValidationError('El nombre debe tener al menos 2 caracteres.')
+        return nombre
 
 
 
@@ -209,3 +236,46 @@ class MascotaForm(forms.ModelForm):
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 3}),
         }
+
+
+# Formulario para Artículos del Blog
+class ArticuloBlogForm(forms.ModelForm):
+    class Meta:
+        model = ArticuloBlog
+        fields = ['titulo', 'contenido', 'resumen', 'imagen', 'categoria', 'destacado', 'publicado']
+        widgets = {
+            'titulo': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Título del artículo...',
+                'maxlength': '200'
+            }),
+            'contenido': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 15,
+                'placeholder': 'Escribe el contenido del artículo aquí...'
+            }),
+            'resumen': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Resumen breve del artículo (máximo 300 caracteres)...',
+                'maxlength': '300'
+            }),
+            'categoria': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'destacado': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'publicado': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hacer el campo imagen opcional
+        self.fields['imagen'].required = False
+        # Establecer fecha de publicación automáticamente si se marca como publicado
+        if self.instance and self.instance.pk and self.data.get('publicado'):
+            if not self.instance.fecha_publicacion:
+                self.instance.fecha_publicacion = timezone.now()

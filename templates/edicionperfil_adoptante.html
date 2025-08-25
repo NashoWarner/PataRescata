@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil Adoptante - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h1 {
+            color: #10b981;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-input.required {
+            border-left: 4px solid #ef4444;
+        }
+
+        .required-field {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .field-icon {
+            color: #10b981;
+            margin-right: 0.5rem;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            .form-card {
+                padding: 2rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <!-- Mensajes de éxito/error -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-header">
+                <h1><i class="fas fa-user-edit"></i> Editar Perfil Adoptante</h1>
+                <p>Actualiza tu información personal para mejorar tu experiencia</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <i class="fas fa-envelope field-icon"></i>
+                        Correo Electrónico <span class="required-field">*</span>
+                    </label>
+                    <input type="email" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}" 
+                           class="form-input" id="{{ form.email.id_for_label }}" required>
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}" class="form-label">
+                        <i class="fas fa-user field-icon"></i>
+                        Nombre Completo <span class="required-field">*</span>
+                    </label>
+                    <input type="text" name="{{ form.nombre.name }}" value="{{ form.nombre.value|default:'' }}" 
+                           class="form-input" id="{{ form.nombre.id_for_label }}" required>
+                    {% if form.nombre.errors %}
+                        <div class="error-message">{{ form.nombre.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.telefono.id_for_label }}" class="form-label">
+                        <i class="fas fa-phone field-icon"></i>
+                        Teléfono <span class="required-field">*</span>
+                    </label>
+                    <input type="tel" name="{{ form.telefono.name }}" value="{{ form.telefono.value|default:'' }}" 
+                           class="form-input" id="{{ form.telefono.id_for_label }}" required>
+                    {% if form.telefono.errors %}
+                        <div class="error-message">{{ form.telefono.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'home' %}" class="btn btn-info">
+                        <i class="fas fa-home"></i> Volver al Inicio
+                    </a>
+                    <a href="{% url 'perfil_adoptante' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver al Perfil
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Eliminar Cuenta
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Agregar clase 'required' a campos obligatorios
+        document.addEventListener('DOMContentLoaded', function() {
+            const requiredFields = document.querySelectorAll('.required-field');
+            requiredFields.forEach(field => {
+                const input = field.closest('.form-group').querySelector('.form-input');
+                if (input) {
+                    input.classList.add('required');
+                }
+            });
+
+            // Mejorar la experiencia del usuario
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                // Agregar placeholder si no hay valor
+                if (!input.value) {
+                    switch(input.type) {
+                        case 'email':
+                            input.placeholder = 'ejemplo@email.com';
+                            break;
+                        case 'text':
+                            input.placeholder = 'Tu nombre completo';
+                            break;
+                        case 'tel':
+                            input.placeholder = '+56 9 1234 5678';
+                            break;
+                    }
+                }
+                
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                    this.style.borderColor = '#10b981';
+                    this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                    if (!this.value) {
+                        this.style.borderColor = '#e5e7eb';
+                        this.style.boxShadow = 'none';
+                    }
+                });
+                
+                // Validación en tiempo real
+                input.addEventListener('input', function() {
+                    if (this.value) {
+                        this.style.borderColor = '#10b981';
+                        this.style.background = 'white';
+                    } else {
+                        this.style.borderColor = '#e5e7eb';
+                        this.style.background = '#f9fafb';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

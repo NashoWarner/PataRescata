@@ -3,106 +3,583 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda - Productos para Mascotas</title>
-  <link rel="stylesheet" href="{% static 'css/nosotros.css' %}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    .card {
-      height: 100%; /* Permite que todas las tarjetas tengan la misma altura */
-      display: flex;
-      flex-direction: column; /* Asegura que el contenido interno esté alineado verticalmente */
-    }
-    .card-img-top {
-      height: 200px; /* Altura fija para las imágenes */
-      width: 100%; /* Ocupa todo el ancho del contenedor */
-      object-fit: contain; /* Mantiene la proporción de la imagen sin recortarla */
-      background-color: #f8f9fa; /* Fondo gris claro para las imágenes */
-      padding: 10px; /* Espaciado interno para evitar bordes muy ajustados */
-    }
-    .card-body {
-      flex-grow: 1; /* Ocupa el espacio restante para mantener el contenido alineado */
-      display: flex;
-      flex-direction: column; /* Permite alinear el botón al final */
-      justify-content: space-between; /* Asegura que el contenido esté distribuido */
-    }
-    .btn-primary {
-      margin-top: auto; /* Empuja el botón hacia el final del contenedor */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paw" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="15" cy="8" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="12" cy="15" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="7" cy="12" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23paw)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Filtros y Ordenamiento */
+        .filters-section {
+            background: white;
+            padding: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+        }
+
+        .filters-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            color: #374151;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(124, 58, 237, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .overlay-button {
+            background: white;
+            color: #8b5cf6;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+        }
+
+        .product-card:hover .overlay-button {
+            transform: translateY(0);
+        }
+
+        .overlay-button:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .product-description {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .buy-button {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .buy-button:hover::before {
+            left: 100%;
+        }
+
+        .buy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Estados de carga y vacío */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-select {
+                min-width: auto;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .main-content {
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .product-card {
+                margin: 0 10px;
+            }
+        }
+
+        /* Animaciones */
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .filters-section {
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    </style>
 </head>
-<body style="background-color: #f9f9f9; overflow-x: hidden;">
+<body>
+    {% include 'navegador.html' %}
 
-<!-- Header -->
-<nav>
-  {% include 'navegador.html' %}
-</nav>
-
-<header class="bg-white shadow-sm">
-  <div class="container-fluid py-3 px-4">
-    <div class="d-flex justify-content-between align-items-center">
-      <a href="/" class="navbar-brand d-flex align-items-center">
-        <span class="ms-2 fw-bold text-primary"></span>
-      </a>
-      <div class="d-flex align-items-center">
-        {% if user.is_authenticated %}
-          <span class="text-secondary me-3">Hola, {{ user.username }}</span>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- Main Content -->
-<div class="container mt-4">
-  <!-- Filtro de Categoría y Ordenamiento -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <form method="get" id="filtro-form" class="d-flex">
-      <select name="categoria" class="form-select me-2 w-auto" onchange="document.getElementById('filtro-form').submit();">
-        <option value="">Todas las categorías</option>
-        <option value="comida" {% if categoria_seleccionada == "comida" %}selected{% endif %}>Comida para Perros</option>
-        <option value="juguetes" {% if categoria_seleccionada == "juguetes" %}selected{% endif %}>Juguetes para Perros</option>
-      </select>
-      <select name="ordenar_por" class="form-select w-auto" onchange="document.getElementById('filtro-form').submit();">
-        <option value="">Ordenar por...</option>
-        <option value="precio_asc" {% if ordenar_por == "precio_asc" %}selected{% endif %}>Precio: Bajo a Alto</option>
-        <option value="precio_desc" {% if ordenar_por == "precio_desc" %}selected{% endif %}>Precio: Alto a Bajo</option>
-      </select>
-    </form>
-  </div>
-
-  <!-- Productos -->
-  <div class="row g-4">
-    {% for producto in productos %}
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-        <div class="card-body">
-          <h5 class="card-title">{{ producto.nombre }}</h5>
-          <p class="card-text text-muted">{{ producto.descripcion }}</p>
-          <p class="fw-bold text-success">Precio: ${{ producto.precio|floatformat:0|intcomma }}</p>
-          {% if producto.enlace %}
-            <a href="{{ producto.enlace }}" target="_blank" class="btn btn-primary w-100">Comprar ahora</a>
-          {% else %}
-            <p class="text-muted text-center">No disponible para compra</p>
-          {% endif %}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Tienda PataRescata</h1>
+            <p class="hero-subtitle">
+                Descubre productos de calidad para el cuidado y bienestar de tu mascota. 
+                Desde alimentos premium hasta juguetes divertidos, todo lo que necesitas 
+                para hacer feliz a tu compañero peludo.
+            </p>
         </div>
-      </div>
-    </div>
-    {% empty %}
-    <p class="text-center">No se encontraron productos para esta categoría.</p>
-    {% endfor %}
-  </div>
-</div>
+    </section>
 
-<footer>
-  <nav>
+    <!-- Filtros y Ordenamiento -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="categoria">Categoría:</label>
+                <select name="categoria" id="categoria" class="filter-select" onchange="filterProducts()">
+                    <option value="">Todas las categorías</option>
+                    <option value="alimentos">Alimentos</option>
+                    <option value="juguetes">Juguetes</option>
+                    <option value="accesorios">Accesorios</option>
+                    <option value="cuidado">Cuidado</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="ordenar">Ordenar por:</label>
+                <select name="ordenar" id="ordenar" class="filter-select" onchange="sortProducts()">
+                    <option value="">Ordenar por...</option>
+                    <option value="precio_asc">Precio: Menor a Mayor</option>
+                    <option value="precio_desc">Precio: Mayor a Menor</option>
+                    <option value="nombre">Nombre A-Z</option>
+                    <option value="popularidad">Popularidad</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        {% if productos %}
+            <div class="products-grid">
+                {% for producto in productos %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="product-image">
+                        {% else %}
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #9ca3af; font-size: 3rem;">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="product-overlay">
+                            <button class="overlay-button" onclick="viewProduct('{{ producto.id }}')">
+                                <i class="fas fa-eye"></i> Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-title">{{ producto.nombre }}</h3>
+                        <p class="product-description">{{ producto.descripcion }}</p>
+                        
+                        <div class="product-price">
+                            <span class="price-label">Precio:</span>
+                            <span>${{ producto.precio|floatformat:0 }}</span>
+                        </div>
+                        
+                        <button class="buy-button" onclick="buyProduct('{{ producto.id }}')">
+                            <i class="fas fa-shopping-cart"></i>
+                            Comprar ahora
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>No hay productos disponibles</h3>
+                <p>Prueba ajustando los filtros o vuelve más tarde</p>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
     {% include 'footer.html' %}
-  </nav>
-</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(30, 27, 75, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
+                }
+            });
+
+            // Efectos hover para las tarjetas de productos
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Animaciones para elementos del formulario
+            const filterSelects = document.querySelectorAll('.filter-select');
+            filterSelects.forEach((select, index) => {
+                select.style.animationDelay = `${index * 0.1}s`;
+                select.style.animation = 'fadeInUp 0.6s ease forwards';
+                select.style.opacity = '0';
+                select.style.transform = 'translateY(20px)';
+            });
+        });
+
+        // Funciones de filtrado y ordenamiento
+        function filterProducts() {
+            const categoria = document.getElementById('categoria').value;
+            const ordenar = document.getElementById('ordenar').value;
+            
+            // Construir URL con parámetros
+            let url = '{% url "tienda" %}?';
+            if (categoria) url += `categoria=${categoria}&`;
+            if (ordenar) url += `ordenar_por=${ordenar}`;
+            
+            // Redirigir a la URL filtrada
+            window.location.href = url;
+        }
+
+        function sortProducts() {
+            filterProducts();
+        }
+
+        function viewProduct(productId) {
+            // Aquí puedes implementar la vista detallada del producto
+            alert(`Vista detallada del producto ID: ${productId}`);
+        }
+
+        function buyProduct(productId) {
+            // Aquí puedes implementar la lógica de compra
+            alert(`Producto agregado al carrito: ${productId}`);
+        }
+
+        // Efectos de shimmer para botones
+        const buttons = document.querySelectorAll('.buy-button, .overlay-button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
 </body>
 </html>

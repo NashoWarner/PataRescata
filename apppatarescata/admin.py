@@ -1,5 +1,6 @@
 from django.contrib import admin
-from apppatarescata.models import Producto
+from django.utils import timezone
+from apppatarescata.models import Producto, ArticuloBlog
 
 productos = [
     {
@@ -86,7 +87,6 @@ juguetes = [
         "categoria": "juguetes"
     }
 ]
-
 # Crea o actualiza productos y juguetes
 for producto in productos + juguetes:
     if not Producto.objects.filter(nombre=producto["nombre"]).exists():
@@ -108,3 +108,37 @@ for producto in productos + juguetes:
         prod.save()
 
 print("Productos y juguetes creados o actualizados exitosamente.")
+
+
+# Configuración del Admin para Artículos del Blog
+@admin.register(ArticuloBlog)
+class ArticuloBlogAdmin(admin.ModelAdmin):
+    list_display = ['titulo', 'categoria', 'autor', 'fecha_creacion', 'publicado', 'destacado', 'visitas']
+    list_filter = ['categoria', 'publicado', 'destacado', 'fecha_creacion', 'fecha_publicacion']
+    search_fields = ['titulo', 'contenido', 'resumen']
+    list_editable = ['publicado', 'destacado']
+    readonly_fields = ['fecha_creacion', 'visitas', 'slug']
+    prepopulated_fields = {'slug': ('titulo',)}
+    
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('titulo', 'slug', 'categoria', 'autor')
+        }),
+        ('Contenido', {
+            'fields': ('resumen', 'contenido', 'imagen')
+        }),
+        ('Publicación', {
+            'fields': ('publicado', 'destacado', 'fecha_publicacion')
+        }),
+        ('Estadísticas', {
+            'fields': ('fecha_creacion', 'visitas'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not change:  # Si es un nuevo artículo
+            obj.autor = request.user
+        if form.cleaned_data['publicado'] and not obj.fecha_publicacion:
+            obj.fecha_publicacion = timezone.now()
+        super().save_model(request, obj, form, change)

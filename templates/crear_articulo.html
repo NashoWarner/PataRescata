@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Artículo - PataRescata</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-section h3 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section h3 i {
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-check {
+            margin-bottom: 1rem;
+        }
+
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+            border: 2px solid #667eea;
+        }
+
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .character-count {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        .character-count.warning {
+            color: #ffc107;
+        }
+
+        .character-count.danger {
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="bi bi-plus-circle"></i> Crear Nuevo Artículo</h1>
+            <p>Comparte conocimiento y experiencias sobre el cuidado de mascotas</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Información Básica -->
+                <div class="form-section">
+                    <h3><i class="bi bi-info-circle"></i> Información Básica</h3>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.titulo.id_for_label }}" class="form-label">
+                            <i class="bi bi-type-bold"></i> Título del Artículo
+                        </label>
+                        {{ form.titulo }}
+                        <div class="help-text">Escribe un título atractivo y descriptivo (máximo 200 caracteres)</div>
+                        <div class="character-count" id="titulo-count">0/200</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.categoria.id_for_label }}" class="form-label">
+                            <i class="bi bi-tags"></i> Categoría
+                        </label>
+                        {{ form.categoria }}
+                        <div class="help-text">Selecciona la categoría que mejor describa tu artículo</div>
+                    </div>
+                </div>
+
+                <!-- Contenido -->
+                <div class="form-section">
+                    <h3><i class="bi bi-file-text"></i> Contenido del Artículo</h3>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.resumen.id_for_label }}" class="form-label">
+                            <i class="bi bi-card-text"></i> Resumen
+                        </label>
+                        {{ form.resumen }}
+                        <div class="help-text">Escribe un resumen breve y atractivo (máximo 300 caracteres)</div>
+                        <div class="character-count" id="resumen-count">0/300</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.contenido.id_for_label }}" class="form-label">
+                            <i class="bi bi-pencil-square"></i> Contenido Completo
+                        </label>
+                        {{ form.contenido }}
+                        <div class="help-text">Escribe el contenido completo de tu artículo. Puedes usar HTML básico para formato</div>
+                    </div>
+                </div>
+
+                <!-- Imagen y Configuración -->
+                <div class="form-section">
+                    <h3><i class="bi bi-image"></i> Imagen y Configuración</h3>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.imagen.id_for_label }}" class="form-label">
+                            <i class="bi bi-camera"></i> Imagen del Artículo
+                        </label>
+                        {{ form.imagen }}
+                        <div class="help-text">Agrega una imagen representativa para tu artículo (opcional)</div>
+                        <div class="image-preview" id="image-preview" style="display: none;">
+                            <img id="preview-img" src="" alt="Vista previa">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.destacado }}
+                            <label class="form-check-label" for="{{ form.destacado.id_for_label }}">
+                                <i class="bi bi-star"></i> Marcar como Artículo Destacado
+                            </label>
+                        </div>
+                        <div class="help-text">Los artículos destacados aparecen en la página principal del blog</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.publicado }}
+                            <label class="form-check-label" for="{{ form.publicado.id_for_label }}">
+                                <i class="bi bi-eye"></i> Publicar Inmediatamente
+                            </label>
+                        </div>
+                        <div class="help-text">Si no lo marcas, el artículo se guardará como borrador</div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Crear Artículo
+                    </button>
+                    <a href="{% url 'gestionar_blog' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Contador de caracteres para el título
+        const tituloInput = document.getElementById('{{ form.titulo.id_for_label }}');
+        const tituloCount = document.getElementById('titulo-count');
+        
+        tituloInput.addEventListener('input', function() {
+            const length = this.value.length;
+            tituloCount.textContent = `${length}/200`;
+            
+            if (length > 180) {
+                tituloCount.className = 'character-count warning';
+            } else if (length > 190) {
+                tituloCount.className = 'character-count danger';
+            } else {
+                tituloCount.className = 'character-count';
+            }
+        });
+
+        // Contador de caracteres para el resumen
+        const resumenInput = document.getElementById('{{ form.resumen.id_for_label }}');
+        const resumenCount = document.getElementById('resumen-count');
+        
+        resumenInput.addEventListener('input', function() {
+            const length = this.value.length;
+            resumenCount.textContent = `${length}/300`;
+            
+            if (length > 270) {
+                resumenCount.className = 'character-count warning';
+            } else if (length > 290) {
+                resumenCount.className = 'character-count danger';
+            } else {
+                resumenCount.className = 'character-count';
+            }
+        });
+
+        // Vista previa de imagen
+        const imagenInput = document.getElementById('{{ form.imagen.id_for_label }}');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        
+        imagenInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        // Inicializar contadores
+        tituloInput.dispatchEvent(new Event('input'));
+        resumenInput.dispatchEvent(new Event('input'));
+    </script>
+</body>
+</html>

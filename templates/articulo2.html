@@ -1,41 +1,583 @@
 
-{%load static%}
-<!doctype html>
-<html lang="en">
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/articulo.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>La Alimentación Adecuada para Tu Mascota - Pata Rescata</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Blog 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .article-title {
+            font-family: 'Merriweather', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .meta-icon {
+            font-size: 1.2rem;
+        }
+        
+        .article-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .article-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .article-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .article-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .article-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .article-text {
+            font-size: 1.1rem;
+            color: #34495e;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight-text {
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+        
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .nutrition-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nutrition-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .nutrition-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .nutrition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        
+        .nutrition-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .nutrition-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .nutrition-text {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .table-header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .table-content {
+            padding: 2rem;
+        }
+        
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .comparison-item {
+            text-align: center;
+        }
+        
+        .comparison-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-text {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .article-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+        
+        .footer-text {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 1rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .article-content {
+                padding: 2rem;
+            }
+            
+            .nutrition-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 5%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            bottom: 30%;
+            left: 5%;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+    </style>
   </head>
+
   <body>
+    <!-- Floating background shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Navigation -->
     <nav>
       {% include 'navegador.html' %}
     </nav>
-    <img src="{% static 'images/art2.jpg' %}" alt="Imagen de Portada" class="rounded mx-auto d-block" style="margin-top: 10%;">
-      <div class="rectangulo m-5">
-        <div class="container mx-auto d-block">
-            <section>
-                <h1 class="title">"La Alimentación Adecuada para Tu Mascota: Claves para una Vida Saludabl</h1>
-                <p class="writer">Escrito por: Ignacio Covarrubias</p>
-                <p class="Cuerpo">La nutrición es esencial para mantener a tu mascota sana y activa. Aquí, aprenderás las claves para elegir la alimentación adecuada y brindarle a tu compañero una vida saludable y feliz. Las mascotas tienen necesidades dietéticas únicas. La alimentación de tu mascota debe adaptarse a su edad, tamaño y nivel de actividad. Las mascotas jóvenes necesitan alimentos ricos en proteínas y grasas para su crecimiento, mientras que las mascotas mayores pueden necesitar una dieta más baja en calorías.</p>
-                <p class="Cuerpo">La comida seca y húmeda tiene sus ventajas y desventajas. La comida seca puede ayudar a mantener la salud bucal, mientras que la comida húmeda proporciona hidratación adicional. Es importante encontrar un equilibrio entre ambos tipos de alimentos. Lee las etiquetas de los alimentos para mascotas con atención. Asegúrate de que los ingredientes principales sean fuentes de proteína de alta calidad, como el pollo o el pavo. Evita los alimentos que contengan rellenos innecesarios y subproductos.</p>
-                <p class="Cuerpo">Mantén un horario regular de alimentación y controla la cantidad de comida que le das a tu mascota para evitar el sobrepeso. Consulta a tu veterinario para obtener recomendaciones específicas sobre la alimentación de tu mascota.</p>
-            </section>
+
+    <div class="article-container">
+        <!-- Article Header -->
+        <div class="article-header">
+            <h1 class="article-title">La Alimentación Adecuada para Tu Mascota: Claves para una Vida Saludable</h1>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <i class="bi bi-person-circle meta-icon"></i>
+                    <span>Escrito por: Ignacio Covarrubias</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-calendar3 meta-icon"></i>
+                    <span>Diciembre 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="bi bi-clock meta-icon"></i>
+                    <span>6 min de lectura</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Image -->
+        <img src="{% static 'images/art2.jpg' %}" alt="Alimentación saludable para mascotas" class="article-image">
+
+        <!-- Article Content -->
+        <div class="article-content">
+            <div class="article-section">
+                <h2 class="section-title">Introducción</h2>
+                <p class="article-text">
+                    La nutrición es esencial para mantener a tu mascota sana y activa. Aquí, aprenderás las claves para elegir la alimentación adecuada y brindarle a tu compañero una vida saludable y feliz.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-lightbulb me-2"></i>Consejo Fundamental
+                </h3>
+                <p class="highlight-text">
+                    Una alimentación balanceada es la base de la salud de tu mascota. Invierte tiempo en aprender sobre sus necesidades nutricionales específicas.
+                </p>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Necesidades Dietéticas Únicas</h2>
+                <p class="article-text">
+                    Las mascotas tienen necesidades dietéticas únicas. La alimentación de tu mascota debe adaptarse a su edad, tamaño y nivel de actividad. Las mascotas jóvenes necesitan alimentos ricos en proteínas y grasas para su crecimiento, mientras que las mascotas mayores pueden necesitar una dieta más baja en calorías.
+                </p>
+            </div>
+
+            <div class="nutrition-grid">
+                <div class="nutrition-card">
+                    <div class="nutrition-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4 class="nutrition-title">Mascotas Jóvenes</h4>
+                    <p class="nutrition-text">
+                        Necesitan alimentos ricos en proteínas y grasas para su desarrollo y crecimiento óptimo.
+                    </p>
+                </div>
+
+                <div class="nutrition-card">
+                    <div class="nutrition-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <h4 class="nutrition-title">Mascotas Adultas</h4>
+                    <p class="nutrition-text">
+                        Requieren una dieta balanceada que mantenga su peso ideal y energía diaria.
+                    </p>
+                </div>
+
+                <div class="nutrition-card">
+                    <div class="nutrition-icon">
+                        <i class="bi bi-person-heart"></i>
+                    </div>
+                    <h4 class="nutrition-title">Mascotas Mayores</h4>
+                    <p class="nutrition-text">
+                        Benefician de alimentos más bajos en calorías y con suplementos para articulaciones.
+                    </p>
+                </div>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Tipos de Alimentación</h2>
+                <p class="article-text">
+                    La comida seca y húmeda tiene sus ventajas y desventajas. La comida seca puede ayudar a mantener la salud bucal, mientras que la comida húmeda proporciona hidratación adicional. Es importante encontrar un equilibrio entre ambos tipos de alimentos.
+                </p>
+            </div>
+
+            <div class="comparison-table">
+                <div class="table-header">
+                    <h3><i class="bi bi-bar-chart me-2"></i>Comparación de Alimentos</h3>
+                </div>
+                <div class="table-content">
+                    <div class="comparison-row">
+                        <div class="comparison-item">
+                            <div class="comparison-title">Comida Seca</div>
+                            <div class="comparison-text">Ayuda a mantener la salud bucal y es más económica</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-title">Comida Húmeda</div>
+                            <div class="comparison-text">Proporciona hidratación adicional y es más apetecible</div>
+                        </div>
+                    </div>
+                    <div class="comparison-row">
+                        <div class="comparison-item">
+                            <div class="comparison-title">Ventajas</div>
+                            <div class="comparison-text">Larga duración, fácil almacenamiento, beneficios dentales</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-title">Ventajas</div>
+                            <div class="comparison-text">Alto contenido de agua, mayor palatabilidad, fácil digestión</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Leer las Etiquetas</h2>
+                <p class="article-text">
+                    Lee las etiquetas de los alimentos para mascotas con atención. Asegúrate de que los ingredientes principales sean fuentes de proteína de alta calidad, como el pollo o el pavo. Evita los alimentos que contengan rellenos innecesarios y subproductos.
+                </p>
+            </div>
+
+            <div class="article-section">
+                <h2 class="section-title">Horarios y Cantidades</h2>
+                <p class="article-text">
+                    Mantén un horario regular de alimentación y controla la cantidad de comida que le das a tu mascota para evitar el sobrepeso. Consulta a tu veterinario para obtener recomendaciones específicas sobre la alimentación de tu mascota.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3 class="highlight-title">
+                    <i class="bi bi-shield-check me-2"></i>Recomendación Profesional
+                </h3>
+                <p class="highlight-text">
+                    Siempre consulta con tu veterinario antes de cambiar la dieta de tu mascota. Ellos conocen mejor las necesidades específicas de tu compañero.
+                </p>
+            </div>
+        </div>
+
+        <!-- Article Footer -->
+        <div class="article-footer">
+            <p class="footer-text">¿Te gustó este artículo? Compártelo con otros amantes de las mascotas</p>
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
         </div>
       </div>
 
+    <!-- Footer -->
       <nav>
         {% include 'footer.html' %}
       </nav>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
 

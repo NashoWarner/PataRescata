@@ -1,114 +1,452 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<html lang="en">
-  <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Luckiest+Guy">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Passion+One">
 
-    <title>Pata Rescata | blog</title>
-  </head>
-  <body>
+        /* Hero Section del Blog */
+        .blog-hero {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    <nav>
-        {% include 'navegador.html' %}
-    </nav>
-    <div class="row mx-5">
-        <div>
-            <p class="col offset-md-6 titulo text-center"><br>PataRescata <br> Blog</p>
+        .blog-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paw" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="6" cy="6" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="14" cy="6" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="6" cy="14" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="14" cy="14" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23paw)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .blog-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .blog-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Grid de Artículos */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        /* Artículo Destacado */
+        .featured-article {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #8b5cf6 0%, #f59e0b 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: stretch;
+            min-height: 300px;
+        }
+
+        .featured-image {
+            flex: 1;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .featured-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .featured-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        .featured-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .read-button {
+            background: #f59e0b;
+            color: #000;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .read-button:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Artículos Regulares */
+        .article-card {
+            background: white;
+            border: 3px solid #8b5cf6;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #f59e0b;
+            border-radius: 20px;
+            margin: 3px;
+            pointer-events: none;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover .article-image img {
+            transform: scale(1.1);
+        }
+
+        .article-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .article-button {
+            background: #f59e0b;
+            color: #000;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .article-button:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .featured-article {
+                flex-direction: column;
+            }
+
+            .featured-image {
+                min-height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .blog-title {
+                font-size: 2.5rem;
+            }
+
+            .blog-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+
+            .featured-content {
+                padding: 30px 20px;
+            }
+
+            .featured-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-title {
+                font-size: 2rem;
+            }
+
+            .blog-subtitle {
+                font-size: 1rem;
+            }
+
+            .featured-article {
+                min-height: 250px;
+            }
+
+            .article-card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animaciones */
+        .featured-article, .article-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .featured-article { animation-delay: 0.1s; }
+        .article-card:nth-child(2) { animation-delay: 0.2s; }
+        .article-card:nth-child(3) { animation-delay: 0.3s; }
+        .article-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navegador.html' %}
+
+    <!-- Hero Section del Blog -->
+    <section class="blog-hero">
+        <div class="blog-hero-content">
+            <h1 class="blog-title">PATARESCATA<br><span style="font-size: 0.8em;">BLOG</span></h1>
+            <p class="blog-subtitle">
+                ¡Bienvenidos a la sección educativa de PataRescata! 
+                ¡Aprende cómo cuidar y educar a tu mascota como un experto! 
+                ¿Qué esperas para aprender más?
+            </p>
         </div>
-    </div>
-    <div class="row mx-5">
-        <div>
-            <p class="col offset-md-6 text-center subtitulo"><br>Bienvenidos a la sección educativa de PataRescata! ¡Aprende cómo cuidar y educar a tu mascota como un experto! ¿Qué esperas para aprender más?</p>
-        </div>
-    </div>
-   
-    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
-        <div class="col offset-md-6">
-            <div class="cuadrado-morado">
-                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
-                    <img src="{% static 'images/art5.jpg' %}" class="img-fluid" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
-                    <div class="card-body">
-                        <h5 class="card-title">"Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly"</h5>
-                        <p class="card-text"></p>
-                        <a href="/articulo5" class="btn btn-warning" style="width: 234px;">Leer</a>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
-    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
-        <div class="col offset-md-6">
-            <div class="cuadrado-morado">
-                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
-                    <img src="{% static 'images/art4.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
-                    <div class="card-body">
-                        <h5 class="card-title">"Adoptar vs. Comprar: ¿Cuál es la Mejor Opción para Tu Nueva Mascota?"</h5>
-                        <p class="card-text"></p>
-                        <a href="/articulo4" class="btn btn-warning" style="width: 234px;">Leer</a>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
-    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
-        <div class="col offset-md-6">
-            <div class="cuadrado-morado">
-                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
-                    <img src="{% static 'images/art3.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
-                    <div class="card-body">
-                        <h5 class="card-title">"Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar"</h5>
-                        <p class="card-text"></p>
-                        <a href="/articulo3" class="btn btn-warning" style="width: 234px;">Leer</a>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
-    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
-        <div class="col offset-md-6">
-            <div class="cuadrado-morado">
-                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
-                    <img src="{% static 'images/art2.jpg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
-                    <div class="card-body">
-                        <h5 class="card-title">"La Alimentación Adecuada para Tu Mascota: Claves para una Vida Saludable"</h5>
-                        <p class="card-text"></p>
-                        <a href="/articulo2" class="btn btn-warning" style="width: 234px;">Leer</a>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
-    <div class="row mx-5 my-4" style="border-color: #FCBF49; border-width: 5px;">   
-        <div class="col offset-md-6">
-            <div class="cuadrado-morado">
-                <div class="card" style="border-radius: 30px; border-color: #FCBF49; border-width: 5px;">
-                    <img src="{% static 'images/art1.jpeg' %}" class="card-img-top" alt="Descripción de la imagen" width="auto" height="280px" style="border-radius: 26px;">
-                    <div class="card-body">
-                        <h5 class="card-title">"Cómo Preparar a Tu Mascota para Viajar en Avión"</h5>
-                        <p class="card-text"></p>
-                        <a href="/articulo1" class="btn btn-warning" style="width: 234px;">Leer</a>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
+    </section>
 
-    
-    <nav>
-        {% include 'footer.html' %}
-    </nav>
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Grid de Artículos -->
+        <div class="blog-grid">
+            <!-- Artículo Destacado -->
+            <article class="featured-article">
+                <div class="featured-image">
+                    <img src="{% static 'images/art5.jpeg' %}" alt="Mascotas y Medio Ambiente">
+                </div>
+                <div class="featured-content">
+                    <h2 class="featured-title">
+                        "Las Mascotas y el Medio Ambiente: Cómo Ser un Dueño Eco-Friendly"
+                    </h2>
+                    <a href="{% url 'articulo5' %}" class="read-button">Leer</a>
+                </div>
+            </article>
 
+            <!-- Artículo 1 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="{% static 'images/art1.jpeg' %}" alt="Adoptar vs Comprar">
+                </div>
+                <div class="article-content">
+                    <h3 class="article-title">
+                        Adoptar vs. Comprar: ¿Cuál es la Mejor Opción para Tu Nueva Mascota?
+                    </h3>
+                    <a href="{% url 'articulo4' %}" class="article-button">Leer</a>
+                </div>
+            </article>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
+            <!-- Artículo 2 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="{% static 'images/art2.jpeg' %}" alt="Entrenamiento de Perros">
+                </div>
+                <div class="article-content">
+                    <h3 class="article-title">
+                        Cómo Entrenar a Tu Perro para que Sea un Ciudadano Ejemplar
+                    </h3>
+                    <a href="{% url 'articulo3' %}" class="article-button">Leer</a>
+                </div>
+            </article>
+
+            <!-- Artículo 3 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="{% static 'images/art3.jpeg' %}" alt="Alimentación de Mascotas">
+                </div>
+                <div class="article-content">
+                    <h3 class="article-title">
+                        La Alimentación Adecuada para Tu Mascota: Claves para una Vida Saludable
+                    </h3>
+                    <a href="{% url 'articulo2' %}" class="article-button">Leer</a>
+                </div>
+            </article>
+
+            <!-- Artículo 4 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="{% static 'images/art4.jpeg' %}" alt="Viajar con Mascotas">
+                </div>
+                <div class="article-content">
+                    <h3 class="article-title">
+                        Cómo Preparar a Tu Mascota para Viajar en Avión
+                    </h3>
+                    <a href="{% url 'articulo1' %}" class="article-button">Leer</a>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de scroll para el header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(139, 92, 246, 0.95)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
+                }
+            });
+
+            // Efectos hover para las tarjetas
+            const cards = document.querySelectorAll('.featured-article, .article-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Efectos para el logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+
+            // Animaciones para elementos
+            const elements = document.querySelectorAll('.featured-article, .article-card');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Efectos de shimmer para botones
+        const buttons = document.querySelectorAll('.read-button, .article-button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
 </html>

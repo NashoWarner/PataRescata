@@ -1,0 +1,623 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidado Animal - PataRescata</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        /* Forzar el tamaño correcto del navbar */
+        .navbar {
+            padding: 0.3rem 0 !important;
+            min-height: auto !important;
+            height: auto !important;
+        }
+
+        .navbar-brand {
+            padding: 0.25rem 0 !important;
+        }
+
+        .nav-link {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        .btn-logout, .btn-login {
+            padding: 0.3rem 0.6rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        /* Responsive para el navbar */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                padding: 0.5rem !important;
+            }
+            
+            .nav-link {
+                margin: 0.2rem 0 !important;
+                padding: 0.3rem 0.5rem !important;
+            }
+        }
+
+
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1e1b4b, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .care-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .care-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .care-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(30, 27, 75, 0.2);
+            border-color: #1e1b4b;
+        }
+
+        .care-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e1b4b, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(30, 27, 75, 0.3);
+        }
+
+        .care-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .care-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .care-tips {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            border-left: 4px solid #1e1b4b;
+        }
+
+        .care-tips h4 {
+            color: #1e1b4b;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .care-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .care-tips li {
+            color: #6b7280;
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .care-tips li::before {
+            content: '🐾';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+        }
+
+        .emergency-section {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 2px solid #fecaca;
+        }
+
+        .emergency-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .emergency-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .emergency-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid #fecaca;
+            transition: all 0.3s ease;
+        }
+
+        .emergency-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.15);
+        }
+
+        .emergency-item h4 {
+            color: #dc2626;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .emergency-item p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .resources-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #1e1b4b, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .resource-item:hover {
+            border-color: #1e1b4b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 27, 75, 0.15);
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            color: #1e1b4b;
+            margin-bottom: 1rem;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #1e1b4b 0%, #8b5cf6 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1e1b4b;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #10b981;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                margin: 2rem auto;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .care-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .emergency-content {
+                grid-template-columns: 1fr;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navegador.html' %}
+
+    <div class="container">
+        <!-- Header de la Página -->
+        <div class="page-header">
+            <h1 class="page-title">Cuidado Animal</h1>
+            <p class="page-subtitle">
+                Aprende todo lo necesario para cuidar a tu mascota de la mejor manera. 
+                Desde alimentación hasta salud preventiva, te damos los consejos más importantes.
+            </p>
+        </div>
+
+        <!-- Grid de Cuidados Básicos -->
+        <div class="care-grid">
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 class="care-title">Alimentación</h3>
+                <p class="care-description">
+                    Una alimentación balanceada es fundamental para la salud de tu mascota. 
+                    Aprende sobre porciones, horarios y tipos de comida apropiados.
+                </p>
+                <div class="care-tips">
+                    <h4>Consejos Importantes:</h4>
+                    <ul>
+                        <li>Alimenta según la edad y peso</li>
+                        <li>Mantén horarios regulares</li>
+                        <li>Proporciona agua fresca siempre</li>
+                        <li>Evita comida humana dañina</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="care-title">Salud Preventiva</h3>
+                <p class="care-description">
+                    La prevención es la mejor medicina. Vacunas, desparasitación y 
+                    chequeos regulares mantienen a tu mascota saludable.
+                </p>
+                <div class="care-tips">
+                    <h4>Mantén al día:</h4>
+                    <ul>
+                        <li>Vacunas anuales</li>
+                        <li>Desparasitación mensual</li>
+                        <li>Chequeos veterinarios</li>
+                        <li>Control de peso</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3 class="care-title">Hogar Seguro</h3>
+                <p class="care-description">
+                    Tu casa debe ser un lugar seguro para tu mascota. Identifica y 
+                    elimina peligros potenciales.
+                </p>
+                <div class="care-tips">
+                    <h4>Recomendaciones:</h4>
+                    <ul>
+                        <li>Mantén productos tóxicos lejos</li>
+                        <li>Protege cables eléctricos</li>
+                        <li>Crea espacios de descanso</li>
+                        <li>Mantén ventanas seguras</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-running"></i>
+                </div>
+                <h3 class="care-title">Ejercicio y Estimulación</h3>
+                <p class="care-description">
+                    El ejercicio físico y mental son esenciales para el bienestar 
+                    de tu mascota y previenen problemas de comportamiento.
+                </p>
+                <div class="care-tips">
+                    <h4>Actividades Diarias:</h4>
+                    <ul>
+                        <li>Paseos regulares</li>
+                        <li>Juegos interactivos</li>
+                        <li>Entrenamiento básico</li>
+                        <li>Socialización con otros</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-brush"></i>
+                </div>
+                <h3 class="care-title">Higiene y Grooming</h3>
+                <p class="care-description">
+                    Mantener a tu mascota limpia y bien cuidada mejora su salud 
+                    y fortalece el vínculo entre ustedes.
+                </p>
+                <div class="care-tips">
+                    <h4>Cuidados Regulares:</h4>
+                    <ul>
+                        <li>Cepillado según el pelaje</li>
+                        <li>Baños cuando sea necesario</li>
+                        <li>Corte de uñas</li>
+                        <li>Limpieza de oídos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="care-card">
+                <div class="care-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="care-title">Bienestar Emocional</h3>
+                <p class="care-description">
+                    Las mascotas también tienen necesidades emocionales. El amor, 
+                    la atención y la estabilidad son fundamentales.
+                </p>
+                <div class="care-tips">
+                    <h4>Para su Felicidad:</h4>
+                    <ul>
+                        <li>Dedica tiempo de calidad</li>
+                        <li>Mantén rutinas estables</li>
+                        <li>Reconoce sus logros</li>
+                        <li>Proporciona compañía</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Emergencias -->
+        <div class="emergency-section">
+            <h2 class="emergency-title">🚨 Emergencias - ¿Qué Hacer?</h2>
+            <div class="emergency-content">
+                <div class="emergency-item">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Envenenamiento</h4>
+                    <p>No induzcas el vómito. Contacta inmediatamente a tu veterinario y guarda el producto tóxico.</p>
+                </div>
+                <div class="emergency-item">
+                    <h4><i class="fas fa-thermometer-half"></i> Golpe de Calor</h4>
+                    <p>Mueve a tu mascota a un lugar fresco, aplica agua fría y contacta al veterinario urgentemente.</p>
+                </div>
+                <div class="emergency-item">
+                    <h4><i class="fas fa-car-crash"></i> Accidente</h4>
+                    <p>Mantén la calma, inmoviliza a tu mascota si es necesario y busca atención veterinaria inmediata.</p>
+                </div>
+                <div class="emergency-item">
+                    <h4><i class="fas fa-droplet"></i> Hemorragia</h4>
+                    <p>Aplica presión directa con un paño limpio y busca atención veterinaria de emergencia.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Recursos -->
+        <div class="resources-section">
+            <h2 class="section-title">Recursos Útiles</h2>
+            <div class="resources-grid">
+                <a href="{% url 'blog' %}" class="resource-item">
+                    <div class="resource-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4 class="resource-title">Blog Educativo</h4>
+                    <p class="resource-description">Artículos detallados sobre cuidado animal, comportamiento y salud.</p>
+                </a>
+                <a href="{% url 'faq' %}" class="resource-item">
+                    <div class="resource-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h4 class="resource-title">Preguntas Frecuentes</h4>
+                    <p class="resource-description">Resuelve tus dudas sobre adopción y cuidado de mascotas.</p>
+                </a>
+                <a href="{% url 'tienda' %}" class="resource-item">
+                    <div class="resource-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h4 class="resource-title">Productos Recomendados</h4>
+                    <p class="resource-description">Encuentra productos de calidad para el cuidado de tu mascota.</p>
+                </a>
+                <a href="{% url 'nosotros' %}" class="resource-item">
+                    <div class="resource-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h4 class="resource-title">Contacto Profesional</h4>
+                    <p class="resource-description">Conecta con veterinarios y especialistas en comportamiento animal.</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección CTA -->
+        <div class="cta-section">
+            <h3 class="cta-title">¿Necesitas Ayuda Especializada?</h3>
+            <p class="cta-description">
+                Nuestro equipo de expertos está aquí para ayudarte con cualquier duda 
+                sobre el cuidado de tu mascota. No dudes en contactarnos.
+            </p>
+            <div class="cta-buttons">
+                <a href="{% url 'nosotros' %}" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i> Contactar Expertos
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para las secciones
+            const sections = document.querySelectorAll('.care-card, .emergency-section, .resources-section, .cta-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            });
+
+            // Efectos hover mejorados para las tarjetas
+            const careCards = document.querySelectorAll('.care-card');
+            careCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

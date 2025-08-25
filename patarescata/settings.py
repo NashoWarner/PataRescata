@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Necesario para get_current_site
     'apppatarescata',
     'django.contrib.humanize',
 ]
@@ -63,7 +64,7 @@ WSGI_APPLICATION = 'patarescata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'animales',
         'USER': 'postgres',
         'PASSWORD': 'Linux2024',
         'HOST': 'localhost', #db para docker/localhost para mi pc local
@@ -109,6 +110,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configuración para sitios (necesario para get_current_site)
+SITE_ID = 1
+SITE_NAME = 'PataRescata'
+
 AUTH_USER_MODEL = 'apppatarescata.Usuario'
 
 AUTHENTICATION_BACKENDS = [
@@ -120,11 +125,13 @@ LOGIN_REDIRECT_URL = 'agregarmascota'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_PORT = 587  # Cambiado de 465 a 587 para TLS
+EMAIL_USE_TLS = True  # Cambiado a True
+EMAIL_USE_SSL = False  # Cambiado a False
 EMAIL_HOST_USER = 'jordan4retro142@gmail.com'
-EMAIL_HOST_PASSWORD = 'ajtu ffnj xllg gidg' #Explicado en README.MD su funcionamiento
+EMAIL_HOST_PASSWORD = 'iclr fdzd inuc jaqy'  # Asegúrate de usar la contraseña de aplicación
+EMAIL_TIMEOUT = 20  # Timeout en segundos
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 MEDIA_URL = '/media/'
