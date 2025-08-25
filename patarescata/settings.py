@@ -65,8 +65,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Linux2024',
-        'HOST': 'localhost', #db para docker/localhost para mi pc local
+        'PASSWORD': '1',
+        'HOST': 'db', #db para docker/localhost para mi pc local
         'PORT': '5432',
     }
 }
