@@ -462,9 +462,9 @@
                         {% endif %}
                         
                         <div class="product-overlay">
-                            <button class="overlay-button" onclick="viewProduct('{{ producto.id }}')">
-                                <i class="fas fa-eye"></i> Ver Detalles
-                            </button>
+                            <a class="overlay-button" href="{{ producto.enlace }}" target="_blank" rel="noopener noreferrer">
+                                <i class="fas fa-eye"></i> Ver producto
+                            </a>
                         </div>
                     </div>
                     
@@ -478,9 +478,10 @@
                         </div>
                         
                         <button class="buy-button" onclick="buyProduct('{{ producto.id }}')">
+                        <a class="buy-button" href="{{ producto.enlace }}" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-shopping-cart"></i>
                             Comprar ahora
-                        </button>
+                        </a>
                     </div>
                 </div>
                 {% endfor %}
@@ -565,8 +566,7 @@
         }
 
         function buyProduct(productId) {
-            // Aquí puedes implementar la lógica de compra
-            alert(`Producto agregado al carrito: ${productId}`);
+            // La lógica de compra se maneja con el enlace directo, no se muestra ningún alert.
         }
 
         // Efectos de shimmer para botones
