@@ -4,15 +4,22 @@ services:
   web:
     build: .
     command: >
-        sh -c "./wait-for-it.sh db:5432 &&
-              python manage.py migrate &&
-              python manage.py runserver 0.0.0.0:8000"
+      sh -c "./wait-for-it.sh db:5432 --timeout=20 --strict && \
+        python manage.py migrate && \
+        python manage.py crear_superuser && \
+        python manage.py poblar_productos && \
+        python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=patarescata.settings
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+      - DJANGO_SUPERUSER_PASSWORD=admin123
     ports:
       - "8000:8000"
     depends_on:
       - db
-    environment:
-      - DJANGO_SETTINGS_MODULE=patarescata.settings
+    volumes:
+      - ./media:/app/media
   db:
     image: postgres:latest
     environment:
