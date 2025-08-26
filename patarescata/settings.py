@@ -1,3 +1,4 @@
+MEDIA_ROOT = '/app/media'
 import os
 from pathlib import Path
 
