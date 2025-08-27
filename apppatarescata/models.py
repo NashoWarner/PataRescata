@@ -15,6 +15,7 @@ def generar_token():
 class Mascota(models.Model):
     nombre_mascota = models.CharField(max_length=20)
     edad_mascota = models.CharField(max_length=5)  
+    tipo_mascota = models.CharField(max_length=50)  # Campo para tipo de mascota (perro, gato, etc.)
     tamaño_mascota = models.CharField(max_length=50)
     comuna_mascota = models.CharField(max_length=50)
     region = models.CharField(max_length=50)

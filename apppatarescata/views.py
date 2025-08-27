@@ -49,16 +49,21 @@ def agregarMascota(request):
 
     if request.method == 'POST':
         form2 = Formulario2(request.POST, request.FILES)
+        print("POST data:", request.POST)  # Debug
+        print("Form is valid:", form2.is_valid())  # Debug
         if form2.is_valid():
+            print("Cleaned data:", form2.cleaned_data)  # Debug
             nueva_mascota = Mascota(
                 nombre_mascota=form2.cleaned_data['nombre_mascota'],
                 edad_mascota=form2.cleaned_data['edad_mascota'],
+                tipo_mascota=form2.cleaned_data['tipo_mascota'],
                 tamaño_mascota=form2.cleaned_data['tamaño_mascota'],
                 comuna_mascota=form2.cleaned_data['comuna_mascota'],
                 region=form2.cleaned_data['region'],
                 descripcion=form2.cleaned_data['descripcion'],
                 imagen=form2.cleaned_data['imagen'],
             )
+            print("Mascota object:", nueva_mascota.__dict__)  # Debug
             nueva_mascota.save()
 
             # Obtén la fundación actualmente autenticada y asigna la mascota a esa fundación

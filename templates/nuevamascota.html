@@ -422,6 +422,19 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="{{ form2.tipo_mascota.id_for_label }}" class="form-label required">
+                            Tipo de Mascota
+                        </label>
+                        {{ form2.tipo_mascota }}
+                        {% if form2.tipo_mascota.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form2.tipo_mascota.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
                         <label for="{{ form2.tamaño_mascota.id_for_label }}" class="form-label required">
                             Tamaño
                         </label>

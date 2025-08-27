@@ -30,6 +30,16 @@ class Formulario2(forms.Form):
     
     regiones = [('RM', 'Region Metropolitana')]
 
+    tipo_mascota = [
+        ('', ''),
+        ('perro', 'Perro'),
+        ('gato', 'Gato'),
+        ('conejo', 'Conejo'),
+        ('hamster', 'Hamster'),
+        ('ave', 'Ave'),
+        ('otro', 'Otro'),
+    ]
+
     tamaño_mascota = [
         ('', ''),
         ('miniatura', 'Miniatura'),
@@ -115,6 +125,11 @@ class Formulario2(forms.Form):
     edad_mascota = forms.ChoiceField(
         choices=opciones_edades,
         widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+    )
+    tipo_mascota = forms.ChoiceField(
+        choices=tipo_mascota,
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        required=True
     )
     tamaño_mascota = forms.ChoiceField(
         choices=tamaño_mascota,
