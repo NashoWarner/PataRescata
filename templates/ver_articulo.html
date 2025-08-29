@@ -24,7 +24,7 @@
 
         .container {
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 80px auto 0 auto;
             padding: 0 1rem;
         }
 
@@ -333,6 +333,8 @@
     </style>
 </head>
 <body>
+    {% include 'navegador.html' %}
+    
     <div class="container">
         <!-- Header del Artículo -->
         <div class="article-header">
@@ -342,7 +344,17 @@
             <div class="article-meta">
                 <div class="meta-item">
                     <i class="bi bi-person"></i>
-                    <span>{{ articulo.autor.nombre|default:"Sin autor" }}</span>
+                    <span>Escrito por: 
+                        {% if "Medio Ambiente" in articulo.titulo or "Alimentación" in articulo.titulo %}
+                            Nicolás Herrera
+                        {% elif "Adoptar vs. Comprar" in articulo.titulo or "Viajar en Avión" in articulo.titulo %}
+                            Diego Fuentes
+                        {% elif "Entrenar a Tu Perro" in articulo.titulo %}
+                            Ignacio Covarrubias
+                        {% else %}
+                            {{ articulo.autor.nombre }}
+                        {% endif %}
+                    </span>
                 </div>
                 
                 <div class="meta-item">
@@ -352,12 +364,12 @@
                 
                 <div class="meta-item">
                     <i class="bi bi-clock"></i>
-                    <span>{{ articulo.tiempo_lectura }} min de lectura</span>
+                    <span>5 min de lectura</span>
                 </div>
                 
                 <div class="meta-item">
                     <i class="bi bi-eye"></i>
-                    <span>{{ articulo.visitas }} visitas</span>
+                    <span>0 visitas</span>
                 </div>
             </div>
 

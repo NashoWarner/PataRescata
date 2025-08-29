@@ -39,3 +39,143 @@ body {
     border: 25px rgba(115, 82, 144, 0.80);
     height: 49px;
 }
+
+/* Estilos para resúmenes de artículos */
+.article-summary {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 10px 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.featured-summary {
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 15px 0;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Estilos para imágenes de artículos */
+.article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.featured-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* Efectos hover para imágenes */
+.article-card:hover .article-image img {
+    transform: scale(1.05);
+}
+
+/* Estilos para tarjetas de artículos mejoradas */
+.article-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el artículo destacado */
+.featured-article {
+    background: linear-gradient(135deg, #8b5cf6 0%, #f59e0b 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.featured-article:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para metadatos de artículos */
+.featured-meta, .article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.article-meta {
+    color: #6b7280;
+    margin: 10px 0;
+}
+
+.featured-author, .article-author {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.article-author {
+    color: #8b5cf6;
+}
+
+.featured-date, .article-date {
+    opacity: 0.8;
+}
+
+/* Mejoras en botones */
+.read-button, .article-button {
+    background: #f59e0b;
+    color: #000;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.read-button:hover, .article-button:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    color: #000;
+    text-decoration: none;
+}
+
+/* Estilos para cuando no hay artículos */
+.no-articles {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-articles h3 {
+    color: #374151;
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-family: 'Passion One', sans-serif;
+}
+
+.no-articles p {
+    color: #6b7280;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+}

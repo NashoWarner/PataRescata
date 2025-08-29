@@ -11,9 +11,7 @@ from .models import Numero,rut
 
 from django.core.exceptions import ValidationError
 
-# class Formulario1(forms.Form):
-#     pregunta = forms.CharField()
-#     respuesta = forms.CharField(widget=forms.TextInput(attrs={'disabled': 'true'}))
+
 
 
 class FAQForm(forms.ModelForm):

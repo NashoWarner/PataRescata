@@ -1,24 +1,20 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from apppatarescata.models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm, ActualizarPerfilForm, ArticuloBlogForm
-from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, logout
-from .models import MascotaFundacion, Mascota, Mascota, Adopcion
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse
-from .models import Producto
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from .forms import MascotaForm
-from django.db.models import Count
-from django import forms
+from django.http import HttpResponse, JsonResponse
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
+
+from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm
 
 def faq(request):
     preguntas = FAQ.objects.all()
@@ -86,32 +82,7 @@ def eventos(request):
     """Vista para la página de eventos"""
     return render(request, 'eventos.html')
 
-def buscar_animales(request):
-    # Si el usuario está autenticado y es adoptante, redirigir a su perfil
-    if request.user.is_authenticated and not request.user.rut_empresa:
-        return redirect('perfil_adoptante')
-    
-    animales = []
 
-    if request.method == 'GET':
-        tamaño_mascota = request.GET.get('tamaño', '')
-        region = request.GET.get('region', '')
-        edad_mascota = request.GET.get('edad', '')
-        
-        # Filtrar mascotas disponibles
-        mascotas = Mascota.objects.filter(disponible=True)
-        
-        if tamaño_mascota:
-            mascotas = mascotas.filter(tamaño_mascota=tamaño_mascota)
-        if region:
-            mascotas = mascotas.filter(region=region)
-        if edad_mascota:
-            mascotas = mascotas.filter(edad_mascota=edad_mascota)
-        
-        # Obtener solo las primeras 6 mascotas para mostrar
-        animales = mascotas[:6]
-
-    return render(request, 'buscar_animales.html', {'animales': animales})
 
 def resultado_busqueda(request):
     tamaño_mascota = request.GET.get('tamaño', '')
@@ -140,8 +111,8 @@ def home(request):
     return render(request, 'index.html', context)
 
 def blog(request):
-    articulos = ArticuloBlog.objects.filter(publicado=True).order_by('-fecha_publicacion')
-    return render(request, 'blog.html', {'articulos': articulos})
+    """Vista para la página del blog con artículos estáticos"""
+    return render(request, 'blog.html')
 
 def nosotros(request):
     return render(request, 'nosotros.html')
@@ -149,8 +120,7 @@ def nosotros(request):
 def preguntas_frecuentes(request):
     return render(request, 'faq.html')
 
-def navegador(request):
-    return render(request, 'navegador.html')
+
 
 def home_perfil(request):
     if not request.user.is_authenticated:
@@ -290,18 +260,7 @@ def tienda(request):
     productos = Producto.objects.all()
     return render(request, 'Tienda.html', {'productos': productos})
 
-def probar_email(request):
-    try:
-        send_mail(
-            'Prueba de Email - PataRescata',
-            'Este es un email de prueba para verificar que la configuración funciona correctamente.',
-            'jordan4retro142@gmail.com',
-            ['test@example.com'],
-            fail_silently=False,
-        )
-        return HttpResponse('Email enviado exitosamente')
-    except Exception as e:
-        return HttpResponse(f'Error al enviar email: {e}')
+
 
 def gestionar_blog(request):
     if not request.user.is_superuser:
@@ -370,22 +329,25 @@ def cambiar_estado_articulo(request, articulo_id):
     messages.success(request, f'Artículo {estado} exitosamente.')
     return redirect('gestionar_blog')
 
-def ver_articulo(request, slug):
-    try:
-        articulo = ArticuloBlog.objects.get(slug=slug, publicado=True)
-        
-        # Obtener artículos relacionados (mismo autor o categoría)
-        articulos_relacionados = ArticuloBlog.objects.filter(
-            publicado=True
-        ).exclude(id=articulo.id)[:3]
-        
-        return render(request, 'ver_articulo.html', {
-            'articulo': articulo,
-            'articulos_relacionados': articulos_relacionados,
-        })
-    except ArticuloBlog.DoesNotExist:
-        messages.error(request, "El artículo no existe o no está publicado.")
-        return redirect('blog')
+def articulo1(request):
+    """Vista para el artículo 1: Viajar en Avión"""
+    return render(request, 'articulo1.html')
+
+def articulo2(request):
+    """Vista para el artículo 2: Adoptar vs. Comprar"""
+    return render(request, 'articulo2.html')
+
+def articulo3(request):
+    """Vista para el artículo 3: Entrenar a Tu Perro"""
+    return render(request, 'articulo3.html')
+
+def articulo4(request):
+    """Vista para el artículo 4: Alimentación Adecuada"""
+    return render(request, 'articulo4.html')
+
+def articulo5(request):
+    """Vista para el artículo 5: Medio Ambiente"""
+    return render(request, 'articulo5.html')
 
 def seleccionar_tipo_cuenta(request):
     return render(request, 'seleccionar_tipo_cuenta.html')
@@ -894,230 +856,6 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
     
     return redirect('mis_solicitudes')
 
-def recuperar_password_adoptante(request):
-    """Vista para que los adoptantes recuperen su contraseña"""
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        
-        if not email:
-            messages.error(request, 'Por favor, ingresa un correo electrónico.')
-            return render(request, 'recuperar_password_adoptante.html')
-        
-        try:
-            # Buscar usuario por email (solo adoptantes)
-            user = Usuario.objects.get(email=email, rut_empresa__isnull=True)
-            
-            # Generar token único para restablecer contraseña
-            token = get_random_string(length=64)
-            user.token_verificacion = token
-            user.save()
-            
-            # Crear enlace para restablecer contraseña
-            reset_url = f'http://127.0.0.1:8000/restablecer-password/{token}/'
-            
-            # Enviar email con instrucciones
-            try:
-                send_mail(
-                    'Recuperar Contraseña - PataRescata',
-                    f'''Hola {user.nombre},
-                    
-Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para crear una nueva contraseña:
 
-{reset_url}
 
-Este enlace expirará en 24 horas.
 
-Si no solicitaste este cambio, puedes ignorar este email.
-
-Saludos,
-El equipo de PataRescata''',
-                    'jordan4retro142@gmail.com',
-                    [user.email],
-                    fail_silently=False,
-                )
-                messages.success(request, 'Se han enviado las instrucciones a tu correo electrónico.')
-            except Exception as e:
-                print(f"Error al enviar email: {e}")  # Debug
-                messages.error(request, 'Error al enviar el email. Por favor, intenta nuevamente.')
-                
-        except Usuario.DoesNotExist:
-            # No mostrar si el email existe o no por seguridad
-            messages.success(request, 'Si el email existe en nuestra base de datos, recibirás las instrucciones.')
-        except Exception as e:
-            print(f"Error inesperado en recuperar_password_adoptante: {e}")  # Debug
-            messages.error(request, 'Error inesperado. Por favor, intenta nuevamente.')
-    
-    return render(request, 'recuperar_password_adoptante.html')
-
-def recuperar_password_fundacion(request):
-    """Vista para que las fundaciones recuperen su contraseña"""
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        
-        if not email:
-            messages.error(request, 'Por favor, ingresa un correo electrónico.')
-            return render(request, 'recuperar_password_fundacion.html')
-        
-        try:
-            # Buscar usuario por email (solo fundaciones)
-            user = Usuario.objects.get(email=email, rut_empresa__isnull=False)
-            
-            # Generar token único para restablecer contraseña
-            token = get_random_string(length=64)
-            user.token_verificacion = token
-            user.save()
-            
-            # Crear enlace para restablecer contraseña
-            reset_url = f'http://127.0.0.1:8000/restablecer-password/{token}/'
-            
-            # Enviar email con instrucciones
-            try:
-                send_mail(
-                    'Recuperar Contraseña - PataRescata',
-                    f'''Hola {user.nombre},
-                    
-Has solicitado restablecer la contraseña de tu fundación. Haz clic en el siguiente enlace para crear una nueva contraseña:
-
-{reset_url}
-
-Este enlace expirará en 24 horas.
-
-Si no solicitaste este cambio, puedes ignorar este email.
-
-Saludos,
-El equipo de PataRescata''',
-                    'jordan4retro142@gmail.com',
-                    [user.email],
-                    fail_silently=False,
-                )
-                messages.success(request, 'Se han enviado las instrucciones a tu correo electrónico.')
-            except Exception as e:
-                print(f"Error al enviar email: {e}")  # Debug
-                messages.error(request, 'Error al enviar el email. Por favor, intenta nuevamente.')
-                
-        except Usuario.DoesNotExist:
-            # No mostrar si el email existe o no por seguridad
-            messages.success(request, 'Si el email existe en nuestra base de datos, recibirás las instrucciones.')
-        except Exception as e:
-            print(f"Error inesperado en recuperar_password_fundacion: {e}")  # Debug
-            messages.error(request, 'Error inesperado. Por favor, intenta nuevamente.')
-    
-    return render(request, 'recuperar_password_fundacion.html')
-
-def restablecer_password(request, token):
-    """Vista para restablecer la contraseña usando el token"""
-    try:
-        # Buscar usuario por token
-        user = Usuario.objects.get(token_verificacion=token)
-        
-        if request.method == 'POST':
-            new_password1 = request.POST.get('new_password1')
-            new_password2 = request.POST.get('new_password2')
-            
-            # Validar que las contraseñas coincidan
-            if new_password1 != new_password2:
-                messages.error(request, 'Las contraseñas no coinciden.')
-                return render(request, 'restablecer_password.html')
-            
-            # Validar que la contraseña cumpla los requisitos mínimos
-            if len(new_password1) < 8:
-                messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
-                return render(request, 'restablecer_password.html')
-            
-            # Cambiar la contraseña
-            user.set_password(new_password1)
-            # Generar un nuevo token en lugar de establecer None
-            user.token_verificacion = get_random_string(length=64)
-            user.save()
-            
-            messages.success(request, 'Tu contraseña ha sido cambiada exitosamente. Ahora puedes iniciar sesión.')
-            return redirect('seleccionar_tipo_cuenta')
-        
-        return render(request, 'restablecer_password.html')
-        
-    except Usuario.DoesNotExist:
-        messages.error(request, 'El enlace de restablecimiento de contraseña no es válido o ha expirado.')
-        return redirect('seleccionar_tipo_cuenta')
-    except Exception as e:
-        messages.error(request, 'Error inesperado. Por favor, intenta nuevamente.')
-        return redirect('seleccionar_tipo_cuenta')
-
-def articulo1(request):
-    """Vista para el artículo 1"""
-    return render(request, 'articulo1.html')
-
-def articulo2(request):
-    """Vista para el artículo 2"""
-    return render(request, 'articulo2.html')
-
-def articulo3(request):
-    """Vista para el artículo 3"""
-    return render(request, 'articulo3.html')
-
-def articulo4(request):
-    """Vista para el artículo 4"""
-    return render(request, 'articulo4.html')
-
-def articulo5(request):
-    """Vista para el artículo 5"""
-    return render(request, 'articulo5.html')
-
-def recuperar_password_universal(request):
-    """Vista universal para recuperar contraseñas (funciona para adoptantes y fundaciones)"""
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        
-        if not email:
-            messages.error(request, 'Por favor, ingresa un correo electrónico.')
-            return render(request, 'recuperar_password_universal.html')
-        
-        try:
-            # Buscar usuario por email (sin importar el tipo)
-            user = Usuario.objects.get(email=email)
-            
-            # Generar token único para restablecer contraseña
-            token = get_random_string(length=64)
-            user.token_verificacion = token
-            user.save()
-            
-            # Crear enlace para restablecer contraseña
-            reset_url = f'http://127.0.0.1:8000/restablecer-password/{token}/'
-            
-            # Determinar el tipo de usuario para el mensaje
-            tipo_usuario = "fundación" if user.rut_empresa else "adoptante"
-            
-            # Enviar email con instrucciones
-            try:
-                send_mail(
-                    'Recuperar Contraseña - PataRescata',
-                    f'''Hola {user.nombre},
-                    
-Has solicitado restablecer la contraseña de tu cuenta de {tipo_usuario}. Haz clic en el siguiente enlace para crear una nueva contraseña:
-
-{reset_url}
-
-Este enlace expirará en 24 horas.
-
-Si no solicitaste este cambio, puedes ignorar este email.
-
-Saludos,
-El equipo de PataRescata''',
-                    'jordan4retro142@gmail.com',
-                    [user.email],
-                    fail_silently=False,
-                )
-                messages.success(request, 'Se han enviado las instrucciones a tu correo electrónico.')
-                print(f"Email enviado exitosamente a {user.email}")  # Debug
-            except Exception as e:
-                print(f"Error al enviar email: {e}")  # Debug
-                messages.error(request, f'Error al enviar el email: {str(e)}. Por favor, intenta nuevamente.')
-                
-        except Usuario.DoesNotExist:
-            print(f"Usuario no encontrado con email: {email}")  # Debug
-            # Por seguridad, no revelar si el email existe o no
-            messages.success(request, 'Si el email existe en nuestra base de datos, recibirás las instrucciones.')
-        except Exception as e:
-            print(f"Error inesperado en recuperar_password_universal: {e}")  # Debug
-            messages.error(request, f'Error inesperado: {str(e)}. Por favor, intenta nuevamente.')
-    
-    return render(request, 'recuperar_password_universal.html')
