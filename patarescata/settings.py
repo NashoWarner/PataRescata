@@ -1,4 +1,4 @@
-MEDIA_ROOT = '/app/media'
+
 import os
 from pathlib import Path
 
@@ -104,9 +104,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -129,8 +126,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # Cambiado de 465 a 587 para TLS
 EMAIL_USE_TLS = True  # Cambiado a True
 EMAIL_USE_SSL = False  # Cambiado a False
-EMAIL_HOST_USER = 'jordan4retro142@gmail.com'
-EMAIL_HOST_PASSWORD = 'iclr fdzd inuc jaqy'  # Asegúrate de usar la contraseña de aplicación
+EMAIL_HOST_USER = 'pata.rescata1@gmail.com'
+EMAIL_HOST_PASSWORD = 'nqya npsb zers xzrv'  # Asegúrate de usar la contraseña de aplicación
 EMAIL_TIMEOUT = 20  # Timeout en segundos
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
