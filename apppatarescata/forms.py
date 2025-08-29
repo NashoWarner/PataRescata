@@ -202,7 +202,7 @@ from .models import Usuario
 class ActualizarPerfilForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['email', 'nombre', 'telefono']
+        fields = ['email', 'nombre', 'telefono', 'rut_empresa']
 
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -223,6 +223,14 @@ class ActualizarPerfilForm(forms.ModelForm):
             if len(nombre) < 2:
                 raise ValidationError('El nombre debe tener al menos 2 caracteres.')
         return nombre
+
+    def clean_rut_empresa(self):
+        rut_empresa = self.cleaned_data.get('rut_empresa')
+        if rut_empresa:
+            # Validar que el RUT tenga entre 7 y 9 dígitos y solo números
+            if not rut_empresa.isdigit() or len(rut_empresa) < 7 or len(rut_empresa) > 9:
+                raise ValidationError('El RUT debe ser válido (entre 7 y 9 dígitos numéricos).')
+        return rut_empresa
 
 
 

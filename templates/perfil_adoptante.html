@@ -97,9 +97,10 @@
 
         .profile-actions {
             display: flex;
-            justify-content: center;
+            flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 2rem;
+            justify-content: center;
+            margin-top: 1.5rem;
         }
 
         .btn {
@@ -121,38 +122,12 @@
         }
 
         .btn-info {
-            background: #3b82f6;
+            background: #17a2b8;
             color: white;
         }
 
-        .btn-primary {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .profile-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+        .btn-info:hover {
+            background: #138496;
         }
 
         .btn-primary {
@@ -175,25 +150,14 @@
             background: #10b981;
             color: white;
         }
-        
-        .btn-info {
-            background: #17a2b8;
+
+        .btn-danger {
+            background: #ef4444;
             color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
         }
-        
-        .btn-info:hover {
-            background: #138496;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+
+        .btn-danger:hover {
+            background: #dc2626;
         }
 
         .content-section {
@@ -435,98 +399,13 @@
             </div>
 
             <div class="profile-actions">
-                <a href="{% url 'home' %}" class="btn btn-info" style="background: #17a2b8; border-color: #17a2b8;">
-                    <i class="fas fa-home"></i> Volver al Inicio
-                </a>
-                <a href="{% url 'resultado_busqueda' %}" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Buscar Mascotas
-                </a>
                 <a href="{% url 'actualizar_perfil_adoptante' %}" class="btn btn-secondary">
                     <i class="fas fa-edit"></i> Editar Perfil
                 </a>
             </div>
         </div>
 
-        <!-- Sección de Solicitudes de Adopción -->
-        <div class="content-section">
-            <h2 class="section-title">
-                <i class="fas fa-list"></i> Mis Solicitudes de Adopción
-            </h2>
-            
-            {% if solicitudes %}
-                <div class="solicitudes-grid">
-                    {% for solicitud in solicitudes %}
-                    <div class="solicitud-card">
-                        <div class="mascota-info">
-                            <div class="mascota-avatar">
-                                <i class="fas fa-paw"></i>
-                            </div>
-                            <div class="mascota-details">
-                                <h4>{{ solicitud.mascota.nombre_mascota }}</h4>
-                                <p>{{ solicitud.mascota.edad_mascota }} años • {{ solicitud.mascota.tamaño_mascota }}</p>
-                                <p>{{ solicitud.mascota.comuna_mascota }}, {{ solicitud.mascota.region }}</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Información de la Fundación -->
-                        <div class="fundacion-info">
-                            {% for mascota_fundacion in solicitud.mascota.mascotafundacion_set.all %}
-                                {% if forloop.first %}
-                                    {% with fundacion=mascota_fundacion.adoptante %}
-                                    <div class="fundacion-details">
-                                        <div class="fundacion-detail">
-                                            <i class="fas fa-building"></i>
-                                            <span>{{ fundacion.nombre }}</span>
-                                        </div>
-                                        <div class="fundacion-detail">
-                                            <i class="fas fa-envelope"></i>
-                                            <span>{{ fundacion.email }}</span>
-                                        </div>
-                                        <div class="fundacion-detail">
-                                            <i class="fas fa-phone"></i>
-                                            <span>{{ fundacion.telefono }}</span>
-                                        </div>
-                                    </div>
-                                    {% endwith %}
-                                {% endif %}
-                            {% empty %}
-                                <div style="color: #6b7280; font-style: italic;">
-                                    <i class="fas fa-exclamation-triangle"></i> Información de fundación no disponible
-                                </div>
-                            {% endfor %}
-                        </div>
-                        
-                        <div class="solicitud-status">
-                            <span class="status-badge 
-                                {% if solicitud.estado == 'aprobada' %}status-aprobada
-                                {% elif solicitud.estado == 'rechazada' %}status-rechazada
-                                {% else %}status-pendiente{% endif %}">
-                                {% if solicitud.estado == 'aprobada' %}
-                                    ¡Aprobada! 🎉
-                                {% elif solicitud.estado == 'rechazada' %}
-                                    Rechazada
-                                {% else %}
-                                    Pendiente
-                                {% endif %}
-                            </span>
-                            <span class="fecha-solicitud">
-                                {{ solicitud.fecha_adopcion|date:"d/m/Y" }}
-                            </span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="no-solicitudes">
-                    <i class="fas fa-heart-broken"></i>
-                    <h3>No tienes solicitudes de adopción</h3>
-                    <p>¡Comienza tu búsqueda para encontrar a tu compañero perfecto!</p>
-                    <a href="{% url 'resultado_busqueda' %}" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Buscar Mascotas
-                    </a>
-                </div>
-            {% endif %}
-        </div>
+
 
         <!-- Sección de Información Personal -->
         <div class="content-section">
@@ -572,22 +451,6 @@
             </h2>
             
             <div class="profile-actions">
-                <a href="{% url 'home' %}" class="btn btn-info">
-                    <i class="fas fa-home"></i> Volver al Inicio
-                </a>
-                
-                <a href="{% url 'resultado_busqueda' %}" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Buscar Mascotas
-                </a>
-                
-                <a href="{% url 'mis_solicitudes' %}" class="btn btn-secondary">
-                    <i class="fas fa-heart"></i> Mis Solicitudes
-                </a>
-                
-                <a href="{% url 'actualizar_perfil_adoptante' %}" class="btn btn-secondary">
-                    <i class="fas fa-edit"></i> Editar Perfil
-                </a>
-                
                 <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger">
                     <i class="fas fa-trash"></i> Eliminar Cuenta
                 </a>

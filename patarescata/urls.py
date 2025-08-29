@@ -4,10 +4,10 @@ from apppatarescata import views
 from apppatarescata.views import estadisticas
 from apppatarescata.views import (
     faq, home, blog, nosotros, preguntas_frecuentes, agregarMascota, 
-    resultado_busqueda, mi_login, 
+    mi_login, 
     logout_view, home_perfil, actualizar_perfil, actualizar_perfil_adoptante, eliminar_cuenta, 
     realizar_adopcion, mis_solicitudes, verificar_cuenta, tienda,
-    gestionar_blog, crear_articulo, editar_articulo, eliminar_articulo, 
+    eliminar_articulo, 
     cambiar_estado_articulo, seleccionar_tipo_cuenta, 
     login_adoptante, login_fundacion, registro_adoptante, registro_fundacion,
     perfil_adoptante, generar_solicitud_adopcion, preparar_adopcion,
@@ -39,9 +39,9 @@ urlpatterns = [
     path('generar-solicitud-adopcion/<int:mascota_id>/', generar_solicitud_adopcion, name='generar_solicitud_adopcion'),
     path('agregarmascota/', agregarMascota, name='agregarmascota'),
 
-    path('resultado_busqueda/', resultado_busqueda, name='resultado_busqueda'),
+
     path('login/', mi_login, name='mi_login'), 
-    path('registro/', registro_adoptante, name='registro_usuario'),
+
     path('seleccionar-tipo/', seleccionar_tipo_cuenta, name='seleccionar_tipo_cuenta'),
     path('login-adoptante/', login_adoptante, name='login_adoptante'),
     path('login-fundacion/', login_fundacion, name='login_fundacion'),
@@ -49,23 +49,23 @@ urlpatterns = [
     path('registro-fundacion/', registro_fundacion, name='registro_fundacion'),
     path('logout/', logout_view, name='logout'),
     path('actualizar_perfil/', actualizar_perfil, name='actualizar_perfil'),
-    path('edicionperfil/', actualizar_perfil, name='edicionperfil'),
+
     path('actualizar_perfil_adoptante/', actualizar_perfil_adoptante, name='actualizar_perfil_adoptante'),
     path('eliminar-cuenta/', eliminar_cuenta, name='eliminar_cuenta'),
     path('verificar-cuenta/<str:token>/', verificar_cuenta, name='verificar_cuenta'),
     path('listar_mascotas/', views.listar_mascotas, name='listar_mascotas'),
     path('eliminar_mascota/<int:mascota_id>/', views.eliminar_mascota, name='eliminar_mascota'),
     path('eliminar_mascotas/', views.eliminar_mascotas, name='eliminar_mascotas'),
-    path('contar_mascotas/', views.contar_mascotas, name='contar_mascotas'),
+
     path('actualizar_mascota/<int:mascota_id>/', views.actualizar_mascota, name='actualizar_mascota'),
     path('estadisticas/', estadisticas, name='estadisticas'),
 
 
     
     # URLs para gestión del blog (solo administradores)
-    path('gestionar-blog/', gestionar_blog, name='gestionar_blog'),
-    path('crear-articulo/', crear_articulo, name='crear_articulo'),
-    path('editar-articulo/<int:articulo_id>/', editar_articulo, name='editar_articulo'),
+
+
+
     path('eliminar-articulo/<int:articulo_id>/', eliminar_articulo, name='eliminar_articulo'),
     path('cambiar-estado-articulo/<int:articulo_id>/', cambiar_estado_articulo, name='cambiar_estado_articulo'),
     

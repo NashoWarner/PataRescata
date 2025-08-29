@@ -84,22 +84,7 @@ def eventos(request):
 
 
 
-def resultado_busqueda(request):
-    tamaño_mascota = request.GET.get('tamaño', '')
-    region = request.GET.get('region', '')
-    edad_mascota = request.GET.get('edad', '')
-    
-    # Filtrar mascotas disponibles
-    mascotas = Mascota.objects.filter(disponible=True)
-    
-    if tamaño_mascota:
-        mascotas = mascotas.filter(tamaño_mascota=tamaño_mascota)
-    if region:
-        mascotas = mascotas.filter(region=region)
-    if edad_mascota:
-        mascotas = mascotas.filter(edad_mascota=edad_mascota)
-    
-    return render(request, 'resultado_busqueda.html', {'mascotas': mascotas})
+
 
 def home(request):
     # Obtener mascotas disponibles para adopción (destacadas)
@@ -262,49 +247,11 @@ def tienda(request):
 
 
 
-def gestionar_blog(request):
-    if not request.user.is_superuser:
-        messages.error(request, "No tienes permisos para acceder a esta página.")
-        return redirect('home')
-    
-    articulos = ArticuloBlog.objects.all().order_by('-fecha_publicacion')
-    return render(request, 'gestionar_blog.html', {'articulos': articulos})
 
-def crear_articulo(request):
-    if not request.user.is_superuser:
-        messages.error(request, "No tienes permisos para acceder a esta página.")
-        return redirect('home')
-    
-    if request.method == 'POST':
-        form = ArticuloBlogForm(request.POST, request.FILES)
-        if form.is_valid():
-            articulo = form.save(commit=False)
-            articulo.autor = request.user
-            articulo.save()
-            messages.success(request, 'Artículo creado exitosamente.')
-            return redirect('gestionar_blog')
-    else:
-        form = ArticuloBlogForm()
-    
-    return render(request, 'crear_articulo.html', {'form': form})
 
-def editar_articulo(request, articulo_id):
-    if not request.user.is_superuser:
-        messages.error(request, "No tienes permisos para acceder a esta página.")
-        return redirect('home')
-    
-    articulo = get_object_or_404(ArticuloBlog, id=articulo_id)
-    
-    if request.method == 'POST':
-        form = ArticuloBlogForm(request.POST, request.FILES, instance=articulo)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Artículo actualizado exitosamente.')
-            return redirect('gestionar_blog')
-    else:
-        form = ArticuloBlogForm(instance=articulo)
-    
-    return render(request, 'editar_articulo.html', {'form': form, 'articulo': articulo})
+
+
+
 
 def eliminar_articulo(request, articulo_id):
     if not request.user.is_superuser:
@@ -314,7 +261,7 @@ def eliminar_articulo(request, articulo_id):
     articulo = get_object_or_404(ArticuloBlog, id=articulo_id)
     articulo.delete()
     messages.success(request, 'Artículo eliminado exitosamente.')
-    return redirect('gestionar_blog')
+    return redirect('home')
 
 def cambiar_estado_articulo(request, articulo_id):
     if not request.user.is_superuser:
@@ -327,7 +274,7 @@ def cambiar_estado_articulo(request, articulo_id):
     
     estado = "publicado" if articulo.publicado else "oculto"
     messages.success(request, f'Artículo {estado} exitosamente.')
-    return redirect('gestionar_blog')
+    return redirect('home')
 
 def articulo1(request):
     """Vista para el artículo 1: Viajar en Avión"""
@@ -604,23 +551,7 @@ def eliminar_mascotas(request):
     
     return redirect('listar_mascotas')
 
-def contar_mascotas(request):
-    if not request.user.is_authenticated:
-        return redirect('login_fundacion')
-    
-    if not request.user.rut_empresa:
-        return redirect('perfil_adoptante')
-    
-    total_mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user).count()
-    mascotas_disponibles = Mascota.objects.filter(
-        mascotafundacion__adoptante=request.user,
-        disponible=True
-    ).count()
-    
-    return render(request, 'contar_mascotas.html', {
-        'total_mascotas': total_mascotas,
-        'mascotas_disponibles': mascotas_disponibles
-    })
+
 
 def actualizar_mascota(request, mascota_id):
     if not request.user.is_authenticated:
@@ -855,6 +786,763 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
         messages.error(request, 'Error al rechazar la solicitud.')
     
     return redirect('mis_solicitudes')
+
+
+
+def perfil_adoptante(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_adoptante')
+
+    
+
+    if request.user.rut_empresa:
+
+        return redirect('home_perfil')
+
+    
+
+    # Obtener solicitudes de adopción del adoptante
+
+    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota')
+
+    
+
+    # Calcular estadísticas en tiempo real
+
+    total_solicitudes = solicitudes.count()
+
+    solicitudes_pendientes = solicitudes.filter(estado='pendiente').count()
+
+    solicitudes_aprobadas = solicitudes.filter(estado='aprobada').count()
+
+    solicitudes_rechazadas = solicitudes.filter(estado='rechazada').count()
+
+    
+
+    context = {
+
+        'solicitudes': solicitudes,
+
+        'total_solicitudes': total_solicitudes,
+
+        'solicitudes_pendientes': solicitudes_pendientes,
+
+        'solicitudes_aprobadas': solicitudes_aprobadas,
+
+        'solicitudes_rechazadas': solicitudes_rechazadas,
+
+        
+
+        # Variables para el template (nombres correctos)
+
+        'solicitudes_count': total_solicitudes,
+
+        'mascotas_adoptadas_count': solicitudes_aprobadas,
+
+        
+
+        # Agregar datos del usuario para el template
+
+        'usuario': request.user,
+
+        'nombre': request.user.nombre,
+
+        'email': request.user.email,
+
+        'telefono': request.user.telefono,
+
+    }
+
+    
+
+    return render(request, 'perfil_adoptante.html', context)
+
+
+
+def generar_solicitud_adopcion(request, mascota_id):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_adoptante')
+
+    
+
+    if request.user.rut_empresa:
+
+        return redirect('home_perfil')
+
+    
+
+    try:
+
+        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
+
+        
+
+        # Crear solicitud de adopción
+
+        adopcion = Adopcion.objects.create(
+
+            adoptante=request.user,
+
+            mascota=mascota,
+
+            estado='pendiente',
+
+            fecha_solicitud=timezone.now().date()
+
+        )
+
+        
+
+        # Marcar mascota como no disponible
+
+        mascota.disponible = False
+
+        mascota.save()
+
+        
+
+        messages.success(request, f'Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud.')
+
+        return redirect('perfil_adoptante')
+
+        
+
+    except Mascota.DoesNotExist:
+
+        messages.error(request, 'La mascota no está disponible para adopción.')
+
+        return redirect('buscar_animales')
+
+
+
+def preparar_adopcion(request, mascota_id):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_adoptante')
+
+    
+
+    if request.user.rut_empresa:
+
+        return redirect('home_perfil')
+
+    
+
+    try:
+
+        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
+
+        # Guardar en sesión para usar después del login
+
+        request.session['mascota_pendiente_adopcion'] = mascota_id
+
+        return redirect('login_adoptante')
+
+    except Mascota.DoesNotExist:
+
+        messages.error(request, 'La mascota no está disponible para adopción.')
+
+        return redirect('buscar_animales')
+
+
+
+def listar_mascotas(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user)
+
+    return render(request, 'listar_mascotas.html', {'mascotas': mascotas})
+
+
+
+def eliminar_mascota(request, mascota_id):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    try:
+
+        mascota = Mascota.objects.get(id=mascota_id, mascotafundacion__adoptante=request.user)
+
+        mascota.delete()
+
+        messages.success(request, 'Mascota eliminada exitosamente.')
+
+    except Mascota.DoesNotExist:
+
+        messages.error(request, 'La mascota no existe o no tienes permisos para eliminarla.')
+
+    
+
+    return redirect('listar_mascotas')
+
+
+
+def eliminar_mascotas(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    if request.method == 'POST':
+
+        mascota_ids = request.POST.getlist('mascotas')
+
+        if mascota_ids:
+
+            Mascota.objects.filter(
+
+                id__in=mascota_ids,
+
+                mascotafundacion__adoptante=request.user
+
+            ).delete()
+
+            messages.success(request, f'{len(mascota_ids)} mascota(s) eliminada(s) exitosamente.')
+
+    
+
+    return redirect('listar_mascotas')
+
+
+
+def contar_mascotas(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    total_mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user).count()
+
+    mascotas_disponibles = Mascota.objects.filter(
+
+        mascotafundacion__adoptante=request.user,
+
+        disponible=True
+
+    ).count()
+
+    
+
+    return render(request, 'contar_mascotas.html', {
+
+        'total_mascotas': total_mascotas,
+
+        'mascotas_disponibles': mascotas_disponibles
+
+    })
+
+
+
+def actualizar_mascota(request, mascota_id):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    try:
+
+        mascota = Mascota.objects.get(id=mascota_id, mascotafundacion__adoptante=request.user)
+
+    except Mascota.DoesNotExist:
+
+        messages.error(request, 'La mascota no existe o no tienes permisos para editarla.')
+
+        return redirect('listar_mascotas')
+
+    
+
+    if request.method == 'POST':
+
+        form = MascotaForm(request.POST, request.FILES, instance=mascota)
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(request, 'Mascota actualizada exitosamente.')
+
+            return redirect('listar_mascotas')
+
+    else:
+
+        form = MascotaForm(instance=mascota)
+
+    
+
+    return render(request, 'actualizar_mascota.html', {'form': form, 'mascota': mascota})
+
+
+
+def estadisticas(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    if not request.user.rut_empresa:
+
+        return redirect('perfil_adoptante')
+
+    
+
+    # Estadísticas de mascotas de la fundación
+
+    mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user)
+
+    total_mascotas = mascotas.count()
+
+    mascotas_disponibles = mascotas.filter(disponible=True).count()
+
+    mascotas_adoptadas = mascotas.filter(disponible=False).count()
+
+    
+
+    # Estadísticas de solicitudes
+
+    solicitudes = Adopcion.objects.filter(mascota__mascotafundacion__adoptante=request.user)
+
+    total_solicitudes = solicitudes.count()
+
+    solicitudes_pendientes = solicitudes.filter(estado='pendiente').count()
+
+    solicitudes_aprobadas = solicitudes.filter(estado='aprobada').count()
+
+    solicitudes_rechazadas = solicitudes.filter(estado='rechazada').count()
+
+    
+
+    # Calcular tasa de éxito
+
+    tasa_exito = 0
+
+    if total_solicitudes > 0:
+
+        tasa_exito = round((solicitudes_aprobadas / total_solicitudes) * 100)
+
+    
+
+    # Estadísticas generales del sistema (para mostrar en el template)
+
+    total_adopciones = Adopcion.objects.filter(estado='aprobada').count()
+
+    total_fundaciones = Usuario.objects.filter(rut_empresa__isnull=False).count()
+
+    total_adoptantes = Usuario.objects.filter(rut_empresa__isnull=True).count()
+
+    
+
+    # Promedio de adopciones por mes (simplificado)
+
+    promedio_adopciones_mes = round(total_adopciones / 12) if total_adopciones > 0 else 0
+
+    
+
+    context = {
+
+        # Estadísticas de la fundación
+
+        'total_mascotas': total_mascotas,
+
+        'mascotas_disponibles': mascotas_disponibles,
+
+        'mascotas_adoptadas': mascotas_adoptadas,
+
+        'total_solicitudes': total_solicitudes,
+
+        'solicitudes_pendientes': solicitudes_pendientes,
+
+        'solicitudes_aprobadas': solicitudes_aprobadas,
+
+        'solicitudes_rechazadas': solicitudes_rechazadas,
+
+        
+
+        # Estadísticas generales del sistema
+
+        'total_adopciones': total_adopciones,
+
+        'total_fundaciones': total_fundaciones,
+
+        'total_adoptantes': total_adoptantes,
+
+        'tasa_exito': tasa_exito,
+
+        'promedio_adopciones_mes': promedio_adopciones_mes,
+
+        
+
+        # Variables específicas para fundaciones
+
+        'mascotas_fundacion': total_mascotas,
+
+        'adopciones_fundacion': solicitudes_aprobadas,
+
+    }
+
+    
+
+    return render(request, 'estadisticas.html', context)
+
+
+
+def mi_login(request):
+
+    if request.method == 'POST':
+
+        email = request.POST.get('email')
+
+        password = request.POST.get('password')
+
+        
+
+        user = authenticate(request, username=email, password=password)
+
+        
+
+        if user is not None:
+
+            auth.login(request, user)
+
+            if user.rut_empresa:
+
+                return redirect('home_perfil')
+
+            else:
+
+                return redirect('perfil_adoptante')
+
+        else:
+
+            messages.error(request, 'Email o contraseña incorrectos.')
+
+    
+
+    return render(request, 'login_adoptante.html')
+
+
+
+def logout_view(request):
+
+    logout(request)
+
+    messages.success(request, 'Has cerrado sesión exitosamente.')
+
+    return redirect('home')
+
+
+
+def info_perfil(request):
+
+    if not request.user.is_authenticated:
+
+        return redirect('login_fundacion')
+
+    
+
+    # Obtener mascotas de la fundación
+
+    mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user)
+
+    
+
+    # Contar mascotas por estado
+
+    total_mascotas = mascotas.count()
+
+    mascotas_disponibles = mascotas.filter(disponible=True).count()
+
+    mascotas_adoptadas = mascotas.filter(disponible=False).count()
+
+    
+
+    # Obtener solicitudes de adopción de la fundación
+
+    solicitudes = Adopcion.objects.filter(
+
+        mascota__mascotafundacion__adoptante=request.user
+
+    )
+
+    total_solicitudes = solicitudes.count()
+
+    
+
+    context = {
+
+        'total_mascotas': total_mascotas,
+
+        'mascotas_disponibles': mascotas_disponibles,
+
+        'mascotas_adoptadas': mascotas_adoptadas,
+
+        'total_solicitudes': total_solicitudes,
+
+        'mascotas': mascotas[:5],  # Solo mostrar las primeras 5
+
+        'usuario': request.user,  # Agregar el usuario al contexto
+
+        
+
+        # Variables para el template
+
+        'nombre': request.user.nombre,
+
+        'telefono': request.user.telefono,
+
+        'email': request.user.email,
+
+        'rut_empresa': request.user.rut_empresa,
+
+        'mascotas_count': total_mascotas,
+
+        'adopciones_count': total_solicitudes,
+
+    }
+
+    
+
+    return render(request, 'home_perfil.html', context)
+
+
+
+@login_required(login_url='/login-fundacion/')
+
+def aprobar_solicitud_adopcion(request, solicitud_id):
+
+    """Vista para aprobar una solicitud de adopción"""
+
+    if not request.user.rut_empresa:
+
+        messages.error(request, "Solo las fundaciones pueden aprobar solicitudes.")
+
+        return redirect('home_perfil')
+
+    
+
+    try:
+
+        # Obtener la solicitud y verificar que pertenezca a una mascota de la fundación
+
+        solicitud = get_object_or_404(
+
+            Adopcion, 
+
+            id=solicitud_id,
+
+            mascota__mascotafundacion__adoptante=request.user
+
+        )
+
+        
+
+        # Debug: imprimir estado antes del cambio
+
+        print(f"DEBUG: Estado ANTES de aprobar: {solicitud.estado}")
+
+        
+
+        # Actualizar el estado
+
+        solicitud.estado = 'aprobada'
+
+        solicitud.fecha_resolucion = timezone.now().date()
+
+        
+
+        # Debug: imprimir estado después del cambio
+
+        print(f"DEBUG: Estado DESPUÉS de cambiar: {solicitud.estado}")
+
+        
+
+        # Guardar y verificar
+
+        solicitud.save()
+
+        
+
+        # Debug: verificar si se guardó correctamente
+
+        solicitud.refresh_from_db()
+
+        print(f"DEBUG: Estado DESPUÉS de guardar: {solicitud.estado}")
+
+        
+
+        # Actualizar la mascota para que no aparezca más como disponible
+
+        mascota = solicitud.mascota
+
+        mascota.adopcion_solicitada = True
+
+        mascota.disponible = False  # Marcar como no disponible para adopción
+
+        mascota.save()
+
+        
+
+        messages.success(request, f'Solicitud de adopción para {solicitud.mascota.nombre_mascota} aprobada exitosamente.')
+
+        
+
+    except Adopcion.DoesNotExist:
+
+        messages.error(request, 'La solicitud no existe o no tienes permisos para aprobarla.')
+
+    except Exception as e:
+
+        messages.error(request, 'Error al aprobar la solicitud.')
+
+    
+
+    return redirect('mis_solicitudes')
+
+
+
+@login_required(login_url='/login-fundacion/')
+
+def rechazar_solicitud_adopcion(request, solicitud_id):
+
+    """Vista para rechazar una solicitud de adopción"""
+
+    if not request.user.rut_empresa:
+
+        messages.error(request, "Solo las fundaciones pueden rechazar solicitudes.")
+
+        return redirect('home_perfil')
+
+    
+
+    try:
+
+        # Obtener la solicitud y verificar que pertenezca a una mascota de la fundación
+
+        solicitud = get_object_or_404(
+
+            Adopcion, 
+
+            id=solicitud_id,
+
+            mascota__mascotafundacion__adoptante=request.user
+
+        )
+
+        
+
+        # Debug: imprimir estado antes del cambio
+
+        print(f"DEBUG: Estado ANTES de rechazar: {solicitud.estado}")
+
+        
+
+        # Actualizar el estado
+
+        solicitud.estado = 'rechazada'
+
+        solicitud.fecha_resolucion = timezone.now().date()
+
+        
+
+        # Debug: imprimir estado después del cambio
+
+        print(f"DEBUG: Estado DESPUÉS de cambiar: {solicitud.estado}")
+
+        
+
+        # Guardar y verificar
+
+        solicitud.save()
+
+        
+
+        # Debug: verificar si se guardó correctamente
+
+        solicitud.refresh_from_db()
+
+        print(f"DEBUG: Estado DESPUÉS de guardar: {solicitud.estado}")
+
+        
+
+        # Si se rechaza, marcar la mascota como disponible nuevamente
+
+        mascota = solicitud.mascota
+
+        mascota.disponible = True  # Marcar como disponible para adopción
+
+        mascota.save()
+
+        
+
+        messages.success(request, f'Solicitud de adopción para {solicitud.mascota.nombre_mascota} rechazada.')
+
+        
+
+    except Adopcion.DoesNotExist:
+
+        messages.error(request, 'La solicitud no existe o no tienes permisos para rechazarla.')
+
+    except Exception as e:
+
+        messages.error(request, 'Error al rechazar la solicitud.')
+
+    
+
+    return redirect('mis_solicitudes')
+
+
+
 
 
 
