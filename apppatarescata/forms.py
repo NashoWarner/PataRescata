@@ -32,10 +32,6 @@ class Formulario2(forms.Form):
         ('', ''),
         ('perro', 'Perro'),
         ('gato', 'Gato'),
-        ('conejo', 'Conejo'),
-        ('hamster', 'Hamster'),
-        ('ave', 'Ave'),
-        ('otro', 'Otro'),
     ]
 
     tamaño_mascota = [
