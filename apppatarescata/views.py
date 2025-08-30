@@ -315,7 +315,9 @@ def login_adoptante(request):
             if mascota_id:
                 # Limpiar la sesión
                 del request.session['mascota_pendiente_adopcion']
+                request.session.save()
                 # Redirigir a generar la solicitud
+                messages.info(request, f'Procesando tu solicitud de adopción...')
                 return redirect('generar_solicitud_adopcion', mascota_id=mascota_id)
             
             return redirect('perfil_adoptante')
@@ -434,7 +436,7 @@ def perfil_adoptante(request):
         return redirect('home_perfil')
     
     # Obtener solicitudes de adopción del adoptante
-    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota')
+    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota').order_by('-fecha_solicitud')
     
     # Calcular estadísticas en tiempo real
     total_solicitudes = solicitudes.count()
@@ -472,6 +474,16 @@ def generar_solicitud_adopcion(request, mascota_id):
     try:
         mascota = Mascota.objects.get(id=mascota_id, disponible=True)
         
+        # Verificar si ya existe una solicitud para esta mascota y este adoptante
+        solicitud_existente = Adopcion.objects.filter(
+            adoptante=request.user,
+            mascota=mascota
+        ).first()
+        
+        if solicitud_existente:
+            messages.info(request, f'Ya tienes una solicitud pendiente para {mascota.nombre_mascota}.')
+            return redirect('perfil_adoptante')
+        
         # Crear solicitud de adopción
         adopcion = Adopcion.objects.create(
             adoptante=request.user,
@@ -484,28 +496,26 @@ def generar_solicitud_adopcion(request, mascota_id):
         mascota.disponible = False
         mascota.save()
         
-        messages.success(request, f'Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud.')
+        messages.success(request, f'¡Excelente! Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud.')
+        # Redirigir al perfil con un parámetro para indicar que se acaba de adoptar
         return redirect('perfil_adoptante')
         
     except Mascota.DoesNotExist:
         messages.error(request, 'La mascota no está disponible para adopción.')
-        return redirect('buscar_animales')
+        return redirect('home')
 
 def preparar_adopcion(request, mascota_id):
-    if not request.user.is_authenticated:
-        return redirect('login_adoptante')
-    
-    if request.user.rut_empresa:
-        return redirect('home_perfil')
-    
     try:
         mascota = Mascota.objects.get(id=mascota_id, disponible=True)
         # Guardar en sesión para usar después del login
         request.session['mascota_pendiente_adopcion'] = mascota_id
+        # Guardar la sesión inmediatamente
+        request.session.save()
+        messages.info(request, f'Has seleccionado a {mascota.nombre_mascota} para adoptar. Por favor inicia sesión para continuar.')
         return redirect('login_adoptante')
     except Mascota.DoesNotExist:
         messages.error(request, 'La mascota no está disponible para adopción.')
-        return redirect('buscar_animales')
+        return redirect('home')
 
 def listar_mascotas(request):
     if not request.user.is_authenticated:
@@ -793,93 +803,11 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
 
 
 
-def generar_solicitud_adopcion(request, mascota_id):
-
-    if not request.user.is_authenticated:
-
-        return redirect('login_adoptante')
-
-    
-
-    if request.user.rut_empresa:
-
-        return redirect('home_perfil')
-
-    
-
-    try:
-
-        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
-
-        
-
-        # Crear solicitud de adopción
-
-        adopcion = Adopcion.objects.create(
-
-            adoptante=request.user,
-
-            mascota=mascota,
-
-            estado='pendiente',
-
-            fecha_solicitud=timezone.now().date()
-
-        )
-
-        
-
-        # Marcar mascota como no disponible
-
-        mascota.disponible = False
-
-        mascota.save()
-
-        
-
-        messages.success(request, f'Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud.')
-
-        return redirect('perfil_adoptante')
-
-        
-
-    except Mascota.DoesNotExist:
-
-        messages.error(request, 'La mascota no está disponible para adopción.')
-
-        return redirect('buscar_animales')
+# Función duplicada eliminada
 
 
 
-def preparar_adopcion(request, mascota_id):
-
-    if not request.user.is_authenticated:
-
-        return redirect('login_adoptante')
-
-    
-
-    if request.user.rut_empresa:
-
-        return redirect('home_perfil')
-
-    
-
-    try:
-
-        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
-
-        # Guardar en sesión para usar después del login
-
-        request.session['mascota_pendiente_adopcion'] = mascota_id
-
-        return redirect('login_adoptante')
-
-    except Mascota.DoesNotExist:
-
-        messages.error(request, 'La mascota no está disponible para adopción.')
-
-        return redirect('buscar_animales')
+# Función duplicada eliminada
 
 
 
