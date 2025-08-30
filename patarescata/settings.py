@@ -131,6 +131,10 @@ EMAIL_HOST_PASSWORD = 'nqya npsb zers xzrv'  # Asegúrate de usar la contraseña
 EMAIL_TIMEOUT = 20  # Timeout en segundos
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Configuración de sesiones
+SESSION_COOKIE_AGE = 30 * 24 * 60 * 60  # 30 días en segundos (por defecto)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Las sesiones no expiran al cerrar el navegador por defecto
+SESSION_SAVE_EVERY_REQUEST = True  # Guardar la sesión en cada request para mantenerla activa
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

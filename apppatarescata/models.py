@@ -69,7 +69,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     nombre = models.CharField(max_length=50)
     telefono = models.CharField(max_length=15, validators=[Numero])
-    rut_empresa = models.CharField(max_length=20, null=True, blank=True, validators=[rut])
+    rut_empresa = models.CharField(max_length=20, null=True, blank=True)
     email_verificado = models.BooleanField(default=False)
     token_verificacion = models.CharField(max_length=100, default=generar_token)
     date_joined = models.DateTimeField(auto_now_add=True)

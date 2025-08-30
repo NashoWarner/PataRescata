@@ -309,7 +309,7 @@
                             <i class="fas fa-id-card"></i> RUT de Empresa <span class="required-field">*</span>
                         </label>
                         {{ form.rut_empresa }}
-                        <div class="help-text">Ejemplo: 12.345.678-9</div>
+                        <div class="help-text">Ejemplo: 19956655-5 (solo números, guión y dígito verificador)</div>
                         {% if form.rut_empresa.errors %}
                             <ul class="errorlist">
                                 {% for error in form.rut_empresa.errors %}

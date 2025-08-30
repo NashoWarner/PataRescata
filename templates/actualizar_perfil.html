@@ -80,6 +80,20 @@
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
+        .error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .help-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -237,6 +251,7 @@
                     <i class="fas fa-building"></i> RUT de Empresa
                 </label>
                 {{ form.rut_empresa }}
+                <div class="help-text">Ejemplo: 19956655-5 (solo números, guión y dígito verificador)</div>
                 {% if form.rut_empresa.errors %}
                     <div class="error">{{ form.rut_empresa.errors.0 }}</div>
                 {% endif %}

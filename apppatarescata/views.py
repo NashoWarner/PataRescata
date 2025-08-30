@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 
 from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm
 
 def faq(request):
     preguntas = FAQ.objects.all()
@@ -391,14 +391,18 @@ def registro_adoptante(request):
 
 def registro_fundacion(request):
     if request.method == 'POST':
-        form = RegistroUsuarioForm(request.POST)
+        form = RegistroFundacionForm(request.POST)
+        print("POST data:", request.POST)  # Debug
+        print("Form is valid:", form.is_valid())  # Debug
         if form.is_valid():
+            print("Cleaned data:", form.cleaned_data)  # Debug
             user = form.save(commit=False)
             email = form.cleaned_data['email']
             password = form.cleaned_data['password1']
             
-            # Forzar tipo fundación
-            user.rut_empresa = "FUNDACION"  # Valor temporal para identificar fundaciones
+            # El RUT de empresa ya viene validado del formulario
+            # No necesitamos verificar nada adicional
+            print("RUT empresa:", form.cleaned_data.get('rut_empresa'))  # Debug
             
             user.set_password(password)
             user.save()
@@ -424,7 +428,7 @@ def registro_fundacion(request):
             return redirect('login_fundacion')
 
     else:
-        form = RegistroUsuarioForm()
+        form = RegistroFundacionForm()
 
     return render(request, 'registro_fundacion.html', {'form': form})
 

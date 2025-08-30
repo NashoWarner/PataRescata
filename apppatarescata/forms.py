@@ -193,6 +193,72 @@ class RegistroUsuarioForm(UserCreationForm):
     class Meta:
         model = Usuario
         fields = ['rut_empresa', 'nombre', 'telefono', 'email', 'password1', 'password2']
+
+
+class RegistroFundacionForm(UserCreationForm):
+    email = forms.EmailField()
+    rut_empresa = forms.CharField(
+        max_length=20, 
+        required=True, 
+        label="RUT de Empresa", 
+        help_text="Ingresa el RUT sin puntos, solo números y guión (ej: 19956655-5)",
+        widget=forms.TextInput(attrs={'placeholder': '19956655-5'})
+    )
+    
+    # Personalizar mensajes de ayuda para contraseñas en español
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].help_text = (
+            '• Tu contraseña no puede ser muy similar a tu información personal.<br>'
+            '• Tu contraseña debe contener al menos 8 caracteres.<br>'
+            '• Tu contraseña no puede ser una contraseña comúnmente utilizada.<br>'
+            '• Tu contraseña no puede ser completamente numérica.'
+        )
+        self.fields['password1'].label = "Contraseña"
+        self.fields['password2'].label = "Confirmar Contraseña"
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        Numero(telefono)
+        return telefono
+
+    def clean_rut_empresa(self):
+        rut_empresa = self.cleaned_data.get('rut_empresa')
+        
+        # El RUT de empresa es obligatorio para fundaciones
+        if not rut_empresa:
+            raise ValidationError('El RUT de empresa es obligatorio para fundaciones.')
+        
+        # Validar formato: solo números, un guión y dígito verificador
+        if not rut_empresa or '-' not in rut_empresa:
+            raise ValidationError('El RUT debe tener el formato: 19956655-5 (números, guión y dígito verificador).')
+        
+        # Separar números del dígito verificador
+        partes = rut_empresa.split('-')
+        if len(partes) != 2:
+            raise ValidationError('El RUT debe tener exactamente un guión separando números del dígito verificador.')
+        
+        numeros = partes[0]
+        digito_verificador = partes[1]
+        
+        # Validar que la primera parte solo contenga números
+        if not numeros.isdigit():
+            raise ValidationError('La parte numérica del RUT debe contener solo números.')
+        
+        # Validar que el dígito verificador sea un solo carácter
+        if len(digito_verificador) != 1:
+            raise ValidationError('El dígito verificador debe ser un solo carácter.')
+        
+        # Validar que tenga exactamente 8 dígitos (sin contar el dígito verificador)
+        if len(numeros) != 8:
+            raise ValidationError('El RUT debe tener exactamente 8 dígitos + guión + dígito verificador (ej: 19956655-5).')
+        
+        # Retornar el RUT tal como se ingresó (con guión)
+        return rut_empresa
+
+    class Meta:
+        model = Usuario
+        fields = ['rut_empresa', 'nombre', 'telefono', 'email', 'password1', 'password2']
         
 
 from django import forms
@@ -200,6 +266,14 @@ from django.core.exceptions import ValidationError
 from .models import Usuario
 
 class ActualizarPerfilForm(forms.ModelForm):
+    rut_empresa = forms.CharField(
+        max_length=20, 
+        required=False, 
+        label="RUT de Empresa",
+        help_text="Ingresa el RUT sin puntos, solo números y guión (ej: 19956655-5). Debe tener exactamente 8 dígitos + guión + dígito verificador.",
+        widget=forms.TextInput(attrs={'placeholder': '19956655-5'})
+    )
+    
     class Meta:
         model = Usuario
         fields = ['email', 'nombre', 'telefono', 'rut_empresa']
@@ -227,9 +301,32 @@ class ActualizarPerfilForm(forms.ModelForm):
     def clean_rut_empresa(self):
         rut_empresa = self.cleaned_data.get('rut_empresa')
         if rut_empresa:
-            # Validar que el RUT tenga entre 7 y 9 dígitos y solo números
-            if not rut_empresa.isdigit() or len(rut_empresa) < 7 or len(rut_empresa) > 9:
-                raise ValidationError('El RUT debe ser válido (entre 7 y 9 dígitos numéricos).')
+            # Validar formato: solo números, un guión y dígito verificador
+            if '-' not in rut_empresa:
+                raise ValidationError('El RUT debe tener el formato: 19956655-5 (números, guión y dígito verificador).')
+            
+            # Separar números del dígito verificador
+            partes = rut_empresa.split('-')
+            if len(partes) != 2:
+                raise ValidationError('El RUT debe tener exactamente un guión separando números del dígito verificador.')
+            
+            numeros = partes[0]
+            digito_verificador = partes[1]
+            
+            # Validar que la primera parte solo contenga números
+            if not numeros.isdigit():
+                raise ValidationError('La parte numérica del RUT debe contener solo números.')
+            
+            # Validar que el dígito verificador sea un solo carácter
+            if len(digito_verificador) != 1:
+                raise ValidationError('El dígito verificador debe ser un solo carácter.')
+            
+            # Validar que tenga exactamente 8 dígitos (sin contar el dígito verificador)
+            if len(numeros) != 8:
+                raise ValidationError('El RUT debe tener exactamente 8 dígitos + guión + dígito verificador (ej: 19956655-5).')
+            
+            # Retornar el RUT tal como se ingresó (con guión)
+            return rut_empresa
         return rut_empresa
     
 
