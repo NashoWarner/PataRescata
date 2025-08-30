@@ -163,15 +163,10 @@ def actualizar_perfil(request):
 
 def actualizar_perfil_adoptante(request):
     if request.method == 'POST':
-        form = ActualizarPerfilForm(request.POST, request.FILES, instance=request.user)
+        form = ActualizarPerfilForm(request.POST, instance=request.user)
         if form.is_valid():
-            # Verificar si se subió una nueva imagen
-            nueva_imagen = form.cleaned_data.get('imagen_perfil')
-            if nueva_imagen:
-                messages.success(request, 'Perfil actualizado exitosamente. Tu nueva imagen de perfil se ha guardado.')
-            else:
-                messages.success(request, 'Perfil actualizado exitosamente.')
             form.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')
             return redirect('perfil_adoptante')
     else:
         form = ActualizarPerfilForm(instance=request.user)
@@ -832,6 +827,44 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
         messages.error(request, 'Error al rechazar la solicitud.')
     
     return redirect('mis_solicitudes')
+
+def cambiar_imagen_perfil(request):
+    """Vista para cambiar la imagen de perfil directamente desde el perfil"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Debes iniciar sesión'})
+    
+    if request.user.rut_empresa:
+        return JsonResponse({'success': False, 'message': 'Esta función es solo para adoptantes'})
+    
+    if request.method == 'POST':
+        try:
+            nueva_imagen = request.FILES.get('imagen_perfil')
+            if not nueva_imagen:
+                return JsonResponse({'success': False, 'message': 'No se seleccionó ninguna imagen'})
+            
+            # Validar tipo de archivo
+            if not nueva_imagen.content_type.startswith('image/'):
+                return JsonResponse({'success': False, 'message': 'Solo se permiten archivos de imagen'})
+            
+            # Validar tamaño (máximo 5MB)
+            if nueva_imagen.size > 5 * 1024 * 1024:
+                return JsonResponse({'success': False, 'message': 'La imagen no puede superar los 5MB'})
+            
+            # Actualizar la imagen del usuario
+            request.user.imagen_perfil = nueva_imagen
+            request.user.save()
+            
+            return JsonResponse({
+                'success': True, 
+                'message': 'Imagen de perfil actualizada exitosamente',
+                'image_url': request.user.imagen_perfil.url
+            })
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error al actualizar la imagen: {str(e)}'})
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido'})
+
 
 def eliminar_solicitud_adopcion(request, solicitud_id):
     """Vista para que los adoptantes eliminen sus solicitudes de adopción"""

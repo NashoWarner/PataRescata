@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Adoptante - PataRescata</title>
+    {% csrf_token %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -71,6 +72,45 @@
             border-color: #10b981;
             box-shadow: 0 12px 35px rgba(16, 185, 129, 0.3);
             transform: translateY(-3px);
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(16, 185, 129, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .profile-avatar:hover .avatar-overlay {
+            opacity: 1;
+        }
+        
+        .profile-avatar.loading {
+            pointer-events: none;
+        }
+        
+        .profile-avatar.loading .avatar-overlay {
+            opacity: 1;
+            background: rgba(16, 185, 129, 0.9);
+        }
+        
+        .profile-avatar.loading .avatar-overlay i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .profile-name {
@@ -450,13 +490,17 @@
     <div class="container">
         <!-- Header del Perfil -->
         <div class="profile-header">
-            <div class="profile-avatar">
+            <div class="profile-avatar" id="profile-avatar" style="cursor: pointer;" title="Haz clic para cambiar tu imagen de perfil">
                 {% if usuario.imagen_perfil %}
                     <img src="{{ usuario.imagen_perfil.url }}" alt="{{ usuario.nombre }}" class="profile-image">
                 {% else %}
                     <i class="fas fa-heart"></i>
                 {% endif %}
+                <div class="avatar-overlay">
+                    <i class="fas fa-camera"></i>
+                </div>
             </div>
+            <input type="file" id="profile-image-input" accept="image/*" style="display: none;">
             <h1 class="profile-name">{{ usuario.nombre }}</h1>
             <p class="profile-email">{{ usuario.email }}</p>
             <p class="profile-phone">
@@ -667,7 +711,154 @@
                     card.style.transform = 'translateY(0)';
                 }, index * 100);
             });
+            
+            // Funcionalidad para cambiar imagen de perfil
+            const profileAvatar = document.getElementById('profile-avatar');
+            const profileImageInput = document.getElementById('profile-image-input');
+            
+            profileAvatar.addEventListener('click', function() {
+                profileImageInput.click();
+            });
+            
+            profileImageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    uploadProfileImage(file);
+                }
+            });
+            
+            function uploadProfileImage(file) {
+                // Validar tipo de archivo
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor selecciona un archivo de imagen válido.');
+                    return;
+                }
+                
+                // Validar tamaño (máximo 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('La imagen no puede superar los 5MB.');
+                    return;
+                }
+                
+                // Mostrar estado de carga
+                profileAvatar.classList.add('loading');
+                
+                // Crear FormData
+                const formData = new FormData();
+                formData.append('imagen_perfil', file);
+                
+                // Enviar imagen
+                fetch('{% url "cambiar_imagen_perfil" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar la imagen en el DOM
+                        const profileImage = profileAvatar.querySelector('.profile-image');
+                        if (profileImage) {
+                            profileImage.src = data.image_url;
+                        } else {
+                            // Si no hay imagen, crear una nueva
+                            const newImage = document.createElement('img');
+                            newImage.src = data.image_url;
+                            newImage.alt = '{{ usuario.nombre }}';
+                            newImage.className = 'profile-image';
+                            profileAvatar.innerHTML = '';
+                            profileAvatar.appendChild(newImage);
+                            profileAvatar.appendChild(document.createElement('div')).className = 'avatar-overlay';
+                            profileAvatar.querySelector('.avatar-overlay').innerHTML = '<i class="fas fa-camera"></i>';
+                        }
+                        
+                        // Mostrar mensaje de éxito
+                        showMessage(data.message, 'success');
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Error al subir la imagen. Inténtalo de nuevo.', 'error');
+                })
+                .finally(() => {
+                    // Remover estado de carga
+                    profileAvatar.classList.remove('loading');
+                    // Limpiar input
+                    profileImageInput.value = '';
+                });
+            }
+            
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            
+            function showMessage(message, type) {
+                // Crear elemento de mensaje
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message message-${type}`;
+                messageDiv.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                // Agregar estilos
+                messageDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                    background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                `;
+                
+                // Agregar al DOM
+                document.body.appendChild(messageDiv);
+                
+                // Remover después de 5 segundos
+                setTimeout(() => {
+                    messageDiv.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (messageDiv.parentNode) {
+                            messageDiv.parentNode.removeChild(messageDiv);
+                        }
+                    }, 300);
+                }, 5000);
+            }
         });
+        
+        // Estilos para las animaciones de mensajes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

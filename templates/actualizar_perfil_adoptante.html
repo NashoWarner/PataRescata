@@ -81,27 +81,7 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
         
-        /* Estilos específicos para el campo de imagen */
-        .form-input[type="file"] {
-            padding: 1.5rem;
-            border: 2px dashed #10b981;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .form-input[type="file"]:hover {
-            border-color: #059669;
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
-        }
-        
-        .form-input[type="file"]:focus {
-            border-color: #10b981;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
+
 
         .form-row {
             display: grid;
@@ -239,7 +219,7 @@
             </div>
             {% endif %}
 
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
                 {% csrf_token %}
                 
                 <div class="form-row">
@@ -274,19 +254,7 @@
                     {% endif %}
                 </div>
 
-                <div class="form-group">
-                    <label for="{{ form.imagen_perfil.id_for_label }}" class="form-label">
-                        <i class="fas fa-camera"></i> Imagen de Perfil
-                    </label>
-                    {{ form.imagen_perfil }}
-                    {% if form.imagen_perfil.errors %}
-                        <div class="error">{{ form.imagen_perfil.errors.0 }}</div>
-                    {% endif %}
-                    <small style="color: #6b7280; font-size: 0.9rem; margin-top: 0.5rem; display: block;">
-                        <i class="fas fa-info-circle"></i> 
-                        Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB.
-                    </small>
-                </div>
+
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
