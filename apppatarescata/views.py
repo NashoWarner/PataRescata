@@ -755,22 +755,10 @@ def aprobar_solicitud_adopcion(request, solicitud_id):
             mascota__mascotafundacion__adoptante=request.user
         )
         
-        # Debug: imprimir estado antes del cambio
-        print(f"DEBUG: Estado ANTES de aprobar: {solicitud.estado}")
-        
         # Actualizar el estado
         solicitud.estado = 'aprobada'
         solicitud.fecha_resolucion = timezone.now().date()
-        
-        # Debug: imprimir estado después del cambio
-        print(f"DEBUG: Estado DESPUÉS de cambiar: {solicitud.estado}")
-        
-        # Guardar y verificar
         solicitud.save()
-        
-        # Debug: verificar si se guardó correctamente
-        solicitud.refresh_from_db()
-        print(f"DEBUG: Estado DESPUÉS de guardar: {solicitud.estado}")
         
         # Actualizar la mascota para que no aparezca más como disponible
         mascota = solicitud.mascota
@@ -802,22 +790,10 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
             mascota__mascotafundacion__adoptante=request.user
         )
         
-        # Debug: imprimir estado antes del cambio
-        print(f"DEBUG: Estado ANTES de rechazar: {solicitud.estado}")
-        
         # Actualizar el estado
         solicitud.estado = 'rechazada'
         solicitud.fecha_resolucion = timezone.now().date()
-        
-        # Debug: imprimir estado después del cambio
-        print(f"DEBUG: Estado DESPUÉS de cambiar: {solicitud.estado}")
-        
-        # Guardar y verificar
         solicitud.save()
-        
-        # Debug: verificar si se guardó correctamente
-        solicitud.refresh_from_db()
-        print(f"DEBUG: Estado DESPUÉS de guardar: {solicitud.estado}")
         
         # Si se rechaza, marcar la mascota como disponible nuevamente
         mascota = solicitud.mascota
@@ -830,6 +806,59 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
         messages.error(request, 'La solicitud no existe o no tienes permisos para rechazarla.')
     except Exception as e:
         messages.error(request, 'Error al rechazar la solicitud.')
+    
+    return redirect('mis_solicitudes')
+
+@login_required(login_url='/login-fundacion/')
+def cambiar_estado_solicitud(request, solicitud_id):
+    """Vista para cambiar el estado de una solicitud de adopción (permitir cambios múltiples)"""
+    if not request.user.rut_empresa:
+        messages.error(request, "Solo las fundaciones pueden cambiar el estado de solicitudes.")
+        return redirect('home_perfil')
+    
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('nuevo_estado')
+        
+        if nuevo_estado not in ['pendiente', 'aprobada', 'rechazada']:
+            messages.error(request, 'Estado no válido.')
+            return redirect('mis_solicitudes')
+        
+        try:
+            # Obtener la solicitud y verificar que pertenezca a una mascota de la fundación
+            solicitud = get_object_or_404(
+                Adopcion, 
+                id=solicitud_id,
+                mascota__mascotafundacion__adoptante=request.user
+            )
+            
+            # Guardar el estado anterior para el mensaje
+            estado_anterior = solicitud.estado
+            
+            # Actualizar el estado
+            solicitud.estado = nuevo_estado
+            solicitud.fecha_resolucion = timezone.now().date()
+            solicitud.save()
+            
+            # Actualizar la disponibilidad de la mascota según el nuevo estado
+            mascota = solicitud.mascota
+            
+            if nuevo_estado == 'aprobada':
+                mascota.adopcion_solicitada = True
+                mascota.disponible = False
+                messages.success(request, f'Solicitud de adopción para {mascota.nombre_mascota} aprobada exitosamente.')
+            elif nuevo_estado == 'rechazada':
+                mascota.disponible = True
+                messages.success(request, f'Solicitud de adopción para {mascota.nombre_mascota} rechazada exitosamente.')
+            elif nuevo_estado == 'pendiente':
+                mascota.disponible = True
+                messages.success(request, f'Solicitud de adopción para {mascota.nombre_mascota} marcada como pendiente.')
+            
+            mascota.save()
+            
+        except Adopcion.DoesNotExist:
+            messages.error(request, 'La solicitud no existe o no tienes permisos para modificarla.')
+        except Exception as e:
+            messages.error(request, 'Error al cambiar el estado de la solicitud.')
     
     return redirect('mis_solicitudes')
 
@@ -945,6 +974,43 @@ def eliminar_solicitud_adopcion(request, solicitud_id):
 
 # Funciones duplicadas eliminadas
 
+
+@login_required(login_url='/login-fundacion/')
+def eliminar_solicitud_fundacion(request, solicitud_id):
+    """Vista para que las fundaciones eliminen solicitudes de adopción"""
+    if not request.user.rut_empresa:
+        messages.error(request, "Solo las fundaciones pueden eliminar solicitudes.")
+        return redirect('home_perfil')
+    
+    try:
+        # Obtener la solicitud y verificar que pertenezca a una mascota de la fundación
+        solicitud = get_object_or_404(
+            Adopcion, 
+            id=solicitud_id,
+            mascota__mascotafundacion__adoptante=request.user
+        )
+        
+        # Obtener el nombre de la mascota antes de eliminar
+        nombre_mascota = solicitud.mascota.nombre_mascota
+        nombre_adoptante = solicitud.adoptante.nombre
+        
+        # Marcar la mascota como disponible nuevamente si la solicitud estaba aprobada
+        if solicitud.estado == 'aprobada':
+            mascota = solicitud.mascota
+            mascota.disponible = True
+            mascota.save()
+        
+        # Eliminar la solicitud
+        solicitud.delete()
+        
+        messages.success(request, f'Solicitud de adopción de {nombre_adoptante} para {nombre_mascota} eliminada exitosamente.')
+        
+    except Adopcion.DoesNotExist:
+        messages.error(request, 'La solicitud no existe o no tienes permisos para eliminarla.')
+    except Exception as e:
+        messages.error(request, 'Error al eliminar la solicitud.')
+    
+    return redirect('mis_solicitudes')
 
 
 def listar_mascotas(request):

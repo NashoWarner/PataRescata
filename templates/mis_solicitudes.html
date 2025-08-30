@@ -298,6 +298,76 @@
                 align-items: center;
             }
         }
+
+        .solicitud-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .estado-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .estado-select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .estado-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-change {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-change:hover {
+            background: #2c5aa0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-delete:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -403,18 +473,26 @@
                         </div>
 
                         <!-- Botones de acción para fundaciones -->
-                        {% if request.user.rut_empresa and solicitud.estado == 'pendiente' %}
-                            <div class="solicitud-actions" style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
-                                <form method="post" action="{% url 'aprobar_solicitud' solicitud.id %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-approve" style="background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
-                                        <i class="fas fa-check"></i> Aprobar
+                        {% if request.user.rut_empresa %}
+                            <div class="solicitud-actions" style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end; flex-wrap: wrap;">
+                                <!-- Botón para cambiar estado -->
+                                <div class="estado-selector" style="display: flex; align-items: center; gap: 10px;">
+                                    <label for="estado-{{ solicitud.id }}" style="color: #4a5568; font-weight: 600;">Cambiar Estado:</label>
+                                    <select id="estado-{{ solicitud.id }}" class="estado-select" style="padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; color: #4a5568; font-weight: 500;">
+                                        <option value="pendiente" {% if solicitud.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                                        <option value="aprobada" {% if solicitud.estado == 'aprobada' %}selected{% endif %}>Aprobada</option>
+                                        <option value="rechazada" {% if solicitud.estado == 'rechazada' %}selected{% endif %}>Rechazada</option>
+                                    </select>
+                                    <button onclick="cambiarEstado({{ solicitud.id }})" class="btn-change" style="background: #3182ce; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                                        <i class="fas fa-sync-alt"></i> Cambiar
                                     </button>
-                                </form>
-                                <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}" style="display: inline;">
+                                </div>
+                                
+                                <!-- Botón para eliminar solicitud -->
+                                <form method="post" action="{% url 'eliminar_solicitud_fundacion' solicitud.id %}" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer.')">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn-reject" style="background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
-                                        <i class="fas fa-times"></i> Rechazar
+                                    <button type="submit" class="btn-delete" style="background: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                                        <i class="fas fa-trash"></i> Eliminar
                                     </button>
                                 </form>
                             </div>
@@ -444,5 +522,53 @@
             {% endif %}
         </div>
     </div>
+
+    <script>
+        // Función para cambiar el estado de una solicitud
+        function cambiarEstado(solicitudId) {
+            const select = document.getElementById(`estado-${solicitudId}`);
+            const nuevoEstado = select.value;
+            
+            // Crear un formulario temporal para enviar la solicitud
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/cambiar-estado-solicitud/${solicitudId}/`;
+            
+            // Agregar CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+            
+            // Agregar el nuevo estado
+            const estadoInput = document.createElement('input');
+            estadoInput.type = 'hidden';
+            estadoInput.name = 'nuevo_estado';
+            estadoInput.value = nuevoEstado;
+            form.appendChild(estadoInput);
+            
+            // Enviar el formulario
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Efectos hover para botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn-change, .btn-delete');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

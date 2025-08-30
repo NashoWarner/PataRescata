@@ -11,8 +11,8 @@ from apppatarescata.views import (
     cambiar_estado_articulo, seleccionar_tipo_cuenta, 
     login_adoptante, login_fundacion, registro_adoptante, registro_fundacion,
     perfil_adoptante, generar_solicitud_adopcion, preparar_adopcion,
-    aprobar_solicitud_adopcion, rechazar_solicitud_adopcion, eliminar_solicitud_adopcion, cuidado_animal, eventos,
-    cambiar_imagen_perfil, eliminar_imagen_perfil,
+    aprobar_solicitud_adopcion, rechazar_solicitud_adopcion, eliminar_solicitud_adopcion, eliminar_solicitud_fundacion, cuidado_animal, eventos,
+    cambiar_imagen_perfil, eliminar_imagen_perfil, cambiar_estado_solicitud,
 
 )
 from django.conf import settings
@@ -34,6 +34,8 @@ urlpatterns = [
     path('aprobar-solicitud/<int:solicitud_id>/', aprobar_solicitud_adopcion, name='aprobar_solicitud'),
     path('rechazar-solicitud/<int:solicitud_id>/', rechazar_solicitud_adopcion, name='rechazar_solicitud'),
     path('eliminar-solicitud/<int:solicitud_id>/', eliminar_solicitud_adopcion, name='eliminar_solicitud'),
+    path('eliminar-solicitud-fundacion/<int:solicitud_id>/', eliminar_solicitud_fundacion, name='eliminar_solicitud_fundacion'),
+    path('cambiar-estado-solicitud/<int:solicitud_id>/', cambiar_estado_solicitud, name='cambiar_estado_solicitud'),
     path('', home, name='home'),
     path('tienda/', tienda, name='tienda'),
     path('home_perfil/', home_perfil, name='home_perfil'), 
