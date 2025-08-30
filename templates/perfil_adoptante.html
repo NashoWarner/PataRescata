@@ -837,11 +837,11 @@
                                     {% endif %}
                                 </div>
                                 
-                                {% if solicitud.estado == 'pendiente' %}
+                                {% if solicitud.estado == 'pendiente' or solicitud.estado == 'rechazada' %}
                                     <div class="solicitud-actions">
                                         <a href="{% url 'eliminar_solicitud' solicitud.id %}" 
                                            class="btn-eliminar-solicitud"
-                                           onclick="return confirm('¿Estás seguro de que quieres eliminar esta solicitud de adopción?')">
+                                           onclick="return confirm('¿Estás seguro de que quieres eliminar esta solicitud de adopción? Esta acción no se puede deshacer.')">
                                             <i class="fas fa-trash"></i> Eliminar
                                         </a>
                                     </div>
@@ -862,6 +862,21 @@
                     <a href="{% url 'home' %}" class="btn btn-primary">
                         <i class="fas fa-search"></i> Buscar Mascotas
                     </a>
+                </div>
+            {% endif %}
+            
+            <!-- Información sobre eliminación de solicitudes -->
+            {% if solicitudes %}
+                <div class="info-box" style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9; border-radius: 12px; border-left: 4px solid #0ea5e9;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; font-size: 1.5rem;"></i>
+                        <h4 style="color: #0c4a6e; margin: 0; font-size: 1.1rem;">Información Importante</h4>
+                    </div>
+                    <p style="color: #0c4a6e; margin: 0; line-height: 1.6; font-size: 0.95rem;">
+                        <strong>Gestión de Solicitudes:</strong> Puedes eliminar solicitudes <strong>pendientes</strong> y <strong>rechazadas</strong> 
+                        para mantener tu lista organizada. Las solicitudes <strong>aprobadas</strong> no se pueden eliminar 
+                        ya que representan adopciones exitosas.
+                    </p>
                 </div>
             {% endif %}
         </div>
@@ -1148,4 +1163,4 @@
     </script>
 </body>
 </html>
- c
+ 

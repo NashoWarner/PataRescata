@@ -945,18 +945,20 @@ def eliminar_solicitud_adopcion(request, solicitud_id):
             adoptante=request.user
         )
         
-        # Solo permitir eliminar solicitudes pendientes
-        if solicitud.estado != 'pendiente':
-            messages.error(request, 'Solo puedes eliminar solicitudes pendientes.')
+        # Permitir eliminar solicitudes pendientes y rechazadas
+        if solicitud.estado not in ['pendiente', 'rechazada']:
+            messages.error(request, 'Solo puedes eliminar solicitudes pendientes o rechazadas.')
             return redirect('perfil_adoptante')
         
         # Obtener el nombre de la mascota antes de eliminar
         nombre_mascota = solicitud.mascota.nombre_mascota
         
-        # Marcar la mascota como disponible nuevamente
-        mascota = solicitud.mascota
-        mascota.disponible = True
-        mascota.save()
+        # Marcar la mascota como disponible nuevamente solo si la solicitud estaba pendiente
+        # Si estaba rechazada, la mascota ya debería estar disponible
+        if solicitud.estado == 'pendiente':
+            mascota = solicitud.mascota
+            mascota.disponible = True
+            mascota.save()
         
         # Eliminar la solicitud
         solicitud.delete()
