@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -833,9 +834,6 @@ def cambiar_imagen_perfil(request):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Debes iniciar sesión'})
     
-    if request.user.rut_empresa:
-        return JsonResponse({'success': False, 'message': 'Esta función es solo para adoptantes'})
-    
     if request.method == 'POST':
         try:
             nueva_imagen = request.FILES.get('imagen_perfil')
@@ -862,6 +860,38 @@ def cambiar_imagen_perfil(request):
             
         except Exception as e:
             return JsonResponse({'success': False, 'message': f'Error al actualizar la imagen: {str(e)}'})
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido'})
+
+
+def eliminar_imagen_perfil(request):
+    """Vista para eliminar la imagen de perfil del usuario"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Debes iniciar sesión'})
+    
+    if request.method == 'POST':
+        try:
+            usuario = request.user
+            
+            # Verificar si el usuario tiene una imagen de perfil
+            if not usuario.imagen_perfil:
+                return JsonResponse({'success': False, 'message': 'No tienes una imagen de perfil para eliminar'})
+            
+            # Eliminar la imagen del sistema de archivos
+            if os.path.isfile(usuario.imagen_perfil.path):
+                os.remove(usuario.imagen_perfil.path)
+            
+            # Limpiar el campo en la base de datos
+            usuario.imagen_perfil = None
+            usuario.save()
+            
+            return JsonResponse({
+                'success': True, 
+                'message': 'Imagen de perfil eliminada exitosamente'
+            })
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error al eliminar la imagen: {str(e)}'})
     
     return JsonResponse({'success': False, 'message': 'Método no permitido'})
 

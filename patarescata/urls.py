@@ -12,7 +12,7 @@ from apppatarescata.views import (
     login_adoptante, login_fundacion, registro_adoptante, registro_fundacion,
     perfil_adoptante, generar_solicitud_adopcion, preparar_adopcion,
     aprobar_solicitud_adopcion, rechazar_solicitud_adopcion, eliminar_solicitud_adopcion, cuidado_animal, eventos,
-    cambiar_imagen_perfil,
+    cambiar_imagen_perfil, eliminar_imagen_perfil,
 
 )
 from django.conf import settings
@@ -54,6 +54,7 @@ urlpatterns = [
 
     path('actualizar_perfil_adoptante/', actualizar_perfil_adoptante, name='actualizar_perfil_adoptante'),
     path('cambiar-imagen-perfil/', cambiar_imagen_perfil, name='cambiar_imagen_perfil'),
+    path('eliminar-imagen-perfil/', eliminar_imagen_perfil, name='eliminar_imagen_perfil'),
     path('eliminar-cuenta/', eliminar_cuenta, name='eliminar_cuenta'),
     path('verificar-cuenta/<str:token>/', verificar_cuenta, name='verificar_cuenta'),
     path('listar_mascotas/', views.listar_mascotas, name='listar_mascotas'),

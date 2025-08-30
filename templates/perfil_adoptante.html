@@ -37,12 +37,17 @@
             text-align: center;
         }
 
+        .profile-avatar-container {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto 1.5rem;
+        }
+
         .profile-avatar {
             width: 120px;
             height: 120px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border-radius: 50%;
-            margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -111,6 +116,37 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        .btn-eliminar-imagen-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            opacity: 0.9;
+        }
+
+        .btn-eliminar-imagen-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .btn-eliminar-imagen-icon i {
+            font-size: 0.7rem;
+            color: white;
         }
 
         .profile-name {
@@ -490,6 +526,7 @@
     <div class="container">
         <!-- Header del Perfil -->
         <div class="profile-header">
+                    <div class="profile-avatar-container">
             <div class="profile-avatar" id="profile-avatar" style="cursor: pointer;" title="Haz clic para cambiar tu imagen de perfil">
                 {% if usuario.imagen_perfil %}
                     <img src="{{ usuario.imagen_perfil.url }}" alt="{{ usuario.nombre }}" class="profile-image">
@@ -500,6 +537,14 @@
                     <i class="fas fa-camera"></i>
                 </div>
             </div>
+            
+            <!-- Icono de eliminar imagen (solo visible cuando hay imagen) -->
+            {% if usuario.imagen_perfil %}
+            <button id="eliminar-imagen-btn" class="btn-eliminar-imagen-icon" title="Eliminar imagen de perfil">
+                <i class="fas fa-trash"></i>
+            </button>
+            {% endif %}
+        </div>
             <input type="file" id="profile-image-input" accept="image/*" style="display: none;">
             <h1 class="profile-name">{{ usuario.nombre }}</h1>
             <p class="profile-email">{{ usuario.email }}</p>
@@ -776,6 +821,60 @@
                         
                         // Mostrar mensaje de éxito
                         showMessage(data.message, 'success');
+                        
+                        // Mostrar el botón de eliminar si no existe
+                        if (!document.getElementById('eliminar-imagen-btn')) {
+                            const eliminarBtn = document.createElement('button');
+                            eliminarBtn.id = 'eliminar-imagen-btn';
+                            eliminarBtn.className = 'btn-eliminar-imagen-icon';
+                            eliminarBtn.title = 'Eliminar imagen de perfil';
+                            eliminarBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                            
+                            // Agregar el evento click
+                            eliminarBtn.addEventListener('click', function() {
+                                if (confirm('¿Estás seguro de que quieres eliminar tu imagen de perfil? Esta acción no se puede deshacer.')) {
+                                    const csrfToken = getCookie('csrftoken');
+                                    fetch('{% url "eliminar_imagen_perfil" %}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRFToken': csrfToken
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Eliminar la imagen del DOM
+                                            const profileImage = profileAvatar.querySelector('.profile-image');
+                                            if (profileImage) {
+                                                profileImage.remove();
+                                            }
+                                            
+                                            // Restaurar el ícono por defecto
+                                            if (!profileAvatar.querySelector('.fas.fa-heart')) {
+                                                const defaultIcon = document.createElement('i');
+                                                defaultIcon.className = 'fas fa-heart';
+                                                profileAvatar.appendChild(defaultIcon);
+                                            }
+                                            
+                                            // Ocultar el botón de eliminar
+                                            eliminarBtn.style.display = 'none';
+                                            
+                                            // Mostrar mensaje de éxito
+                                            showMessage('Imagen de perfil eliminada exitosamente!', 'success');
+                                        } else {
+                                            showMessage(data.message || 'Error al eliminar la imagen de perfil.', 'error');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        showMessage('Error al eliminar la imagen de perfil.', 'error');
+                                    });
+                                }
+                            });
+                            
+                            // Agregar el botón al contenedor
+                            document.querySelector('.profile-avatar-container').appendChild(eliminarBtn);
+                        }
                     } else {
                         showMessage(data.message, 'error');
                     }
@@ -789,6 +888,51 @@
                     profileAvatar.classList.remove('loading');
                     // Limpiar input
                     profileImageInput.value = '';
+                });
+            }
+            
+            // Funcionalidad para eliminar imagen de perfil
+            const eliminarImagenBtn = document.getElementById('eliminar-imagen-btn');
+            if (eliminarImagenBtn) {
+                eliminarImagenBtn.addEventListener('click', function() {
+                    if (confirm('¿Estás seguro de que quieres eliminar tu imagen de perfil? Esta acción no se puede deshacer.')) {
+                        const csrfToken = getCookie('csrftoken');
+                        fetch('{% url "eliminar_imagen_perfil" %}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Eliminar la imagen del DOM
+                                const profileImage = profileAvatar.querySelector('.profile-image');
+                                if (profileImage) {
+                                    profileImage.remove();
+                                }
+                                
+                                // Restaurar el ícono por defecto
+                                if (!profileAvatar.querySelector('.fas.fa-heart')) {
+                                    const defaultIcon = document.createElement('i');
+                                    defaultIcon.className = 'fas fa-heart';
+                                    profileAvatar.appendChild(defaultIcon);
+                                }
+                                
+                                // Ocultar el botón de eliminar
+                                eliminarImagenBtn.style.display = 'none';
+                                
+                                // Mostrar mensaje de éxito
+                                showMessage('Imagen de perfil eliminada exitosamente!', 'success');
+                            } else {
+                                showMessage(data.message || 'Error al eliminar la imagen de perfil.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showMessage('Error al eliminar la imagen de perfil.', 'error');
+                        });
+                    }
                 });
             }
             
