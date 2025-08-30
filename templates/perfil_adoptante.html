@@ -222,6 +222,29 @@
             font-size: 1.8rem;
             font-weight: 600;
             flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .mascota-imagen {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .mascota-avatar:hover .mascota-imagen {
+            transform: scale(1.1);
+        }
+        
+        .mascota-avatar:hover {
+            border-color: #10b981;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
         }
 
         .mascota-details h4 {
@@ -490,7 +513,11 @@
                         <div class="solicitud-card">
                             <div class="mascota-info">
                                 <div class="mascota-avatar">
-                                    <i class="fas fa-paw"></i>
+                                    {% if solicitud.mascota.imagen %}
+                                        <img src="{{ solicitud.mascota.imagen.url }}" alt="{{ solicitud.mascota.nombre_mascota }}" class="mascota-imagen">
+                                    {% else %}
+                                        <i class="fas fa-paw"></i>
+                                    {% endif %}
                                 </div>
                                 <div class="mascota-details">
                                     <h4>{{ solicitud.mascota.nombre_mascota }}</h4>
