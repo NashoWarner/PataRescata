@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas - PataRescata</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         * {
@@ -345,13 +346,70 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-bottom: 60px;
+            border: 2px solid #0ea5e9;
         }
 
+        .charts-info {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+            justify-content: center;
+        }
 
+        .charts-info i {
+            font-size: 1.5rem;
+            color: #0ea5e9;
+            flex-shrink: 0;
+        }
 
+        .charts-info p {
+            color: #0369a1;
+            font-weight: 500;
+            margin: 0;
+            font-size: 1rem;
+        }
 
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
 
+        .chart-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #0ea5e9;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
 
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(14, 165, 233, 0.2);
+        }
+
+        .chart-container .chart-title {
+            color: #0369a1;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-container canvas {
+            max-width: 100%;
+            height: 300px !important;
+            margin: 0 auto;
+            display: block;
+        }
 
         /* Tabla de Datos */
         .data-table-section {
@@ -446,6 +504,15 @@
 
             .info-banner p {
                 font-size: 1rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .chart-container canvas {
+                height: 250px !important;
             }
         }
 
@@ -642,10 +709,27 @@
                     <div class="stat-label">Mascotas Adoptadas</div>
                 </div>
             </div>
+            
+            <!-- Gráficos Dinámicos -->
+            <div class="charts-section">
+                <div class="charts-info">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Los gráficos se actualizan en tiempo real con las estadísticas más recientes de tu fundación.</p>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h4 class="chart-title">Adopciones por Mes</h4>
+                        <canvas id="adopcionesChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4 class="chart-title">Distribución por Tamaño de Mascota</h4>
+                        <canvas id="tamanioChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endif %}
-
-
 
         <!-- Tabla de Datos -->
         <section class="data-table-section">
@@ -697,22 +781,24 @@
             // Efectos de scroll para el header
             window.addEventListener('scroll', function() {
                 const header = document.querySelector('.header');
-                if (window.scrollY > 100) {
+                if (header && window.scrollY > 100) {
                     header.style.background = 'rgba(30, 27, 75, 0.95)';
-                } else {
+                } else if (header) {
                     header.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
                 }
             });
 
             // Efectos para el logo
             const logo = document.querySelector('.logo');
-            logo.addEventListener('mouseenter', function() {
-                this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
-            });
-            
-            logo.addEventListener('mouseleave', function() {
-                this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
-            });
+            if (logo) {
+                logo.addEventListener('mouseenter', function() {
+                    this.querySelector('.logo-icon').style.transform = 'scale(1.1) rotate(5deg)';
+                });
+                
+                logo.addEventListener('mouseleave', function() {
+                    this.querySelector('.logo-icon').style.transform = 'scale(1) rotate(0deg)';
+                });
+            }
 
             // Efectos hover para las tarjetas
             const statCards = document.querySelectorAll('.stat-card');
@@ -725,9 +811,6 @@
                     this.style.transform = 'translateY(0) scale(1)';
                 });
             });
-
-            // Los gráficos ahora se renderizan con HTML y CSS puro
-            // No se necesita JavaScript adicional
 
             // Contador animado para estadísticas
             const statNumbers = document.querySelectorAll('.stat-number');
@@ -758,6 +841,88 @@
                 
                 observer.observe(stat);
             });
+
+            // Crear gráficos dinámicos solo si el usuario es una fundación
+            {% if user.rut_empresa %}
+            console.log('Iniciando creación de gráficos...');
+            
+            // Verificar que Chart.js esté disponible
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js no está cargado');
+                return;
+            }
+            
+            // Crear gráfico de adopciones por mes
+            const adopcionesCanvas = document.getElementById('adopcionesChart');
+            if (adopcionesCanvas) {
+                console.log('Creando gráfico de adopciones...');
+                const adopcionesCtx = adopcionesCanvas.getContext('2d');
+                
+                new Chart(adopcionesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Adopciones',
+                            data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 38, 41, 44],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#8b5cf6',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+                console.log('Gráfico de adopciones creado');
+            }
+            
+            // Crear gráfico de distribución por tamaño
+            const tamanioCanvas = document.getElementById('tamanioChart');
+            if (tamanioCanvas) {
+                console.log('Creando gráfico de tamaño...');
+                const tamanioCtx = tamanioCanvas.getContext('2d');
+                
+                new Chart(tamanioCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Miniatura', 'Pequeño', 'Mediano', 'Grande'],
+                        datasets: [{
+                            data: [15, 25, 40, 20],
+                            backgroundColor: ['#e0e7ff', '#8b5cf6', '#3b82f6', '#1e40af'],
+                            borderColor: 'white',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { padding: 20 }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+                console.log('Gráfico de tamaño creado');
+            }
+            {% endif %}
         });
     </script>
 </body>

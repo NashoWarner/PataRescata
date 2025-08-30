@@ -673,9 +673,23 @@ def estadisticas(request):
         'tasa_exito': tasa_exito,
         'promedio_adopciones_mes': promedio_adopciones_mes,
         
-        # Variables específicas para fundaciones
+            # Variables específicas para fundaciones
         'mascotas_fundacion': total_mascotas,
         'adopciones_fundacion': solicitudes_aprobadas,
+        
+        # Datos para gráficos
+        'chart_data': {
+            'solicitudes': {
+                'labels': ['Pendientes', 'Aprobadas', 'Rechazadas'],
+                'data': [solicitudes_pendientes, solicitudes_aprobadas, solicitudes_rechazadas],
+                'colors': ['#f59e0b', '#10b981', '#ef4444']
+            },
+            'mascotas': {
+                'labels': ['Disponibles', 'Adoptadas'],
+                'data': [mascotas_disponibles, mascotas_adoptadas],
+                'colors': ['#3b82f6', '#8b5cf6']
+            }
+        }
     }
     
     return render(request, 'estadisticas.html', context)
@@ -1187,117 +1201,7 @@ def actualizar_mascota(request, mascota_id):
 
 
 
-def estadisticas(request):
 
-    if not request.user.is_authenticated:
-
-        return redirect('login_fundacion')
-
-    
-
-    if not request.user.rut_empresa:
-
-        return redirect('perfil_adoptante')
-
-    
-
-    # Estadísticas de mascotas de la fundación
-
-    mascotas = Mascota.objects.filter(mascotafundacion__adoptante=request.user)
-
-    total_mascotas = mascotas.count()
-
-    mascotas_disponibles = mascotas.filter(disponible=True).count()
-
-    mascotas_adoptadas = mascotas.filter(disponible=False).count()
-
-    
-
-    # Estadísticas de solicitudes
-
-    solicitudes = Adopcion.objects.filter(mascota__mascotafundacion__adoptante=request.user)
-
-    total_solicitudes = solicitudes.count()
-
-    solicitudes_pendientes = solicitudes.filter(estado='pendiente').count()
-
-    solicitudes_aprobadas = solicitudes.filter(estado='aprobada').count()
-
-    solicitudes_rechazadas = solicitudes.filter(estado='rechazada').count()
-
-    
-
-    # Calcular tasa de éxito
-
-    tasa_exito = 0
-
-    if total_solicitudes > 0:
-
-        tasa_exito = round((solicitudes_aprobadas / total_solicitudes) * 100)
-
-    
-
-    # Estadísticas generales del sistema (para mostrar en el template)
-
-    total_adopciones = Adopcion.objects.filter(estado='aprobada').count()
-
-    total_fundaciones = Usuario.objects.filter(rut_empresa__isnull=False).count()
-
-    total_adoptantes = Usuario.objects.filter(rut_empresa__isnull=True).count()
-
-    
-
-    # Promedio de adopciones por mes (simplificado)
-
-    promedio_adopciones_mes = round(total_adopciones / 12) if total_adopciones > 0 else 0
-
-    
-
-    context = {
-
-        # Estadísticas de la fundación
-
-        'total_mascotas': total_mascotas,
-
-        'mascotas_disponibles': mascotas_disponibles,
-
-        'mascotas_adoptadas': mascotas_adoptadas,
-
-        'total_solicitudes': total_solicitudes,
-
-        'solicitudes_pendientes': solicitudes_pendientes,
-
-        'solicitudes_aprobadas': solicitudes_aprobadas,
-
-        'solicitudes_rechazadas': solicitudes_rechazadas,
-
-        
-
-        # Estadísticas generales del sistema
-
-        'total_adopciones': total_adopciones,
-
-        'total_fundaciones': total_fundaciones,
-
-        'total_adoptantes': total_adoptantes,
-
-        'tasa_exito': tasa_exito,
-
-        'promedio_adopciones_mes': promedio_adopciones_mes,
-
-        
-
-        # Variables específicas para fundaciones
-
-        'mascotas_fundacion': total_mascotas,
-
-        'adopciones_fundacion': solicitudes_aprobadas,
-
-    }
-
-    
-
-    return render(request, 'estadisticas.html', context)
 
 
 
