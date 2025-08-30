@@ -92,6 +92,7 @@ def home(request):
     
     context = {
         'mascotas_destacadas': mascotas_destacadas,
+        'user': request.user,  # Pasar el usuario al contexto para mostrar mensajes personalizados
     }
     return render(request, 'index.html', context)
 
@@ -315,9 +316,7 @@ def login_adoptante(request):
             if mascota_id:
                 # Limpiar la sesión
                 del request.session['mascota_pendiente_adopcion']
-                request.session.save()
                 # Redirigir a generar la solicitud
-                messages.info(request, f'Procesando tu solicitud de adopción...')
                 return redirect('generar_solicitud_adopcion', mascota_id=mascota_id)
             
             return redirect('perfil_adoptante')
@@ -436,7 +435,7 @@ def perfil_adoptante(request):
         return redirect('home_perfil')
     
     # Obtener solicitudes de adopción del adoptante
-    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota').order_by('-fecha_solicitud')
+    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota')
     
     # Calcular estadísticas en tiempo real
     total_solicitudes = solicitudes.count()
@@ -497,7 +496,6 @@ def generar_solicitud_adopcion(request, mascota_id):
         mascota.save()
         
         messages.success(request, f'¡Excelente! Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud.')
-        # Redirigir al perfil con un parámetro para indicar que se acaba de adoptar
         return redirect('perfil_adoptante')
         
     except Mascota.DoesNotExist:
@@ -507,12 +505,45 @@ def generar_solicitud_adopcion(request, mascota_id):
 def preparar_adopcion(request, mascota_id):
     try:
         mascota = Mascota.objects.get(id=mascota_id, disponible=True)
-        # Guardar en sesión para usar después del login
-        request.session['mascota_pendiente_adopcion'] = mascota_id
-        # Guardar la sesión inmediatamente
-        request.session.save()
-        messages.info(request, f'Has seleccionado a {mascota.nombre_mascota} para adoptar. Por favor inicia sesión para continuar.')
-        return redirect('login_adoptante')
+        
+        # Si el usuario ya está autenticado y es adoptante, procesar la adopción directamente
+        if request.user.is_authenticated and not request.user.rut_empresa:
+            # Verificar si ya existe una solicitud para esta mascota y este adoptante
+            solicitud_existente = Adopcion.objects.filter(
+                adoptante=request.user,
+                mascota=mascota
+            ).first()
+            
+            if solicitud_existente:
+                messages.info(request, f'Ya tienes una solicitud pendiente para {mascota.nombre_mascota}.')
+                return redirect('perfil_adoptante')
+            
+            # Crear solicitud de adopción directamente
+            adopcion = Adopcion.objects.create(
+                adoptante=request.user,
+                mascota=mascota,
+                estado='pendiente',
+                fecha_solicitud=timezone.now().date()
+            )
+            
+            # Marcar mascota como no disponible
+            mascota.disponible = False
+            mascota.save()
+            
+            messages.success(request, f'¡Excelente! Has solicitado adoptar a {mascota.nombre_mascota}. La fundación revisará tu solicitud. Puedes ver el estado de tu solicitud en tu perfil.')
+            return redirect('perfil_adoptante')
+        
+        # Si el usuario no está autenticado, guardar en sesión y redirigir al login
+        elif not request.user.is_authenticated:
+            request.session['mascota_pendiente_adopcion'] = mascota_id
+            messages.info(request, f'Has seleccionado a {mascota.nombre_mascota} para adoptar. Por favor inicia sesión para continuar.')
+            return redirect('login_adoptante')
+        
+        # Si es una fundación, redirigir al perfil de fundación
+        else:
+            messages.error(request, 'Solo los adoptantes pueden solicitar adopciones.')
+            return redirect('home_perfil')
+            
     except Mascota.DoesNotExist:
         messages.error(request, 'La mascota no está disponible para adopción.')
         return redirect('home')
@@ -797,17 +828,50 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
     
     return redirect('mis_solicitudes')
 
+def eliminar_solicitud_adopcion(request, solicitud_id):
+    """Vista para que los adoptantes eliminen sus solicitudes de adopción"""
+    if not request.user.is_authenticated:
+        return redirect('login_adoptante')
+    
+    if request.user.rut_empresa:
+        return redirect('home_perfil')
+    
+    try:
+        # Obtener la solicitud y verificar que pertenezca al adoptante
+        solicitud = get_object_or_404(
+            Adopcion, 
+            id=solicitud_id,
+            adoptante=request.user
+        )
+        
+        # Solo permitir eliminar solicitudes pendientes
+        if solicitud.estado != 'pendiente':
+            messages.error(request, 'Solo puedes eliminar solicitudes pendientes.')
+            return redirect('perfil_adoptante')
+        
+        # Obtener el nombre de la mascota antes de eliminar
+        nombre_mascota = solicitud.mascota.nombre_mascota
+        
+        # Marcar la mascota como disponible nuevamente
+        mascota = solicitud.mascota
+        mascota.disponible = True
+        mascota.save()
+        
+        # Eliminar la solicitud
+        solicitud.delete()
+        
+        messages.success(request, f'Solicitud de adopción para {nombre_mascota} eliminada exitosamente.')
+        
+    except Adopcion.DoesNotExist:
+        messages.error(request, 'La solicitud no existe o no tienes permisos para eliminarla.')
+    except Exception as e:
+        messages.error(request, 'Error al eliminar la solicitud.')
+    
+    return redirect('perfil_adoptante')
 
 
-# Función duplicada eliminada
 
-
-
-# Función duplicada eliminada
-
-
-
-# Función duplicada eliminada
+# Funciones duplicadas eliminadas
 
 
 

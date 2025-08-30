@@ -787,10 +787,34 @@
                  <div class="pets-container">
              <h2 class="section-title">Mascotas Destacadas</h2>
              {% if mascotas_destacadas %}
-             <p class="section-subtitle" style="text-align: center; color: #6b7280; margin-bottom: 2rem; font-size: 1.1rem;">
+             <p class="section-subtitle" style="text-align: center; color: #6b7280; margin-bottom: 1rem; font-size: 1.1rem;">
                  <i class="fas fa-paw"></i> 
                  {{ mascotas_destacadas|length }} mascota{{ mascotas_destacadas|length|pluralize:"s" }} disponible{{ mascotas_destacadas|length|pluralize:"s" }} para adopción
              </p>
+             
+             <!-- Mensaje informativo para usuarios autenticados -->
+             {% if user.is_authenticated and not user.rut_empresa %}
+             <div style="text-align: center; margin-bottom: 2rem; padding: 1rem; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 12px; border: 2px solid #10b981; max-width: 600px; margin-left: auto; margin-right: auto;">
+                 <p style="color: #065f46; font-weight: 600; margin: 0; font-size: 1rem;">
+                     <i class="fas fa-info-circle"></i> 
+                     ¡Hola {{ user.nombre }}! Ya has iniciado sesión como adoptante. Puedes hacer clic en "Adoptar" directamente para solicitar la adopción de cualquier mascota.
+                 </p>
+             </div>
+             {% elif user.is_authenticated and user.rut_empresa %}
+             <div style="text-align: center; margin-bottom: 2rem; padding: 1rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 2px solid #f59e0b; max-width: 600px; margin-left: auto; margin-right: auto;">
+                 <p style="color: #92400e; font-weight: 600; margin: 0; font-size: 1rem;">
+                     <i class="fas fa-building"></i> 
+                     ¡Hola {{ user.nombre }}! Como fundación, puedes agregar más mascotas para adopción desde tu panel de administración.
+                 </p>
+             </div>
+             {% else %}
+             <div style="text-align: center; margin-bottom: 2rem; padding: 1rem; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 12px; border: 2px solid #3b82f6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                 <p style="color: #1e40af; font-weight: 600; margin: 0; font-size: 1rem;">
+                     <i class="fas fa-heart"></i> 
+                     Para adoptar una mascota, primero debes iniciar sesión o registrarte como adoptante. ¡Es rápido y fácil!
+                 </p>
+             </div>
+             {% endif %}
              {% endif %}
             <div class="pets-grid">
                 {% if mascotas_destacadas %}
@@ -956,14 +980,8 @@
 
         // Funciones de la página
         function adoptPet(petId) {
-            // Verificar si el usuario está autenticado
-            if (typeof userAuthenticated !== 'undefined' && userAuthenticated) {
-                // Usuario autenticado, redirigir a generar solicitud
-                window.location.href = `/generar-solicitud-adopcion/${petId}/`;
-            } else {
-                // Usuario no autenticado, preparar adopción y redirigir al login
-                window.location.href = `/preparar-adopcion/${petId}/`;
-            }
+            // Siempre usar preparar_adopcion, que maneja tanto usuarios autenticados como no autenticados
+            window.location.href = `/preparar-adopcion/${petId}/`;
         }
 
         // Función para mostrar más información de la mascota
