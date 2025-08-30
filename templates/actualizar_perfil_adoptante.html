@@ -20,173 +20,485 @@
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+        }
+
+        /* Decoración de fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header decorativo */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            border-radius: 2px;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* Indicador de tipo de usuario */
+        .user-type-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-type-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .user-type-indicator:hover::before {
+            left: 100%;
+        }
+
+        .user-type-indicator i {
+            font-size: 1.3rem;
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .form-card {
-            background: white;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
             padding: 3rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #059669, #10b981);
+        }
+
+        /* Decoraciones */
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .decoration.top-left {
+            top: -50px;
+            left: -50px;
+        }
+
+        .decoration.bottom-right {
+            bottom: -50px;
+            right: -50px;
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .form-header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            position: relative;
+        }
+
+        .form-header-icon::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .form-header-icon i {
+            font-size: 2rem;
+            color: white;
         }
 
         .form-header h1 {
-            color: #10b981;
+            color: #1f2937;
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .form-header p {
             color: #6b7280;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             color: #374151;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-label i {
+            color: #10b981;
+            font-size: 1.2rem;
+            width: 20px;
         }
 
         .form-input {
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem 1.5rem;
             border: 2px solid #e5e7eb;
-            border-radius: 12px;
+            border-radius: 20px;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f9fafb;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            position: relative;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            color: #374151;
         }
 
         .form-input:focus {
             outline: none;
             border-color: #10b981;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            background: linear-gradient(145deg, #ffffff, #f0fdf4);
+            box-shadow: 
+                0 0 0 4px rgba(16, 185, 129, 0.15),
+                0 8px 25px rgba(16, 185, 129, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            border-width: 3px;
         }
-        
 
+        .form-input:hover {
+            border-color: #34d399;
+            background: linear-gradient(145deg, #ffffff, #f0fdf4);
+            box-shadow: 
+                0 4px 15px rgba(16, 185, 129, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .form-input:focus::placeholder {
+            color: #6b7280;
+            transform: translateX(5px);
+        }
+
+        /* Efecto de brillo en el borde superior */
+        .form-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), transparent);
+            border-radius: 20px 20px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-input:focus::before {
+            opacity: 1;
+        }
+
+        /* Animación de entrada para los inputs */
+        .form-input {
+            animation: inputSlideIn 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .form-input:nth-child(1) { animation-delay: 0.1s; }
+        .form-input:nth-child(2) { animation-delay: 0.2s; }
+        .form-input:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes inputSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efecto de resplandor en focus */
+        .form-input:focus {
+            animation: inputGlow 0.6s ease;
+        }
+
+        @keyframes inputGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 0 4px rgba(16, 185, 129, 0.15),
+                    0 8px 25px rgba(16, 185, 129, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
+            50% {
+                box-shadow: 
+                    0 0 0 6px rgba(16, 185, 129, 0.2),
+                    0 12px 35px rgba(16, 185, 129, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
+        }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 2rem;
         }
 
         .form-actions {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             justify-content: center;
             margin-top: 3rem;
-            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: linear-gradient(135deg, #6b7280, #4b5563);
             color: white;
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(107, 114, 128, 0.4);
         }
 
         .btn-danger {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
         }
 
         .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .messages {
-            margin-bottom: 2rem;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(239, 68, 68, 0.4);
         }
 
         .message {
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            border-radius: 15px;
             margin-bottom: 1rem;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: slideInDown 0.5s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.success {
-            background: #d1fae5;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             color: #065f46;
-            border: 1px solid #a7f3d0;
+            border: 1px solid #6ee7b7;
         }
 
         .message.error {
-            background: #fee2e2;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
             color: #991b1b;
-            border: 1px solid #fecaca;
+            border: 1px solid #fca5a5;
         }
 
         .message.warning {
-            background: #fef3c7;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
             color: #92400e;
-            border: 1px solid #fde68a;
+            border: 1px solid #fcd34d;
         }
 
         .error {
-            color: #ef4444;
+            color: #dc2626;
             font-size: 0.9rem;
             margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
+        .error i {
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
 
-            .form-card {
-                padding: 2rem;
-            }
-
             .form-row {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .form-actions {
@@ -194,18 +506,74 @@
                 align-items: center;
             }
 
-            .btn {
-                width: 100%;
-                justify-content: center;
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .form-header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animaciones de entrada */
+        .form-card {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            animation: fadeInLeft 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header de la página -->
+        <div class="page-header">
+            <h1 class="page-title">Actualizar Perfil</h1>
+            <p class="page-subtitle">Modifica tu información personal de adoptante</p>
+            <div class="user-type-indicator">
+                <i class="fas fa-heart"></i>
+                <span>❤ PERFIL DE ADOPTANTE</span>
+            </div>
+        </div>
+
         <div class="form-card">
+            <!-- Decoraciones -->
+            <div class="decoration top-left"></div>
+            <div class="decoration bottom-right"></div>
+
             <div class="form-header">
-                <h1><i class="fas fa-user-edit"></i> Actualizar Perfil</h1>
+                <div class="form-header-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h1>Actualizar Perfil</h1>
                 <p>Modifica tu información personal de adoptante</p>
             </div>
 
@@ -213,6 +581,7 @@
             <div class="messages">
                 {% for message in messages %}
                 <div class="message {{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
                     {{ message }}
                 </div>
                 {% endfor %}
@@ -225,48 +594,61 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ form.nombre.id_for_label }}" class="form-label">
-                            <i class="fas fa-user"></i> Nombre Completo
+                            <i class="fas fa-user"></i>
+                            Nombre Completo
                         </label>
                         {{ form.nombre }}
                         {% if form.nombre.errors %}
-                            <div class="error">{{ form.nombre.errors.0 }}</div>
+                            <div class="error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                {{ form.nombre.errors.0 }}
+                            </div>
                         {% endif %}
                     </div>
 
                     <div class="form-group">
                         <label for="{{ form.telefono.id_for_label }}" class="form-label">
-                            <i class="fas fa-phone"></i> Teléfono
+                            <i class="fas fa-phone"></i>
+                            Teléfono
                         </label>
                         {{ form.telefono }}
                         {% if form.telefono.errors %}
-                            <div class="error">{{ form.telefono.errors.0 }}</div>
+                            <div class="error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                {{ form.telefono.errors.0 }}
+                            </div>
                         {% endif %}
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}" class="form-label">
-                        <i class="fas fa-envelope"></i> Correo Electrónico
+                        <i class="fas fa-envelope"></i>
+                        Correo Electrónico
                     </label>
                     {{ form.email }}
                     {% if form.email.errors %}
-                        <div class="error">{{ form.email.errors.0 }}</div>
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ form.email.errors.0 }}
+                        </div>
                     {% endif %}
                 </div>
 
-
-
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar Cambios
+                        <i class="fas fa-save"></i>
+                        Guardar Cambios
                     </button>
                     
                     <a href="{% url 'perfil_adoptante' %}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver al Perfil
+                        <i class="fas fa-arrow-left"></i>
+                        Volver al Perfil
                     </a>
                     
                     <a href="{% url 'eliminar_cuenta' %}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Eliminar Cuenta
+                        <i class="fas fa-trash"></i>
+                        Eliminar Cuenta
                     </a>
                 </div>
             </form>
