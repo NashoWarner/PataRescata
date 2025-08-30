@@ -163,10 +163,15 @@ def actualizar_perfil(request):
 
 def actualizar_perfil_adoptante(request):
     if request.method == 'POST':
-        form = ActualizarPerfilForm(request.POST, instance=request.user)
+        form = ActualizarPerfilForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
+            # Verificar si se subió una nueva imagen
+            nueva_imagen = form.cleaned_data.get('imagen_perfil')
+            if nueva_imagen:
+                messages.success(request, 'Perfil actualizado exitosamente. Tu nueva imagen de perfil se ha guardado.')
+            else:
+                messages.success(request, 'Perfil actualizado exitosamente.')
             form.save()
-            messages.success(request, 'Perfil actualizado exitosamente.')
             return redirect('perfil_adoptante')
     else:
         form = ActualizarPerfilForm(instance=request.user)

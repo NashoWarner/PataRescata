@@ -73,6 +73,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email_verificado = models.BooleanField(default=False)
     token_verificacion = models.CharField(max_length=100, default=generar_token)
     date_joined = models.DateTimeField(auto_now_add=True)
+    imagen_perfil = models.ImageField(upload_to='imagenes_perfil/', blank=True, null=True, verbose_name='Imagen de Perfil')
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

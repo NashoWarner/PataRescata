@@ -48,6 +48,29 @@
             color: white;
             font-size: 3rem;
             font-weight: 600;
+            overflow: hidden;
+            position: relative;
+            border: 4px solid #e5e7eb;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-avatar:hover .profile-image {
+            transform: scale(1.05);
+        }
+        
+        .profile-avatar:hover {
+            border-color: #10b981;
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.3);
+            transform: translateY(-3px);
         }
 
         .profile-name {
@@ -428,7 +451,11 @@
         <!-- Header del Perfil -->
         <div class="profile-header">
             <div class="profile-avatar">
-                <i class="fas fa-heart"></i>
+                {% if usuario.imagen_perfil %}
+                    <img src="{{ usuario.imagen_perfil.url }}" alt="{{ usuario.nombre }}" class="profile-image">
+                {% else %}
+                    <i class="fas fa-heart"></i>
+                {% endif %}
             </div>
             <h1 class="profile-name">{{ usuario.nombre }}</h1>
             <p class="profile-email">{{ usuario.email }}</p>

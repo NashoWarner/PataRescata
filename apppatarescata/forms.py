@@ -202,7 +202,14 @@ from .models import Usuario
 class ActualizarPerfilForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['email', 'nombre', 'telefono', 'rut_empresa']
+        fields = ['email', 'nombre', 'telefono', 'rut_empresa', 'imagen_perfil']
+        widgets = {
+            'imagen_perfil': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+                'style': 'padding: 10px; border: 2px dashed #10b981; border-radius: 10px; background: #f0fdf4;'
+            })
+        }
 
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -231,6 +238,20 @@ class ActualizarPerfilForm(forms.ModelForm):
             if not rut_empresa.isdigit() or len(rut_empresa) < 7 or len(rut_empresa) > 9:
                 raise ValidationError('El RUT debe ser válido (entre 7 y 9 dígitos numéricos).')
         return rut_empresa
+    
+    def clean_imagen_perfil(self):
+        imagen = self.cleaned_data.get('imagen_perfil')
+        if imagen:
+            # Validar el tamaño del archivo (5MB máximo)
+            if imagen.size > 5 * 1024 * 1024:  # 5MB en bytes
+                raise ValidationError('La imagen no puede ser mayor a 5MB.')
+            
+            # Validar el tipo de archivo
+            allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+            if imagen.content_type not in allowed_types:
+                raise ValidationError('Solo se permiten archivos de imagen (JPG, PNG, GIF).')
+        
+        return imagen
 
 
 
