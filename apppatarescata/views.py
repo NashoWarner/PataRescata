@@ -789,75 +789,7 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
 
 
 
-def perfil_adoptante(request):
-
-    if not request.user.is_authenticated:
-
-        return redirect('login_adoptante')
-
-    
-
-    if request.user.rut_empresa:
-
-        return redirect('home_perfil')
-
-    
-
-    # Obtener solicitudes de adopción del adoptante
-
-    solicitudes = Adopcion.objects.filter(adoptante=request.user).select_related('mascota')
-
-    
-
-    # Calcular estadísticas en tiempo real
-
-    total_solicitudes = solicitudes.count()
-
-    solicitudes_pendientes = solicitudes.filter(estado='pendiente').count()
-
-    solicitudes_aprobadas = solicitudes.filter(estado='aprobada').count()
-
-    solicitudes_rechazadas = solicitudes.filter(estado='rechazada').count()
-
-    
-
-    context = {
-
-        'solicitudes': solicitudes,
-
-        'total_solicitudes': total_solicitudes,
-
-        'solicitudes_pendientes': solicitudes_pendientes,
-
-        'solicitudes_aprobadas': solicitudes_aprobadas,
-
-        'solicitudes_rechazadas': solicitudes_rechazadas,
-
-        
-
-        # Variables para el template (nombres correctos)
-
-        'solicitudes_count': total_solicitudes,
-
-        'mascotas_adoptadas_count': solicitudes_aprobadas,
-
-        
-
-        # Agregar datos del usuario para el template
-
-        'usuario': request.user,
-
-        'nombre': request.user.nombre,
-
-        'email': request.user.email,
-
-        'telefono': request.user.telefono,
-
-    }
-
-    
-
-    return render(request, 'perfil_adoptante.html', context)
+# Función duplicada eliminada
 
 
 

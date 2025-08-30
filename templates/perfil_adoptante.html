@@ -402,6 +402,12 @@
                 <a href="{% url 'actualizar_perfil_adoptante' %}" class="btn btn-secondary">
                     <i class="fas fa-edit"></i> Editar Perfil
                 </a>
+                <a href="{% url 'mis_solicitudes' %}" class="btn btn-info">
+                    <i class="fas fa-list"></i> Ver Todas las Solicitudes
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Buscar Mascotas para Adoptar
+                </a>
             </div>
         </div>
 
@@ -442,6 +448,101 @@
                     <p style="color: #6b7280;">{{ usuario.date_joined|date:"d/m/Y" }}</p>
                 </div>
             </div>
+        </div>
+
+        <!-- Sección de Solicitudes de Adopción -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-heart"></i> Mis Solicitudes de Adopción
+            </h2>
+            
+
+            
+            {% if solicitudes %}
+                <div class="solicitudes-grid">
+                    {% for solicitud in solicitudes %}
+                        <div class="solicitud-card">
+                            <div class="mascota-info">
+                                <div class="mascota-avatar">
+                                    <i class="fas fa-paw"></i>
+                                </div>
+                                <div class="mascota-details">
+                                    <h4>{{ solicitud.mascota.nombre_mascota }}</h4>
+                                    <p><strong>Edad:</strong> {{ solicitud.mascota.edad_mascota }} años</p>
+                                    <p><strong>Tipo:</strong> {{ solicitud.mascota.tipo_mascota }}</p>
+                                    <p><strong>Tamaño:</strong> {{ solicitud.mascota.tamaño_mascota }}</p>
+                                    <p><strong>Comuna:</strong> {{ solicitud.mascota.comuna_mascota }}</p>
+                                    <p class="fecha-solicitud">
+                                        <i class="fas fa-calendar"></i> 
+                                        Solicitud: {{ solicitud.fecha_solicitud|date:"d/m/Y" }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="fundacion-info">
+                                <h5><i class="fas fa-building"></i> Información de la Fundación</h5>
+                                <div class="fundacion-details">
+                                    <div class="fundacion-detail">
+                                        <i class="fas fa-user"></i>
+                                        <span><strong>Fundación:</strong> 
+                                            {% for mascota_fundacion in solicitud.mascota.mascotafundacion_set.all %}
+                                                {% if mascota_fundacion.adoptante.rut_empresa %}
+                                                    {{ mascota_fundacion.adoptante.nombre }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                    <div class="fundacion-detail">
+                                        <i class="fas fa-envelope"></i>
+                                        <span><strong>Email:</strong> 
+                                            {% for mascota_fundacion in solicitud.mascota.mascotafundacion_set.all %}
+                                                {% if mascota_fundacion.adoptante.rut_empresa %}
+                                                    {{ mascota_fundacion.adoptante.email }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                    <div class="fundacion-detail">
+                                        <i class="fas fa-phone"></i>
+                                        <span><strong>Teléfono:</strong> 
+                                            {% for mascota_fundacion in solicitud.mascota.mascotafundacion_set.all %}
+                                                {% if mascota_fundacion.adoptante.rut_empresa %}
+                                                    {{ mascota_fundacion.adoptante.telefono }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="solicitud-status">
+                                <div class="status-badge status-{{ solicitud.estado }}">
+                                    {% if solicitud.estado == 'pendiente' %}
+                                        <i class="fas fa-clock"></i> Pendiente
+                                    {% elif solicitud.estado == 'aprobada' %}
+                                        <i class="fas fa-check-circle"></i> Aprobada
+                                    {% elif solicitud.estado == 'rechazada' %}
+                                        <i class="fas fa-times-circle"></i> Rechazada
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-solicitudes">
+                    <i class="fas fa-heart-broken"></i>
+                    <h3>No tienes solicitudes de adopción</h3>
+                    <p>Aún no has solicitado adoptar ninguna mascota.</p>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem;">
+                        <i class="fas fa-info-circle"></i> 
+                        Para adoptar una mascota, ve a la página principal y busca mascotas disponibles.
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar Mascotas
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Panel de Acciones -->
