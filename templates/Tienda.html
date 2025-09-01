@@ -70,7 +70,6 @@
             background: white;
             padding: 30px 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            position: sticky;
             top: 80px;
             z-index: 100;
         }
@@ -189,6 +188,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             transform: translateY(20px);
+            text-decoration: none;
         }
 
         .product-card:hover .overlay-button {
@@ -249,6 +249,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
 
         .buy-button::before {
@@ -422,15 +423,13 @@
     <!-- Filtros y Ordenamiento -->
     <section class="filters-section">
         <div class="filters-container">
-            <div class="filter-group">
-                <label for="categoria">Categoría:</label>
-                <select name="categoria" id="categoria" class="filter-select" onchange="filterProducts()">
-                    <option value="">Todas las categorías</option>
-                    <option value="alimentos">Alimentos</option>
-                    <option value="juguetes">Juguetes</option>
-                    <option value="accesorios">Accesorios</option>
-                    <option value="cuidado">Cuidado</option>
-                </select>
+            <div class="filter-group" style="gap:8px;">
+                <span style="font-weight:600;color:#374151;font-size:0.9rem;margin-right:10px;">Categoría:</span>
+                <button type="button" class="filter-select{% if not request.GET.categoria %} active{% endif %}" style="min-width:auto;" onclick="filterProducts('')">Todas las categorías</button>
+                <button type="button" class="filter-select{% if request.GET.categoria == 'comida' %} active{% endif %}" style="min-width:auto;" onclick="filterProducts('comida')">Alimentos</button>
+                <button type="button" class="filter-select{% if request.GET.categoria == 'juguetes' %} active{% endif %}" style="min-width:auto;" onclick="filterProducts('juguetes')">Juguetes</button>
+                <button type="button" class="filter-select{% if request.GET.categoria == 'accesorios' %} active{% endif %}" style="min-width:auto;" onclick="filterProducts('accesorios')">Accesorios</button>
+                <button type="button" class="filter-select{% if request.GET.categoria == 'cuidado' %} active{% endif %}" style="min-width:auto;" onclick="filterProducts('cuidado')">Cuidado</button>
             </div>
             
             <div class="filter-group">
@@ -477,7 +476,7 @@
                             <span>${{ producto.precio|floatformat:0 }}</span>
                         </div>
                         
-                        <button class="buy-button" onclick="buyProduct('{{ producto.id }}')">
+                        <button class="buy-button" onclick="">
                         <a class="buy-button" href="{{ producto.enlace }}" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-shopping-cart"></i>
                             Comprar ahora
@@ -542,22 +541,23 @@
             });
         });
 
+
         // Funciones de filtrado y ordenamiento
-        function filterProducts() {
-            const categoria = document.getElementById('categoria').value;
+        function filterProducts(categoria) {
             const ordenar = document.getElementById('ordenar').value;
-            
-            // Construir URL con parámetros
             let url = '{% url "tienda" %}?';
             if (categoria) url += `categoria=${categoria}&`;
             if (ordenar) url += `ordenar_por=${ordenar}`;
-            
-            // Redirigir a la URL filtrada
             window.location.href = url;
         }
 
         function sortProducts() {
-            filterProducts();
+            const ordenar = document.getElementById('ordenar').value;
+            const categoria = "{{ request.GET.categoria|default:'' }}";
+            let url = '{% url "tienda" %}?';
+            if (categoria) url += `categoria=${categoria}&`;
+            if (ordenar) url += `ordenar_por=${ordenar}`;
+            window.location.href = url;
         }
 
         function viewProduct(productId) {
@@ -565,9 +565,6 @@
             alert(`Vista detallada del producto ID: ${productId}`);
         }
 
-        function buyProduct(productId) {
-            // La lógica de compra se maneja con el enlace directo, no se muestra ningún alert.
-        }
 
         // Efectos de shimmer para botones
         const buttons = document.querySelectorAll('.buy-button, .overlay-button');

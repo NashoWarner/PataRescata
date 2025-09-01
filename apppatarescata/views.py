@@ -245,6 +245,22 @@ def verificar_cuenta(request, token):
 
 def tienda(request):
     productos = Producto.objects.all()
+    categoria = request.GET.get('categoria')
+    ordenar_por = request.GET.get('ordenar_por')
+
+    if categoria:
+        productos = productos.filter(categoria=categoria)
+
+    if ordenar_por:
+        if ordenar_por == 'precio_asc':
+            productos = productos.order_by('precio')
+        elif ordenar_por == 'precio_desc':
+            productos = productos.order_by('-precio')
+        elif ordenar_por == 'nombre':
+            productos = productos.order_by('nombre')
+        elif ordenar_por == 'popularidad':
+            productos = productos.order_by('-id')  # Puedes cambiar esto por visitas si tienes ese campo
+
     return render(request, 'Tienda.html', {'productos': productos})
 
 
