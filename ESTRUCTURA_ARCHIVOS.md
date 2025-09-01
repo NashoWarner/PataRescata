@@ -1,14 +1,20 @@
+
 # Estructura de Archivos - PataRescata
 
-## Reorganización de Archivos Estáticos y Media
+## Manejo profesional de archivos estáticos y media en Django
 
-### Antes de la Reorganización
-- Todas las imágenes (estáticas y uploads) estaban en la carpeta `media/`
-- No había separación clara entre recursos estáticos y archivos subidos por usuarios
+### ¿Qué es un archivo estático?
+Son archivos que no cambian en tiempo de ejecución: imágenes por defecto, CSS, JS, logos, recursos del proyecto. Se sirven desde la carpeta `static/` y se referencian en los templates con `{% static %}`.
 
-### Después de la Reorganización
+### ¿Qué es un archivo media?
+Son archivos subidos por los usuarios (fotos de mascotas, productos, perfiles, etc). Se guardan en la carpeta `media/` y se accede a ellos con la propiedad `.url` del campo File/Image en los modelos.
+
+---
+
 
 #### 📁 `static/media/` - Recursos Estáticos del Proyecto
+Imágenes por defecto, recursos gráficos, imágenes de productos que no cambian y que se usan como referencia o diseño.
+
 ```
 static/media/
 ├── imagenes_perfil/          # Imágenes de perfil por defecto
@@ -17,57 +23,61 @@ static/media/
 └── blog/                     # Imágenes de artículos del blog por defecto
 ```
 
-#### 📁 `media/` - Archivos Subidos por Usuarios
-- **Vacía actualmente** - Solo contendrá archivos subidos a través de formularios
-- Los modelos Django siguen configurados para usar `upload_to='imagenes_mascotas/'`, etc.
 
-#### 📁 `static/images/` - Imágenes del Diseño
-- Logo, fondos, iconos y otras imágenes del diseño de la interfaz
-- Incluye `default-pet.jpg` para mascotas sin imagen
+#### 📁 `media/` - Archivos subidos por usuarios
+Aquí se guardan las imágenes y archivos que los usuarios suben mediante formularios (fotos de mascotas, productos personalizados, imágenes de perfil, etc).
+Los modelos Django deben tener el campo `upload_to` configurado para guardar aquí los archivos subidos.
+Ejemplo:
+```python
+imagen = models.ImageField(upload_to='imagenes_mascotas/', blank=True, null=True)
+```
 
-### Cambios Realizados
 
-1. ✅ **Movidas todas las carpetas de imágenes estáticas** de `media/` a `static/media/`
-2. ✅ **Mantenida la estructura de carpetas** para facilitar futuras referencias
-3. ✅ **Verificado que todos los templates** tengan `{% load static %}`
-4. ✅ **Creada imagen por defecto** `default-pet.jpg` en `static/images/`
-5. ✅ **Carpeta `media/` vacía** lista para recibir uploads de usuarios
+#### 📁 `static/images/` - Imágenes del diseño
+Imágenes de la interfaz, logos, fondos, iconos, etc. No cambian y se usan solo para el diseño visual.
+Incluye `default-pet.jpg` para mostrar cuando no hay imagen subida por el usuario.
 
-### Beneficios de la Reorganización
 
-- **Separación clara** entre recursos estáticos y contenido dinámico
-- **Mejor rendimiento** al servir archivos estáticos desde `static/`
-- **Mantenimiento más fácil** de recursos del proyecto
-- **Escalabilidad** para futuras implementaciones
-- **Buenas prácticas** de Django para manejo de archivos
+### Cambios realizados
 
-### Notas Importantes
+1. ✅ Todos los recursos estáticos están en `static/media/` y `static/images/`
+2. ✅ Los archivos subidos por usuarios van a `media/`
+3. ✅ Los templates usan `{% static %}` para recursos estáticos y `.url` para archivos media
+4. ✅ Imagen por defecto en `static/images/default-pet.jpg`
+5. ✅ Estructura clara y profesional
 
-- **No se modificaron** las configuraciones de `MEDIA_URL` y `MEDIA_ROOT` en `settings.py`
-- **Los modelos Django** siguen funcionando igual para uploads de usuarios
-- **Todas las rutas en templates** ya usan `{% static %}` correctamente
-- **La aplicación seguirá funcionando** sin cambios en el código
 
-### Estructura Final Recomendada
+### Beneficios
+
+- Separación clara entre recursos estáticos y archivos subidos
+- Mejor rendimiento y organización
+- Mantenimiento y escalabilidad
+- Buenas prácticas Django
+
+
+### Notas importantes
+
+- Las configuraciones de `MEDIA_URL` y `MEDIA_ROOT` en `settings.py` deben estar correctas para servir archivos subidos
+- Los modelos deben usar `upload_to` para guardar en `media/`
+- Los templates usan `{% static '...' %}` para recursos estáticos y `{{ objeto.imagen.url }}` para archivos subidos
+
+
+### Estructura final recomendada
 
 ```
 PataRescata/
 ├── static/
 │   ├── css/                  # Estilos CSS
-│   ├── images/               # Imágenes del diseño
-│   └── media/                # Recursos estáticos del proyecto
-│       ├── imagenes_perfil/
-│       ├── imagenes_mascotas/
-│       ├── productos/
-│       └── blog/
-├── media/                    # Uploads de usuarios (vacía actualmente)
+│   ├── images/               # Imágenes
+├── media/                    # Uploads de usuarios
 └── templates/                # Templates HTML
 ```
 
+
 ### Verificación
 
-- ✅ Carpeta `media/` vacía
-- ✅ Todas las imágenes estáticas en `static/media/`
-- ✅ Todos los templates con `{% load static %}`
-- ✅ Imagen por defecto creada en `static/images/default-pet.jpg`
-- ✅ Estructura de carpetas mantenida
+- ✅ Carpeta `media/` lista para uploads
+- ✅ Imágenes estáticas en `static/media/` y diseño en `static/images/`
+- ✅ Templates usan `{% static %}` y `.url` correctamente
+- ✅ Imagen por defecto en `static/images/default-pet.jpg`
+- ✅ Estructura profesional y mantenible
