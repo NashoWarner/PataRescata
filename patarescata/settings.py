@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-p!5p1srt6c_pirry36=kqbhjl_6h@qmunk6x&ay)-)vd&8374p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -65,10 +65,10 @@ WSGI_APPLICATION = 'patarescata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'animales',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Linux2024',
-        'HOST': 'localhost', #db para docker/localhost para mi pc local
+        'PASSWORD': '1',
+        'HOST': 'db', #db para docker/localhost para mi pc local
         'PORT': '5432',
     }
 }
