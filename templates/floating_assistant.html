@@ -1,0 +1,243 @@
+<!-- Botón flotante del Asistente Virtual -->
+<div id="floating-assistant" class="floating-assistant">
+    <div class="assistant-tooltip">
+        <span>Asistente Virtual</span>
+        <div class="tooltip-arrow"></div>
+    </div>
+    <a href="{% url 'asistente_virtual' %}" class="assistant-button" id="assistant-btn">
+        <i class="fas fa-robot"></i>
+    </a>
+    <div class="assistant-pulse"></div>
+</div>
+
+<style>
+.floating-assistant {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.assistant-button {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.assistant-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(139, 92, 246, 0.6);
+    color: white;
+    text-decoration: none;
+}
+
+.assistant-button i {
+    font-size: 24px;
+    z-index: 2;
+    position: relative;
+}
+
+.assistant-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 2px solid #8b5cf6;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.4);
+        opacity: 0;
+    }
+}
+
+.assistant-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.assistant-tooltip .tooltip-arrow {
+    position: absolute;
+    top: 100%;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.8);
+}
+
+.floating-assistant:hover .assistant-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animación de entrada */
+.floating-assistant {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Efecto de brillo en hover */
+.assistant-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.assistant-button:hover::before {
+    left: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .floating-assistant {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .assistant-button {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .assistant-button i {
+        font-size: 22px;
+    }
+    
+    .assistant-pulse {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .assistant-tooltip {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* Animación de "respiración" sutil */
+.assistant-button {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const assistantBtn = document.getElementById('assistant-btn');
+    const floatingAssistant = document.getElementById('floating-assistant');
+    
+    // Efecto de click
+    assistantBtn.addEventListener('click', function(e) {
+        // Crear efecto de ondas
+        const ripple = document.createElement('div');
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.width = '100px';
+        ripple.style.height = '100px';
+        ripple.style.marginLeft = '-50px';
+        ripple.style.marginTop = '-50px';
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+    
+    // Mostrar/ocultar en scroll
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            // Scrolling down
+            floatingAssistant.style.transform = 'translateY(100px)';
+            floatingAssistant.style.opacity = '0.7';
+        } else {
+            // Scrolling up
+            floatingAssistant.style.transform = 'translateY(0)';
+            floatingAssistant.style.opacity = '1';
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+});
+
+// CSS para el efecto ripple
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>

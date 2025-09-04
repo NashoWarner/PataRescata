@@ -277,7 +277,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {% for item in mascotas_recomendadas %}
-                <div class="mascota-card animate-scale-in bg-white rounded-2xl shadow-xl overflow-hidden border border-secondary-100">
+                <div class="mascota-card animate-scale-in bg-white rounded-2xl shadow-xl overflow-hidden border border-secondary-100 flex flex-col h-full">
                     <div class="relative overflow-hidden">
                         <img src="{% if item.mascota.imagen %}{{ item.mascota.imagen.url }}{% else %}{% static 'images/default-pet.jpg' %}{% endif %}" 
                              alt="{{ item.mascota.nombre_mascota }}" 
@@ -295,36 +295,39 @@
                         </div>
                     </div>
                     
-                    <div class="p-6 space-y-4">
-                        <h3 class="text-xl font-bold text-secondary-800 truncate">{{ item.mascota.nombre_mascota }}</h3>
-                        
-                        <div class="grid grid-cols-2 gap-3 text-sm">
-                            <div class="flex items-center space-x-2 text-secondary-600">
-                                <i class="fas fa-ruler text-primary-500"></i>
-                                <span>{{ item.mascota.tamaño_mascota }}</span>
-                            </div>
-                            <div class="flex items-center space-x-2 text-secondary-600">
-                                <i class="fas fa-calendar text-primary-500"></i>
-                                <span>{{ item.mascota.edad_mascota }}</span>
-                            </div>
-                        </div>
-                        
-                        <p class="text-secondary-600 text-sm line-clamp-2">{{ item.mascota.descripcion }}</p>
-                        
-                        <!-- Razones de compatibilidad -->
-                        <div class="space-y-2">
-                            <h4 class="text-sm font-semibold text-primary-700">¿Por qué es perfecta para ti?</h4>
-                            <div class="space-y-1">
-                                {% for razon in item.razones %}
-                                <div class="flex items-center space-x-2 text-xs text-green-600">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>{{ razon }}</span>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="space-y-4 flex-grow">
+                            <h3 class="text-xl font-bold text-secondary-800 truncate">{{ item.mascota.nombre_mascota }}</h3>
+                            
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="flex items-center space-x-2 text-secondary-600">
+                                    <i class="fas fa-ruler text-primary-500"></i>
+                                    <span>{{ item.mascota.tamaño_mascota }}</span>
                                 </div>
-                                {% endfor %}
+                                <div class="flex items-center space-x-2 text-secondary-600">
+                                    <i class="fas fa-calendar text-primary-500"></i>
+                                    <span>{{ item.mascota.edad_mascota }}</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-secondary-600 text-sm line-clamp-2">{{ item.mascota.descripcion }}</p>
+                            
+                            <!-- Razones de compatibilidad -->
+                            <div class="space-y-2">
+                                <h4 class="text-sm font-semibold text-primary-700">¿Por qué es perfecta para ti?</h4>
+                                <div class="space-y-1">
+                                    {% for razon in item.razones %}
+                                    <div class="flex items-center space-x-2 text-xs text-green-600">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>{{ razon }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="pt-2">
+                        <!-- Botón siempre en la parte inferior -->
+                        <div class="mt-4 pt-4">
                             <a href="{% url 'detalle_mascota_asistente' item.mascota.id %}" 
                                class="btn-primary text-white w-full py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 text-center block">
                                 <i class="fas fa-eye mr-2"></i>Ver Detalles
