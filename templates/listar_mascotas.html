@@ -639,28 +639,7 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav-container">
-            <a href="{% url 'home' %}" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-paw"></i>
-                </div>
-                <span class="logo-text">PataRescata</span>
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="{% url 'tienda' %}">Tienda</a></li>
-                <li><a href="{% url 'blog' %}">Blog</a></li>
-                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-            </ul>
-            
-                            <a href="{% url 'seleccionar_tipo_cuenta' %}" class="login-btn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </a>
-        </nav>
-    </header>
+    {% include 'navegador.html' %}
 
     <!-- Hero Section -->
     <section class="hero-section">
