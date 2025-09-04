@@ -850,10 +850,25 @@
                             </p>
                             
                             <div class="pet-actions" style="display: flex; gap: 10px;">
-                                <button class="adopt-button" onclick="adoptPet('{{ mascota.id }}')" style="flex: 1;">
-                                    <i class="fas fa-heart"></i>
-                                    Adoptar
-                                </button>
+                                {% if user.is_authenticated and not user.rut_empresa %}
+                                    <!-- Solo mostrar botón adoptar para adoptantes -->
+                                    <button class="adopt-button" onclick="adoptPet('{{ mascota.id }}')" style="flex: 1;">
+                                        <i class="fas fa-heart"></i>
+                                        Adoptar
+                                    </button>
+                                {% elif user.is_authenticated and user.rut_empresa %}
+                                    <!-- Para fundaciones, mostrar mensaje informativo -->
+                                    <div style="flex: 1; background: #f3f4f6; border: 2px solid #d1d5db; color: #6b7280; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1rem; text-align: center; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+                                        Solo adoptantes pueden adoptar
+                                    </div>
+                                {% else %}
+                                    <!-- Para usuarios no autenticados -->
+                                    <button class="adopt-button" onclick="adoptPet('{{ mascota.id }}')" style="flex: 1;">
+                                        <i class="fas fa-heart"></i>
+                                        Adoptar
+                                    </button>
+                                {% endif %}
                                 <button class="info-button" onclick="verMasMascota('{{ mascota.id }}')" style="flex: 0 0 auto; background: #6b7280; border: none; color: white; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
                                     <i class="fas fa-info-circle"></i>
                                 </button>

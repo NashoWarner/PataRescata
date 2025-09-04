@@ -65,14 +65,13 @@ WSGI_APPLICATION = 'patarescata.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'animales',
         'USER': 'postgres',
-        'PASSWORD': '1',
-        'HOST': 'db', #db para docker/localhost para mi pc local
+        'PASSWORD': 'Linux2024',
+        'HOST': 'localhost', #db para docker/localhost para mi pc local
         'PORT': '5432',
     }
 }
-
 
 
 # Password validation
