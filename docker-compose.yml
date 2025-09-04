@@ -1,26 +1,4 @@
-version: '3'
-
 services:
-  web:
-    build: .
-    command: >
-      sh -c "./wait-for-it.sh db:5432 --timeout=20 --strict && \
-        python manage.py makemigrations && \
-        python manage.py migrate && \
-        python manage.py crear_superuser && \
-        python manage.py poblar_productos && \
-        python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=patarescata.settings
-      - DJANGO_SUPERUSER_USERNAME=admin
-      - DJANGO_SUPERUSER_EMAIL=admin@example.com
-      - DJANGO_SUPERUSER_PASSWORD=admin123
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    volumes:
-      - ./media:/app/media
   db:
     image: postgres:latest
     environment:
@@ -29,6 +7,50 @@ services:
       POSTGRES_PASSWORD: '1'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile
+    command:
+      - bash
+      - -lc
+      - >
+        until (echo > /dev/tcp/db/5432) >/dev/null 2>&1; do echo "Esperando base de datos..."; sleep 1; done;
+        python manage.py makemigrations && 
+        python manage.py migrate && 
+        python manage.py crear_superuser && 
+        python manage.py poblar_productos && 
+        python manage.py runserver 0.0.0.0:8000
+    environment:
+      DJANGO_SETTINGS_MODULE: patarescata.settings
+      FORCE_POSTGRES: "1"
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '1'
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      DJANGO_SUPERUSER_PASSWORD: admin123
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./media:/app/media
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - web
+    ports:
+      - "8080:80"
+    restart: unless-stopped
 
 volumes:
   postgres_data:

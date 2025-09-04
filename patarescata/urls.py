@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from apppatarescata import views
 from apppatarescata.views import estadisticas
 from apppatarescata.views import (
@@ -17,8 +17,23 @@ from apppatarescata.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
+from apppatarescata.api_views import MascotaViewSet, ProductoViewSet, ArticuloBlogViewSet, AdopcionViewSet
+from apppatarescata.auth_views import (
+    LoginAPI, LogoutAPI, RegistroAdoptanteAPI, RegistroFundacionAPI,
+    verificar_cuenta_api, PerfilUsuarioAPI, eliminar_cuenta_api
+)
+
+router = DefaultRouter()
+router.register(r'mascotas', MascotaViewSet, basename='mascota')
+router.register(r'productos', ProductoViewSet, basename='producto')
+router.register(r'articulos', ArticuloBlogViewSet, basename='articulo')
+router.register(r'adopciones', AdopcionViewSet, basename='adopcion')
 
 urlpatterns = [
+    # API
+    path('api/', include(router.urls)),
     path('preguntas-frecuentes/', preguntas_frecuentes, name='preguntas_frecuentes'),
     path('admin/', admin.site.urls),
 
@@ -90,4 +105,17 @@ if settings.DEBUG:
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# API URLs
+urlpatterns += [
+    # API para autenticación
+    path('api/', include(router.urls)),
+    path('api/auth/login/', LoginAPI.as_view(), name='api_login'),
+    path('api/auth/logout/', LogoutAPI.as_view(), name='api_logout'),
+    path('api/auth/registro/adoptante/', RegistroAdoptanteAPI.as_view(), name='api_registro_adoptante'),
+    path('api/auth/registro/fundacion/', RegistroFundacionAPI.as_view(), name='api_registro_fundacion'),
+    path('api/auth/perfil/', PerfilUsuarioAPI.as_view(), name='api_perfil'),
+    path('api/auth/verificar/<str:token>/', verificar_cuenta_api, name='api_verificar_cuenta'),
+    path('api/auth/eliminar-cuenta/', eliminar_cuenta_api, name='api_eliminar_cuenta'),
+]
 

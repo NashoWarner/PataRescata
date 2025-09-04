@@ -29,6 +29,7 @@
             box-shadow: 0 4px 20px rgba(30, 27, 75, 0.3);
             position: relative;
             overflow: hidden;
+            margin-top: 56px; /* Ajuste para evitar que el contenido se oculte detrás del navegador */
         }
 
         .header::before {
@@ -387,6 +388,9 @@
     </style>
 </head>
 <body>
+    <!-- Navegador -->
+    {% include 'navegador.html' %}
+
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -671,6 +675,30 @@
             reader.readAsDataURL(file);
         }
 
+        // Aplicar clases CSS a los elementos de formulario si no las tienen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Asegurarse de que los inputs tengan las clases necesarias
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="password"]').forEach(input => {
+                if (!input.classList.contains('form-input')) {
+                    input.classList.add('form-input');
+                }
+            });
+            
+            // Asegurarse de que los selects tengan las clases necesarias
+            document.querySelectorAll('select').forEach(select => {
+                if (!select.classList.contains('form-select')) {
+                    select.classList.add('form-select');
+                }
+            });
+            
+            // Asegurarse de que los textareas tengan las clases necesarias
+            document.querySelectorAll('textarea').forEach(textarea => {
+                if (!textarea.classList.contains('form-textarea')) {
+                    textarea.classList.add('form-textarea');
+                }
+            });
+        });
+        
         // Validación en tiempo real
         const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
         inputs.forEach(input => {
@@ -728,5 +756,8 @@
             imageUploadContainer.style.borderColor = '';
         });
     </script>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
 </body>
 </html>

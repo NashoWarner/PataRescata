@@ -1,0 +1,149 @@
+.select-user-type-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  background-image: url('../assets/images/background-paws.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.select-user-type-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+}
+
+.select-title {
+  color: #3a7bd5;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.select-description {
+  color: #6c757d;
+  margin-bottom: 3rem;
+  font-size: 1.2rem;
+}
+
+.user-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.user-type-card {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  flex: 1;
+  min-width: 280px;
+  max-width: 400px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid #e9ecef;
+}
+
+.user-type-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1.5rem;
+}
+
+.card-icon i {
+  font-size: 2rem;
+}
+
+.user-type-card h2 {
+  color: #3a7bd5;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+}
+
+.user-type-card p {
+  color: #6c757d;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-login, .btn-register {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-login {
+  background-color: #3a7bd5;
+  color: white;
+}
+
+.btn-login:hover {
+  background-color: #2c5ea3;
+  transform: translateY(-2px);
+}
+
+.btn-register {
+  background-color: white;
+  color: #3a7bd5;
+  border: 2px solid #3a7bd5;
+}
+
+.btn-register:hover {
+  background-color: #3a7bd5;
+  color: white;
+}
+
+.back-to-home {
+  margin-top: 2rem;
+}
+
+.back-to-home a {
+  color: #6c757d;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.back-to-home a:hover {
+  color: #3a7bd5;
+}
+
+@media (max-width: 768px) {
+  .select-user-type-content {
+    padding: 2rem;
+  }
+  
+  .user-type-card {
+    min-width: 100%;
+  }
+}

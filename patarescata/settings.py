@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-p!5p1srt6c_pirry36=kqbhjl_6h@qmunk6x&ay)-)vd&8374p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -25,12 +25,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Necesario para get_current_site
+    # Terceros
+    'rest_framework',
+    'corsheaders',
+    
     'apppatarescata',
     'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Sirve estáticos eficientemente en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # Habilita CORS para el frontend React
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',#PARA HACER LA PRUEBA EN JMETER
@@ -62,16 +70,24 @@ WSGI_APPLICATION = 'patarescata.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'animales',
-        'USER': 'postgres',
-        'PASSWORD': 'Linux2024',
-        'HOST': 'localhost', #db para docker/localhost para mi pc local
-        'PORT': '5432',
+if DEBUG and os.getenv('FORCE_POSTGRES', '').lower() not in ('1', 'true', 'yes'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'postgres'),
+            'USER': os.getenv('POSTGRES_USER', 'postgres'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'Linux2024'),
+            'HOST': os.getenv('POSTGRES_HOST', 'db'),  # usar 'db' cuando se ejecuta con docker-compose
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
+    }
 
 
 
@@ -103,6 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Optimización de estáticos con WhiteNoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -138,4 +158,27 @@ SESSION_SAVE_EVERY_REQUEST = True  # Guardar la sesión en cada request para man
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+}
+
+# CORS para permitir el frontend en desarrollo (Vite por defecto en 5173)
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+]
 

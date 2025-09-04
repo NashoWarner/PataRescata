@@ -114,34 +114,34 @@ class Formulario2(forms.Form):
 
     nombre_mascota = forms.CharField(
         max_length=20,
-        widget=forms.TextInput(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Nombre de la mascota'})
     )
     edad_mascota = forms.ChoiceField(
         choices=opciones_edades,
-        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        widget=forms.Select(attrs={'class': 'form-select'})
     )
     tipo_mascota = forms.ChoiceField(
         choices=tipo_mascota,
-        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        widget=forms.Select(attrs={'class': 'form-select'}),
         required=True
     )
     tamaño_mascota = forms.ChoiceField(
         choices=tamaño_mascota,
-        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        widget=forms.Select(attrs={'class': 'form-select'})
     )
     comuna_mascota = forms.ChoiceField(
         choices=comunas_de_santiago,
-        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        widget=forms.Select(attrs={'class': 'form-select'})
     )
     region = forms.ChoiceField(
         choices=regiones,
-        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        widget=forms.Select(attrs={'class': 'form-select'})
     )
     descripcion = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'style': 'font-family: "Passion One", sans-serif;'})
+        max_length=500,
+        widget=forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Describe la mascota, su personalidad, historia, etc.', 'rows': 5})
     )
-    imagen = forms.ImageField(required=False)
+    imagen = forms.ImageField(required=True, widget=forms.FileInput(attrs={'class': 'form-file', 'accept': 'image/*'}))
 
 
 
