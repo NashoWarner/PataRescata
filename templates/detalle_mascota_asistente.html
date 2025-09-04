@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mascota.nombre_mascota }} - PataRescata</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/assistant.css' %}" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#e0e7ff',
+                            100: '#c7d2fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-secondary-50 to-secondary-100 min-h-screen">
+    <!-- Navbar -->
+    {% include 'navegador.html' %}
+    
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-secondary-800 to-secondary-900 text-white py-8 shadow-2xl">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-100 to-primary-200 bg-clip-text text-transparent">
+                <i class="fas fa-heart mr-4"></i>{{ mascota.nombre_mascota }}
+            </h1>
+            <p class="text-lg md:text-xl text-secondary-200 max-w-2xl mx-auto">
+                Descubre todos los detalles de tu compañero perfecto
+            </p>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Mensajes -->
+        {% if messages %}
+        <div class="mb-8 space-y-4">
+            {% for message in messages %}
+            <div class="animate-fade-in-up p-4 rounded-xl border-l-4 {% if message.tags == 'success' %}bg-green-50 border-green-400 text-green-800{% elif message.tags == 'info' %}bg-blue-50 border-blue-400 text-blue-800{% else %}bg-yellow-50 border-yellow-400 text-yellow-800{% endif %} shadow-lg">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'info' %}info-circle{% else %}exclamation-circle{% endif %} text-lg"></i>
+                    <span class="font-medium">{{ message }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Detalles de la Mascota -->
+        <div class="animate-fade-in-up form-card rounded-3xl shadow-2xl p-8 mb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Imagen de la Mascota -->
+                <div class="space-y-4">
+                    <div class="relative overflow-hidden rounded-2xl">
+                        <img src="{% if mascota.imagen %}{{ mascota.imagen.url }}{% else %}{% static 'images/default-pet.jpg' %}{% endif %}" 
+                             alt="{{ mascota.nombre_mascota }}" 
+                             class="w-full h-96 object-cover transition-transform duration-300 hover:scale-105">
+                        <div class="absolute top-4 right-4">
+                            <span class="energia-badge px-4 py-2 rounded-full text-sm font-bold border-2 energia-media">
+                                {{ mascota.tamaño_mascota|title }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de la Mascota -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-secondary-800 mb-2">{{ mascota.nombre_mascota }}</h2>
+                        <p class="text-secondary-600 text-lg">{{ mascota.descripcion }}</p>
+                    </div>
+
+                    <!-- Características -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-secondary-50 p-4 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-ruler text-primary-500 text-xl"></i>
+                                <div>
+                                    <p class="text-sm text-secondary-600">Tamaño</p>
+                                    <p class="font-semibold text-secondary-800">{{ mascota.tamaño_mascota|title }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-secondary-50 p-4 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-calendar text-primary-500 text-xl"></i>
+                                <div>
+                                    <p class="text-sm text-secondary-600">Edad</p>
+                                    <p class="font-semibold text-secondary-800">{{ mascota.edad_mascota }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-secondary-50 p-4 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-paw text-primary-500 text-xl"></i>
+                                <div>
+                                    <p class="text-sm text-secondary-600">Tipo</p>
+                                    <p class="font-semibold text-secondary-800">{{ mascota.tipo_mascota|title }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-secondary-50 p-4 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-map-marker-alt text-primary-500 text-xl"></i>
+                                <div>
+                                    <p class="text-sm text-secondary-600">Ubicación</p>
+                                    <p class="font-semibold text-secondary-800">{{ mascota.comuna_mascota }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de la Fundación -->
+                    {% if fundacion %}
+                    <div class="bg-primary-50 p-6 rounded-xl border border-primary-200">
+                        <h3 class="text-lg font-semibold text-primary-800 mb-3">
+                            <i class="fas fa-building mr-2"></i>Información de la Fundación
+                        </h3>
+                        <div class="space-y-2">
+                            <p class="text-primary-700"><strong>Nombre:</strong> {{ fundacion.nombre }}</p>
+                            <p class="text-primary-700"><strong>Email:</strong> {{ fundacion.email }}</p>
+                            <p class="text-primary-700"><strong>Teléfono:</strong> {{ fundacion.telefono }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Estado de Solicitud -->
+                    {% if solicitud_existente %}
+                    <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                            <div>
+                                <h3 class="text-lg font-semibold text-yellow-800">Solicitud Pendiente</h3>
+                                <p class="text-yellow-700">Ya tienes una solicitud de adopción para {{ mascota.nombre_mascota }}. La fundación está revisando tu solicitud.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Botones de Acción -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        {% if not solicitud_existente %}
+                            {% if user.is_authenticated and not user.rut_empresa %}
+                                <a href="{% url 'adoptar_desde_asistente' mascota.id %}" 
+                                   class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+                                    <i class="fas fa-heart mr-3"></i>Adoptar Ahora
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login_adoptante' %}" 
+                                   class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+                                    <i class="fas fa-sign-in-alt mr-3"></i>Iniciar Sesión para Adoptar
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <a href="{% url 'asistente_virtual' %}" 
+                           class="btn-secondary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+                            <i class="fas fa-arrow-left mr-3"></i>Volver al Asistente
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="animate-fade-in-up form-card rounded-3xl shadow-2xl p-8">
+            <h3 class="text-2xl font-bold text-secondary-800 mb-6 text-center">
+                <i class="fas fa-info-circle text-primary-500 mr-3"></i>Información Adicional
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl">
+                    <i class="fas fa-shield-alt text-primary-500 text-3xl mb-4"></i>
+                    <h4 class="font-semibold text-primary-800 mb-2">Salud Verificada</h4>
+                    <p class="text-primary-600 text-sm">Todas nuestras mascotas han pasado por un chequeo veterinario completo</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
+                    <i class="fas fa-heart text-green-500 text-3xl mb-4"></i>
+                    <h4 class="font-semibold text-green-800 mb-2">Adopción Responsable</h4>
+                    <p class="text-green-600 text-sm">Proceso de adopción cuidadoso para garantizar el bienestar de la mascota</p>
+                </div>
+                
+                <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                    <i class="fas fa-handshake text-blue-500 text-3xl mb-4"></i>
+                    <h4 class="font-semibold text-blue-800 mb-2">Seguimiento</h4>
+                    <p class="text-blue-600 text-sm">Te acompañamos durante todo el proceso de adaptación</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animaciones de entrada
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

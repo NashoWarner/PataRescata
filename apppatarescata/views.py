@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 
 from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm, AsistenteVirtualForm
 
 def faq(request):
     preguntas = FAQ.objects.all()
@@ -59,13 +59,20 @@ def agregarMascota(request):
                 region=form2.cleaned_data['region'],
                 descripcion=form2.cleaned_data['descripcion'],
                 imagen=form2.cleaned_data['imagen'],
+                # Nuevos campos para compatibilidad
+                compatible_departamento=form2.cleaned_data.get('compatible_departamento', 'si'),
+                nivel_energia=form2.cleaned_data.get('nivel_energia', 'medio'),
+                necesidad_atencion=form2.cleaned_data.get('necesidad_atencion', 'media'),
+                requisitos_espacio=form2.cleaned_data.get('requisitos_espacio', 'espacio_moderado'),
+                tiempo_ejercicio=form2.cleaned_data.get('tiempo_ejercicio', 'moderado'),
+                sociabilidad=form2.cleaned_data.get('sociabilidad', 'sociable'),
             )
             print("Mascota object:", nueva_mascota.__dict__)  # Debug
             nueva_mascota.save()
 
             # Obtén la fundación actualmente autenticada y asigna la mascota a esa fundación
             fundacion = request.user
-            MascotaFundacion.objects.create(mascota=nueva_mascota, adoptante=fundacion)
+            MascotaFundacion.objects.get_or_create(mascota=nueva_mascota, adoptante=fundacion)
 
             messages.success(request, f"La mascota '{nueva_mascota.nombre_mascota}' ha sido agregada exitosamente.")
             return redirect('listar_mascotas')
@@ -1526,8 +1533,249 @@ def rechazar_solicitud_adopcion(request, solicitud_id):
     return redirect('mis_solicitudes')
 
 
+def asistente_virtual(request):
+    """Vista para el asistente virtual que recomienda mascotas basado en preferencias"""
+    form = AsistenteVirtualForm()
+    mascotas_recomendadas = []
+    mostrar_resultados = False
+    preferencias_usuario = {}
+    
+    if request.method == 'POST':
+        form = AsistenteVirtualForm(request.POST)
+        if form.is_valid():
+            # Obtener las preferencias del formulario
+            tipo_vivienda = form.cleaned_data['tipo_vivienda']
+            espacios_disponibles = form.cleaned_data['espacios_disponibles']
+            tiempo_libre = form.cleaned_data['tiempo_libre']
+            tamaño_preferido = form.cleaned_data['tamaño_preferido']
+            
+            # Guardar preferencias para mostrar en el template
+            preferencias_usuario = {
+                'tipo_vivienda': dict(form.TIPO_VIVIENDA_CHOICES).get(tipo_vivienda, ''),
+                'espacios_disponibles': dict(form.ESPACIOS_DISPONIBLES_CHOICES).get(espacios_disponibles, ''),
+                'tiempo_libre': dict(form.TIEMPO_LIBRE_CHOICES).get(tiempo_libre, ''),
+                'tamaño_preferido': dict(form.TAMAÑO_PREFERIDO_CHOICES).get(tamaño_preferido, ''),
+            }
+            
+            # Obtener todas las mascotas disponibles
+            mascotas_base = Mascota.objects.filter(disponible=True)
+            
+            # Aplicar filtros basados en las preferencias con lógica mejorada
+            mascotas_filtradas = mascotas_base
+            
+            # Sistema de puntuación mejorado usando los nuevos campos de compatibilidad
+            mascotas_con_puntuacion = []
+            
+            for mascota in mascotas_base:
+                puntuacion = 0
+                razones = []
+                
+                # Puntuación por tamaño (25% del peso)
+                if tamaño_preferido and tamaño_preferido != 'sin_preferencia':
+                    if mascota.tamaño_mascota == tamaño_preferido:
+                        puntuacion += 25
+                        razones.append("Tamaño perfecto")
+                    else:
+                        # Puntuación parcial por tamaños similares
+                        tamaño_map = {
+                            'miniatura': ['pequeno'],
+                            'pequeno': ['miniatura', 'mediano'],
+                            'mediano': ['pequeno', 'grande'],
+                            'grande': ['mediano', 'gigante'],
+                            'gigante': ['grande']
+                        }
+                        if mascota.tamaño_mascota in tamaño_map.get(tamaño_preferido, []):
+                            puntuacion += 15
+                            razones.append("Tamaño compatible")
+                
+                # Puntuación por compatibilidad con departamento (25% del peso)
+                if tipo_vivienda in ['departamento', 'departamento_pequeño']:
+                    if mascota.compatible_departamento == 'si':
+                        puntuacion += 25
+                        razones.append("Ideal para departamento")
+                    elif mascota.compatible_departamento == 'con_restricciones' and espacios_disponibles == 'interior_y_balcon':
+                        puntuacion += 20
+                        razones.append("Perfecto para departamento con balcón")
+                    elif mascota.compatible_departamento == 'no':
+                        puntuacion += 5  # Puntuación muy baja
+                        razones.append("No recomendado para departamento")
+                elif tipo_vivienda in ['casa', 'casa_con_patio']:
+                    if mascota.compatible_departamento == 'no':
+                        puntuacion += 25
+                        razones.append("Excelente para casa con patio")
+                    else:
+                        puntuacion += 20
+                        razones.append("Bueno para casa")
+                
+                # Puntuación por requisitos de espacio (20% del peso)
+                if espacios_disponibles == 'solo_interior':
+                    if mascota.requisitos_espacio == 'poco_espacio':
+                        puntuacion += 20
+                        razones.append("Perfecto para poco espacio")
+                    elif mascota.requisitos_espacio == 'espacio_moderado':
+                        puntuacion += 15
+                        razones.append("Aceptable para poco espacio")
+                elif espacios_disponibles in ['interior_y_balcon', 'interior_y_patio_pequeno']:
+                    if mascota.requisitos_espacio in ['poco_espacio', 'espacio_moderado']:
+                        puntuacion += 20
+                        razones.append("Ideal para espacios moderados")
+                elif espacios_disponibles in ['interior_y_patio_grande', 'mucho_espacio_exterior']:
+                    if mascota.requisitos_espacio == 'mucho_espacio':
+                        puntuacion += 20
+                        razones.append("Perfecto para mucho espacio")
+                    else:
+                        puntuacion += 15
+                        razones.append("Bueno para espacios amplios")
+                
+                # Puntuación por tiempo libre y necesidad de atención (20% del peso)
+                if tiempo_libre == 'poco_tiempo':
+                    if mascota.necesidad_atencion == 'baja':
+                        puntuacion += 20
+                        razones.append("Independiente, ideal para poco tiempo")
+                    elif mascota.necesidad_atencion == 'media':
+                        puntuacion += 10
+                        razones.append("Aceptable para poco tiempo")
+                elif tiempo_libre == 'tiempo_moderado':
+                    if mascota.necesidad_atencion in ['media', 'alta']:
+                        puntuacion += 20
+                        razones.append("Ideal para tiempo moderado")
+                    else:
+                        puntuacion += 15
+                        razones.append("Bueno para tiempo moderado")
+                elif tiempo_libre == 'mucho_tiempo':
+                    puntuacion += 20
+                    razones.append("Perfecto para mucho tiempo disponible")
+                elif tiempo_libre == 'solo_fines_semana':
+                    if mascota.necesidad_atencion == 'baja':
+                        puntuacion += 20
+                        razones.append("Ideal para fines de semana")
+                    elif mascota.necesidad_atencion == 'media':
+                        puntuacion += 15
+                        razones.append("Bueno para fines de semana")
+                
+                # Puntuación por nivel de energía y tiempo de ejercicio (10% del peso)
+                if tiempo_libre == 'poco_tiempo':
+                    if mascota.nivel_energia == 'bajo' and mascota.tiempo_ejercicio == 'poco':
+                        puntuacion += 10
+                        razones.append("Bajo mantenimiento")
+                elif tiempo_libre == 'tiempo_moderado':
+                    if mascota.nivel_energia in ['bajo', 'medio'] and mascota.tiempo_ejercicio in ['poco', 'moderado']:
+                        puntuacion += 10
+                        razones.append("Energía equilibrada")
+                elif tiempo_libre == 'mucho_tiempo':
+                    if mascota.nivel_energia == 'alto' and mascota.tiempo_ejercicio == 'mucho':
+                        puntuacion += 10
+                        razones.append("Muy activo, perfecto para mucho tiempo")
+                
+                # Solo incluir mascotas con puntuación > 0
+                if puntuacion > 0:
+                    mascotas_con_puntuacion.append({
+                        'mascota': mascota,
+                        'puntuacion': puntuacion,
+                        'razones': razones
+                    })
+            
+            # Ordenar por puntuación (mayor a menor)
+            mascotas_con_puntuacion.sort(key=lambda x: x['puntuacion'], reverse=True)
+            
+            # Si no hay mascotas con puntuación, mostrar todas las disponibles
+            if not mascotas_con_puntuacion:
+                mascotas_con_puntuacion = [{'mascota': m, 'puntuacion': 10, 'razones': ['Disponible']} for m in mascotas_base[:6]]
+            
+            # Limitar a 8 recomendaciones máximo
+            mascotas_recomendadas = mascotas_con_puntuacion[:8]
+            mostrar_resultados = True
+            
+            if mascotas_recomendadas:
+                messages.success(request, f'¡Perfecto! Hemos encontrado {len(mascotas_recomendadas)} mascotas que coinciden con tus preferencias.')
+            else:
+                messages.info(request, 'No encontramos mascotas que coincidan exactamente con tus preferencias actuales. Te sugerimos modificar algunos criterios o explorar todas las mascotas disponibles.')
+    
+    context = {
+        'form': form,
+        'mascotas_recomendadas': mascotas_recomendadas,
+        'mostrar_resultados': mostrar_resultados,
+        'preferencias_usuario': preferencias_usuario,
+    }
+    
+    return render(request, 'asistente.html', context)
 
 
+def detalle_mascota_asistente(request, mascota_id):
+    """Vista para mostrar detalles de mascota desde el asistente virtual"""
+    try:
+        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
+        
+        # Obtener la fundación propietaria de la mascota
+        try:
+            mascota_fundacion = MascotaFundacion.objects.get(mascota=mascota)
+            fundacion = mascota_fundacion.adoptante
+        except MascotaFundacion.DoesNotExist:
+            fundacion = None
+        
+        # Verificar si el usuario ya tiene una solicitud para esta mascota
+        solicitud_existente = None
+        if request.user.is_authenticated and not request.user.rut_empresa:
+            solicitud_existente = Adopcion.objects.filter(
+                adoptante=request.user,
+                mascota=mascota
+            ).first()
+        
+        context = {
+            'mascota': mascota,
+            'fundacion': fundacion,
+            'solicitud_existente': solicitud_existente,
+            'desde_asistente': True,
+        }
+        
+        return render(request, 'detalle_mascota_asistente.html', context)
+        
+    except Mascota.DoesNotExist:
+        messages.error(request, 'La mascota no está disponible para adopción.')
+        return redirect('asistente_virtual')
+
+
+def adoptar_desde_asistente(request, mascota_id):
+    """Vista para adoptar una mascota directamente desde el asistente virtual"""
+    if not request.user.is_authenticated:
+        messages.info(request, 'Debes iniciar sesión para adoptar una mascota.')
+        return redirect('login_adoptante')
+    
+    if request.user.rut_empresa:
+        messages.error(request, 'Solo los adoptantes pueden solicitar adopciones.')
+        return redirect('home_perfil')
+    
+    try:
+        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
+        
+        # Verificar si ya existe una solicitud para esta mascota y este adoptante
+        solicitud_existente = Adopcion.objects.filter(
+            adoptante=request.user,
+            mascota=mascota
+        ).first()
+        
+        if solicitud_existente:
+            messages.info(request, f'Ya tienes una solicitud pendiente para {mascota.nombre_mascota}.')
+            return redirect('detalle_mascota_asistente', mascota_id=mascota_id)
+        
+        # Crear solicitud de adopción
+        adopcion = Adopcion.objects.create(
+            adoptante=request.user,
+            mascota=mascota,
+            estado='pendiente',
+            fecha_solicitud=timezone.now().date()
+        )
+        
+        # Marcar mascota como no disponible
+        mascota.disponible = False
+        mascota.save()
+        
+        messages.success(request, f'¡Excelente! Has solicitado adoptar a {mascota.nombre_mascota} desde el asistente virtual. La fundación revisará tu solicitud.')
+        return redirect('perfil_adoptante')
+        
+    except Mascota.DoesNotExist:
+        messages.error(request, 'La mascota no está disponible para adopción.')
+        return redirect('asistente_virtual')
 
 
 

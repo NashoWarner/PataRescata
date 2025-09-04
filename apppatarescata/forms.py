@@ -142,6 +142,73 @@ class Formulario2(forms.Form):
         widget=forms.TextInput(attrs={'style': 'font-family: "Passion One", sans-serif;'})
     )
     imagen = forms.ImageField(required=False)
+    
+    # Nuevos campos para compatibilidad con preferencias del adoptante
+    compatible_departamento = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('si', 'Sí, ideal para departamento'),
+            ('con_restricciones', 'Sí, con restricciones (balcón necesario)'),
+            ('no', 'No, requiere casa con patio'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Compatible con departamento'
+    )
+    
+    nivel_energia = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('bajo', 'Bajo - Tranquilo y relajado'),
+            ('medio', 'Medio - Activo pero moderado'),
+            ('alto', 'Alto - Muy activo y enérgico'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Nivel de energía'
+    )
+    
+    necesidad_atencion = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('baja', 'Baja - Independiente'),
+            ('media', 'Media - Necesita compañía moderada'),
+            ('alta', 'Alta - Requiere mucha atención'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Necesidad de atención'
+    )
+    
+    requisitos_espacio = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('poco_espacio', 'Poco espacio - Interior pequeño'),
+            ('espacio_moderado', 'Espacio moderado - Interior amplio'),
+            ('mucho_espacio', 'Mucho espacio - Requiere patio o jardín'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Requisitos de espacio'
+    )
+    
+    tiempo_ejercicio = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('poco', 'Poco - 30 minutos o menos'),
+            ('moderado', 'Moderado - 1-2 horas'),
+            ('mucho', 'Mucho - 2+ horas diarias'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Tiempo de ejercicio necesario'
+    )
+    
+    sociabilidad = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('independiente', 'Independiente - Prefiere estar solo'),
+            ('sociable', 'Sociable - Le gusta la compañía'),
+            ('muy_sociable', 'Muy sociable - Necesita interacción constante'),
+        ],
+        widget=forms.Select(attrs={'style': 'font-family: "Passion One", sans-serif;'}),
+        label='Nivel de sociabilidad'
+    )
 
 
 
@@ -395,3 +462,65 @@ class ArticuloBlogForm(forms.ModelForm):
         if self.instance and self.instance.pk and self.data.get('publicado'):
             if not self.instance.fecha_publicacion:
                 self.instance.fecha_publicacion = timezone.now()
+
+
+# Formulario para el Asistente Virtual
+class AsistenteVirtualForm(forms.Form):
+    TIPO_VIVIENDA_CHOICES = [
+        ('', 'Selecciona una opción'),
+        ('casa', 'Casa'),
+        ('departamento', 'Departamento'),
+        ('casa_con_patio', 'Casa con patio'),
+        ('departamento_pequeño', 'Departamento pequeño'),
+    ]
+    
+    ESPACIOS_DISPONIBLES_CHOICES = [
+        ('', 'Selecciona una opción'),
+        ('solo_interior', 'Solo interior'),
+        ('interior_y_balcon', 'Interior y balcón'),
+        ('interior_y_patio_pequeno', 'Interior y patio pequeño'),
+        ('interior_y_patio_grande', 'Interior y patio grande'),
+        ('mucho_espacio_exterior', 'Mucho espacio exterior'),
+    ]
+    
+    TIEMPO_LIBRE_CHOICES = [
+        ('', 'Selecciona una opción'),
+        ('poco_tiempo', 'Poco tiempo (1-2 horas/día)'),
+        ('tiempo_moderado', 'Tiempo moderado (3-4 horas/día)'),
+        ('mucho_tiempo', 'Mucho tiempo (5+ horas/día)'),
+        ('solo_fines_semana', 'Solo fines de semana'),
+    ]
+    
+    TAMAÑO_PREFERIDO_CHOICES = [
+        ('', 'Selecciona una opción'),
+        ('miniatura', 'Miniatura'),
+        ('pequeno', 'Pequeño'),
+        ('mediano', 'Mediano'),
+        ('grande', 'Grande'),
+        ('gigante', 'Gigante'),
+        ('sin_preferencia', 'Sin preferencia'),
+    ]
+    
+    tipo_vivienda = forms.ChoiceField(
+        choices=TIPO_VIVIENDA_CHOICES,
+        label="Tipo de vivienda",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
+    espacios_disponibles = forms.ChoiceField(
+        choices=ESPACIOS_DISPONIBLES_CHOICES,
+        label="Espacios disponibles",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
+    tiempo_libre = forms.ChoiceField(
+        choices=TIEMPO_LIBRE_CHOICES,
+        label="Tiempo libre disponible",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    
+    tamaño_preferido = forms.ChoiceField(
+        choices=TAMAÑO_PREFERIDO_CHOICES,
+        label="Tamaño preferido",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )

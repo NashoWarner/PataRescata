@@ -13,6 +13,7 @@ def generar_token():
 
 # Definición del modelo Mascota
 class Mascota(models.Model):
+    # Información básica
     nombre_mascota = models.CharField(max_length=20)
     edad_mascota = models.CharField(max_length=5)  
     tipo_mascota = models.CharField(max_length=50)  # Campo para tipo de mascota (perro, gato, etc.)
@@ -23,6 +24,85 @@ class Mascota(models.Model):
     imagen = models.ImageField(upload_to='imagenes_mascotas/', blank=True, null=True)
     adopcion_solicitada = models.BooleanField(default=False)
     disponible = models.BooleanField(default=True)  # True = disponible para adopción, False = no disponible
+    
+    # Campos para compatibilidad con preferencias del adoptante
+    # Compatibilidad con vivienda
+    COMPATIBLE_DEPARTAMENTO_CHOICES = [
+        ('si', 'Sí, ideal para departamento'),
+        ('con_restricciones', 'Sí, con restricciones (balcón necesario)'),
+        ('no', 'No, requiere casa con patio'),
+    ]
+    compatible_departamento = models.CharField(
+        max_length=20, 
+        choices=COMPATIBLE_DEPARTAMENTO_CHOICES,
+        default='si',
+        verbose_name='Compatible con departamento'
+    )
+    
+    # Nivel de energía
+    NIVEL_ENERGIA_CHOICES = [
+        ('bajo', 'Bajo - Tranquilo y relajado'),
+        ('medio', 'Medio - Activo pero moderado'),
+        ('alto', 'Alto - Muy activo y enérgico'),
+    ]
+    nivel_energia = models.CharField(
+        max_length=20,
+        choices=NIVEL_ENERGIA_CHOICES,
+        default='medio',
+        verbose_name='Nivel de energía'
+    )
+    
+    # Necesidad de atención
+    NECESIDAD_ATENCION_CHOICES = [
+        ('baja', 'Baja - Independiente'),
+        ('media', 'Media - Necesita compañía moderada'),
+        ('alta', 'Alta - Requiere mucha atención'),
+    ]
+    necesidad_atencion = models.CharField(
+        max_length=20,
+        choices=NECESIDAD_ATENCION_CHOICES,
+        default='media',
+        verbose_name='Necesidad de atención'
+    )
+    
+    # Requisitos de espacio
+    REQUISITOS_ESPACIO_CHOICES = [
+        ('poco_espacio', 'Poco espacio - Interior pequeño'),
+        ('espacio_moderado', 'Espacio moderado - Interior amplio'),
+        ('mucho_espacio', 'Mucho espacio - Requiere patio o jardín'),
+    ]
+    requisitos_espacio = models.CharField(
+        max_length=20,
+        choices=REQUISITOS_ESPACIO_CHOICES,
+        default='espacio_moderado',
+        verbose_name='Requisitos de espacio'
+    )
+    
+    # Tiempo de ejercicio diario necesario
+    TIEMPO_EJERCICIO_CHOICES = [
+        ('poco', 'Poco - 30 minutos o menos'),
+        ('moderado', 'Moderado - 1-2 horas'),
+        ('mucho', 'Mucho - 2+ horas diarias'),
+    ]
+    tiempo_ejercicio = models.CharField(
+        max_length=20,
+        choices=TIEMPO_EJERCICIO_CHOICES,
+        default='moderado',
+        verbose_name='Tiempo de ejercicio necesario'
+    )
+    
+    # Sociabilidad
+    SOCIABILIDAD_CHOICES = [
+        ('independiente', 'Independiente - Prefiere estar solo'),
+        ('sociable', 'Sociable - Le gusta la compañía'),
+        ('muy_sociable', 'Muy sociable - Necesita interacción constante'),
+    ]
+    sociabilidad = models.CharField(
+        max_length=20,
+        choices=SOCIABILIDAD_CHOICES,
+        default='sociable',
+        verbose_name='Nivel de sociabilidad'
+    )
 
 # Definición del modelo FAQ
 class FAQ(models.Model):
@@ -88,6 +168,9 @@ class MascotaFundacion(models.Model):
     id = models.AutoField(primary_key=True)
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
     adoptante = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mascotas_fundacion')
+    
+    class Meta:
+        unique_together = ('mascota', 'adoptante')  # Evita duplicados
     
     def __str__(self):
         return f"{self.mascota.nombre_mascota} - {self.adoptante.nombre}"
