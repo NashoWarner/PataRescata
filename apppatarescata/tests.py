@@ -60,7 +60,7 @@ from apppatarescata.models import Usuario, Mascota  # Asegúrate de importar tu 
 class AuthenticationTest(TestCase):
     def setUp(self):
         self.user = Usuario.objects.create_user(
-        email='testuser@gmail.com',
+        email='testuser@patarescata.com',
         password='Naxito5421',
         nombre='Test User',
         telefono='66694033',
@@ -78,25 +78,25 @@ class AuthenticationTest(TestCase):
     )
 
     def test_login(self):
-        self.client.login(email='testuser@gmail.com', password='Naxito5421')
+        self.client.login(email='testuser@patarescata.com', password='Naxito5421')
         response = self.client.get(reverse('mi_login'))
         self.assertEqual(response.status_code, 200)
 
     def test_actualizar_perfil(self):
-        self.client.login(email='testuser@gmail.com', password='Naxito5421')
+        self.client.login(email='testuser@patarescata.com', password='Naxito5421')
         response = self.client.get(reverse('actualizar_perfil'))
         self.assertEqual(response.status_code, 200)
 
 
     def test_buscar_animal(self):
-        self.client.login(email='testuser@gmail.com', password='Naxito5421')
+        self.client.login(email='testuser@patarescata.com', password='Naxito5421')
         self.client.get(reverse('buscar_animales'), {'tamaño_mascota': 'Mediano'})
         response = self.client.get(reverse('resultado_busqueda'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Mascota')
 
     def test_resultado_busqueda(self):
-        self.client.login(email='testuser@gmail.com', password='testuser@gmail.com')
+        self.client.login(email='testuser@patarescata.com', password='testuser@patarescata.com')
         params = {
             'tamaño_mascota': 'mediano',
         }
@@ -106,6 +106,6 @@ class AuthenticationTest(TestCase):
 
 
     def test_mis_solicitudes(self):
-        self.client.login(email='testuser@gmail.com', password='Naxito5421')
+        self.client.login(email='testuser@patarescata.com', password='Naxito5421')
         response = self.client.get(reverse('mis_solicitudes'))
         self.assertEqual(response.status_code, 200)

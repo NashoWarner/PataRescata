@@ -8,10 +8,10 @@ EMAIL_CONFIG_TLS = {
     'EMAIL_PORT': 587,
     'EMAIL_USE_TLS': True,
     'EMAIL_USE_SSL': False,
-    'EMAIL_HOST_USER': 'tu-email@gmail.com',
+    'EMAIL_HOST_USER': 'pata.rescata1@gmail.com',
     'EMAIL_HOST_PASSWORD': 'tu-contraseña-de-aplicacion',
     'EMAIL_TIMEOUT': 20,
-    'DEFAULT_FROM_EMAIL': 'tu-email@gmail.com',
+    'DEFAULT_FROM_EMAIL': 'pata.rescata1@gmail.com',
 }
 
 # Opción 2: SSL (Alternativa)
@@ -21,10 +21,10 @@ EMAIL_CONFIG_SSL = {
     'EMAIL_PORT': 465,
     'EMAIL_USE_TLS': False,
     'EMAIL_USE_SSL': True,
-    'EMAIL_HOST_USER': 'tu-email@gmail.com',
+    'EMAIL_HOST_USER': 'pata.rescata1@gmail.com',
     'EMAIL_HOST_PASSWORD': 'tu-contraseña-de-aplicacion',
     'EMAIL_TIMEOUT': 20,
-    'DEFAULT_FROM_EMAIL': 'tu-email@gmail.com',
+    'DEFAULT_FROM_EMAIL': 'pata.rescata1@gmail.com',
 }
 
 # Opción 3: Backend de consola para desarrollo (No envía emails reales)

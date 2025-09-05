@@ -403,7 +403,7 @@ def registro_adoptante(request):
                 send_mail(
                     'Verifica tu cuenta de adoptante',
                     'Haz click en el enlace para verificar tu cuenta: '+enlace_absoluto,
-                    'jordan4retro142@gmail.com',
+                    'pata.rescata1@gmail.com',
                     [user.email],
                     fail_silently=False,
                 )
@@ -446,7 +446,7 @@ def registro_fundacion(request):
                 send_mail(
                     'Verifica tu cuenta de fundación',
                     'Haz click en el enlace para verificar tu cuenta: '+enlace_absoluto,
-                    'jordan4retro142@gmail.com',
+                    'pata.rescata1@gmail.com',
                     [user.email],
                     fail_silently=False,
                 )
