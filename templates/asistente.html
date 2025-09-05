@@ -5,65 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente Virtual - PataRescata</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="{% static 'css/assistant.css' %}" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#e0e7ff',
-                            100: '#c7d2fe',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        },
-                        secondary: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.6s ease-out',
-                        'fade-in-up': 'fadeInUp 0.6s ease-out',
-                        'scale-in': 'scaleIn 0.4s ease-out',
-                        'slide-in': 'slideIn 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        scaleIn: {
-                            '0%': { opacity: '0', transform: 'scale(0.9)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' },
-                        },
-                        slideIn: {
-                            '0%': { opacity: '0', transform: 'translateX(-20px)' },
-                            '100%': { opacity: '1', transform: 'translateX(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/navegador.css' %}">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            padding: 30px 0;
+            box-shadow: 0 4px 20px rgba(30, 27, 75, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
         .form-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
             backdrop-filter: blur(20px);
@@ -71,20 +47,33 @@
         }
         
         .mascota-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
         }
         
         .mascota-card:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
         .energia-badge {
             transition: all 0.2s ease;
         }
         
-        .energia-baja { @apply bg-green-100 text-green-800 border-green-200; }
-        .energia-media { @apply bg-yellow-100 text-yellow-800 border-yellow-200; }
-        .energia-alta { @apply bg-red-100 text-red-800 border-red-200; }
+        .energia-baja { 
+            background-color: #dcfce7; 
+            color: #166534; 
+            border-color: #bbf7d0; 
+        }
+        .energia-media { 
+            background-color: #fef9c3; 
+            color: #854d0e; 
+            border-color: #fef08a; 
+        }
+        .energia-alta { 
+            background-color: #fee2e2; 
+            color: #991b1b; 
+            border-color: #fecaca; 
+        }
         
         .btn-primary {
             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -122,31 +111,31 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-secondary-50 to-secondary-100 min-h-screen">
-    <!-- Navbar -->
-    {% include 'navegador.html' %}
+<body>
+    <nav>
+        {% include 'navegador.html' %}
+    </nav>
     
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-secondary-800 to-secondary-900 text-white py-8 shadow-2xl">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-100 to-primary-200 bg-clip-text text-transparent">
-                <i class="fas fa-robot mr-4"></i>Asistente Virtual
+        <header class="header py-8">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4" style="background: linear-gradient(135deg, #c4b5fd, #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                Encuentra a tu compañero perfecto
             </h1>
-            <p class="text-lg md:text-xl text-secondary-200 max-w-2xl mx-auto">
-                Descubre la mascota perfecta para tu estilo de vida con nuestro asistente inteligente
+            <p class="lead text-light mb-0 mx-auto" style="max-width: 700px; opacity: 0.9;">
+                Nuestro asistente te ayudará a encontrar la mascota que mejor se adapte a ti y a tu estilo de vida.
             </p>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container py-5">
         <!-- Mensajes -->
         {% if messages %}
-        <div class="mb-8 space-y-4">
+        <div class="mb-4">
             {% for message in messages %}
-            <div class="animate-fade-in-up p-4 rounded-xl border-l-4 {% if message.tags == 'success' %}bg-green-50 border-green-400 text-green-800{% elif message.tags == 'info' %}bg-blue-50 border-blue-400 text-blue-800{% else %}bg-yellow-50 border-yellow-400 text-yellow-800{% endif %} shadow-lg">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'info' %}info-circle{% else %}exclamation-circle{% endif %} text-lg"></i>
-                    <span class="font-medium">{{ message }}</span>
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'info' %}alert-info{% else %}alert-warning{% endif %} shadow-sm border-start border-4 fade show" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'info' %}info-circle{% else %}exclamation-circle{% endif %} me-3"></i>
+                    <span class="fw-medium">{{ message }}</span>
                 </div>
             </div>
             {% endfor %}
@@ -154,86 +143,86 @@
         {% endif %}
 
         <!-- Formulario de Preferencias -->
-        <div class="animate-fade-in-up form-card rounded-3xl shadow-2xl p-8 mb-12">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-secondary-800 mb-4">
-                    <i class="fas fa-clipboard-list text-primary-500 mr-3"></i>
+        <div class="form-card rounded-4 shadow p-5 mb-5">
+            <div class="text-center mb-4">
+                <h2 class="display-5 fw-bold mb-3" style="color: #312e81;">
+                    <i class="fas fa-clipboard-list me-2" style="color: #7c3aed;"></i>
                     Cuéntanos sobre tu estilo de vida
                 </h2>
-                <p class="text-secondary-600 text-lg">Selecciona al menos una preferencia para recibir recomendaciones personalizadas</p>
+                <p class="fs-5 mb-4" style="color: #4b5563;">Selecciona al menos una preferencia para recibir recomendaciones personalizadas</p>
                 
                 {% if not mostrar_resultados %}
-                <div class="mt-6 p-4 bg-gradient-to-r from-primary-50 to-purple-50 rounded-xl border border-primary-200">
-                    <div class="flex items-center justify-center space-x-2 text-primary-700">
-                        <i class="fas fa-lightbulb text-lg"></i>
-                        <span class="font-medium"><strong>Flexible:</strong> Selecciona solo los criterios que te importen. Cuantos más selecciones, más precisas serán las recomendaciones.</span>
+                <div class="mt-4 p-3 rounded-3 border" style="background: linear-gradient(135deg, #ede9fe, #e0e7ff);">
+                    <div class="d-flex align-items-center justify-content-center" style="color: #6d28d9;">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <span class="fw-medium"><strong>Flexible:</strong> Selecciona solo los criterios que te importen. Cuantos más selecciones, más precisas serán las recomendaciones.</span>
                     </div>
                 </div>
                 {% endif %}
             </div>
             
-            <form method="post" id="preferencias-form" class="space-y-6">
+            <form method="post" id="preferencias-form">
                 {% csrf_token %}
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="row g-4">
                     <!-- Tipo de Vivienda -->
-                    <div class="space-y-2">
-                        <label for="{{ form.tipo_vivienda.id_for_label }}" class="block text-sm font-semibold text-secondary-700">
-                            <i class="fas fa-home text-primary-500 mr-2"></i>{{ form.tipo_vivienda.label }}
+                    <div class="col-md-6 col-lg-3">
+                        <label for="{{ form.tipo_vivienda.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-home me-2" style="color: #7c3aed;"></i>{{ form.tipo_vivienda.label }}
                         </label>
-                        <div class="relative">
+                        <div class="position-relative">
                             {{ form.tipo_vivienda }}
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-secondary-400"></i>
+                            <div class="position-absolute top-50 end-0 translate-middle-y pe-3 pointer-events-none">
+                                <i class="fas fa-chevron-down text-secondary"></i>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Espacios Disponibles -->
-                    <div class="space-y-2">
-                        <label for="{{ form.espacios_disponibles.id_for_label }}" class="block text-sm font-semibold text-secondary-700">
-                            <i class="fas fa-tree text-primary-500 mr-2"></i>{{ form.espacios_disponibles.label }}
+                    <div class="col-md-6 col-lg-3">
+                        <label for="{{ form.espacios_disponibles.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-tree me-2" style="color: #7c3aed;"></i>{{ form.espacios_disponibles.label }}
                         </label>
-                        <div class="relative">
+                        <div class="position-relative">
                             {{ form.espacios_disponibles }}
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-secondary-400"></i>
+                            <div class="position-absolute top-50 end-0 translate-middle-y pe-3 pointer-events-none">
+                                <i class="fas fa-chevron-down text-secondary"></i>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Tiempo Libre -->
-                    <div class="space-y-2">
-                        <label for="{{ form.tiempo_libre.id_for_label }}" class="block text-sm font-semibold text-secondary-700">
-                            <i class="fas fa-clock text-primary-500 mr-2"></i>{{ form.tiempo_libre.label }}
+                    <div class="col-md-6 col-lg-3">
+                        <label for="{{ form.tiempo_libre.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-clock me-2" style="color: #7c3aed;"></i>{{ form.tiempo_libre.label }}
                         </label>
-                        <div class="relative">
+                        <div class="position-relative">
                             {{ form.tiempo_libre }}
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-secondary-400"></i>
+                            <div class="position-absolute top-50 end-0 translate-middle-y pe-3 pointer-events-none">
+                                <i class="fas fa-chevron-down text-secondary"></i>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Tamaño Preferido -->
-                    <div class="space-y-2">
-                        <label for="{{ form.tamaño_preferido.id_for_label }}" class="block text-sm font-semibold text-secondary-700">
-                            <i class="fas fa-ruler-combined text-primary-500 mr-2"></i>{{ form.tamaño_preferido.label }}
+                    <div class="col-md-6 col-lg-3">
+                        <label for="{{ form.tamaño_preferido.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-ruler-combined me-2" style="color: #7c3aed;"></i>{{ form.tamaño_preferido.label }}
                         </label>
-                        <div class="relative">
+                        <div class="position-relative">
                             {{ form.tamaño_preferido }}
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-secondary-400"></i>
+                            <div class="position-absolute top-50 end-0 translate-middle-y pe-3 pointer-events-none">
+                                <i class="fas fa-chevron-down text-secondary"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="text-center pt-6">
-                    <button type="submit" class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                        <i class="fas fa-search mr-3"></i>
+                <div class="text-center pt-4">
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                        <i class="fas fa-search me-2"></i>
                         <span class="btn-text">Encontrar Mascotas</span>
-                        <div class="loading-spinner hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full ml-3"></div>
+                        <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                     </button>
                 </div>
             </form>
@@ -241,97 +230,97 @@
 
         <!-- Resultados -->
         {% if mostrar_resultados %}
-        <div class="animate-fade-in-up space-y-8">
+        <div class="mt-5">
             <div class="text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-secondary-800 mb-4">
-                    <i class="fas fa-heart text-red-500 mr-3"></i>
+                <h2 class="display-5 fw-bold mb-3" style="color: #312e81;">
+                    <i class="fas fa-heart me-2" style="color: #ef4444;"></i>
                     Mascotas Recomendadas para Ti
                 </h2>
-                <p class="text-secondary-600 text-lg">Hemos encontrado {{ mascotas_recomendadas|length }} mascotas que coinciden con tus preferencias</p>
+                <p class="fs-5" style="color: #4b5563;">Hemos encontrado {{ mascotas_recomendadas|length }} mascotas que coinciden con tus preferencias</p>
                 
                 <!-- Mostrar preferencias del usuario -->
                 {% if preferencias_usuario %}
-                <div class="mt-6 p-4 bg-primary-50 rounded-xl border border-primary-200">
-                    <h3 class="text-lg font-semibold text-primary-800 mb-3">Tus Preferencias:</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
-                            <span class="text-primary-600 font-medium">Vivienda:</span>
-                            <p class="text-primary-800">{{ preferencias_usuario.tipo_vivienda }}</p>
+                <div class="mt-4 p-4 bg-light rounded-3 border shadow-sm">
+                    <h3 class="fs-5 fw-bold mb-3" style="color: #7c3aed;">Tus Preferencias:</h3>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
+                        <div class="col">
+                            <span class="fw-medium" style="color: #7c3aed;">Vivienda:</span>
+                            <p class="mb-0" style="color: #312e81;">{{ preferencias_usuario.tipo_vivienda }}</p>
                         </div>
-                        <div>
-                            <span class="text-primary-600 font-medium">Espacios:</span>
-                            <p class="text-primary-800">{{ preferencias_usuario.espacios_disponibles }}</p>
+                        <div class="col">
+                            <span class="fw-medium" style="color: #7c3aed;">Espacios:</span>
+                            <p class="mb-0" style="color: #312e81;">{{ preferencias_usuario.espacios_disponibles }}</p>
                         </div>
-                        <div>
-                            <span class="text-primary-600 font-medium">Tiempo:</span>
-                            <p class="text-primary-800">{{ preferencias_usuario.tiempo_libre }}</p>
+                        <div class="col">
+                            <span class="fw-medium" style="color: #7c3aed;">Tiempo:</span>
+                            <p class="mb-0" style="color: #312e81;">{{ preferencias_usuario.tiempo_libre }}</p>
                         </div>
-                        <div>
-                            <span class="text-primary-600 font-medium">Tamaño:</span>
-                            <p class="text-primary-800">{{ preferencias_usuario.tamaño_preferido }}</p>
+                        <div class="col">
+                            <span class="fw-medium" style="color: #7c3aed;">Tamaño:</span>
+                            <p class="mb-0" style="color: #312e81;">{{ preferencias_usuario.tamaño_preferido }}</p>
                         </div>
                     </div>
                 </div>
                 {% endif %}
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mt-4">
                 {% for item in mascotas_recomendadas %}
-                <div class="mascota-card animate-scale-in bg-white rounded-2xl shadow-xl overflow-hidden border border-secondary-100 flex flex-col h-full">
-                    <div class="relative overflow-hidden">
+                <div class="col">
+                    <div class="mascota-card card h-100 shadow overflow-hidden border-0 rounded-3">
+                    <div class="position-relative">
                         <img src="{% if item.mascota.imagen %}{{ item.mascota.imagen.url }}{% else %}{% static 'images/default-pet.jpg' %}{% endif %}" 
                              alt="{{ item.mascota.nombre_mascota }}" 
-                             class="w-full h-48 object-cover transition-transform duration-300 hover:scale-110">
-                        <div class="absolute top-3 right-3">
-                            <span class="energia-badge px-3 py-1 rounded-full text-xs font-bold border-2 energia-media">
+                             class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="energia-badge px-2 py-1 rounded-pill fw-bold border-2 energia-media" style="font-size: 0.75rem;">
                                 {{ item.mascota.tamaño_mascota|title }}
                             </span>
                         </div>
                         <!-- Puntuación de compatibilidad -->
-                        <div class="absolute top-3 left-3">
-                            <div class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <div class="bg-success text-white px-2 py-1 rounded-pill fw-bold" style="font-size: 0.75rem;">
                                 {{ item.puntuacion }}% compatible
                             </div>
                         </div>
                     </div>
                     
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div class="space-y-4 flex-grow">
-                            <h3 class="text-xl font-bold text-secondary-800 truncate">{{ item.mascota.nombre_mascota }}</h3>
-                            
-                            <div class="grid grid-cols-2 gap-3 text-sm">
-                                <div class="flex items-center space-x-2 text-secondary-600">
-                                    <i class="fas fa-ruler text-primary-500"></i>
-                                    <span>{{ item.mascota.tamaño_mascota }}</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-secondary-600">
-                                    <i class="fas fa-calendar text-primary-500"></i>
-                                    <span>{{ item.mascota.edad_mascota }}</span>
-                                </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-truncate">{{ item.mascota.nombre_mascota }}</h5>
+                        
+                        <div class="row g-2 mt-2 small">
+                            <div class="col-6 d-flex align-items-center">
+                                <i class="fas fa-ruler me-2" style="color: #7c3aed;"></i>
+                                <span class="text-secondary">{{ item.mascota.tamaño_mascota }}</span>
+                            </div>
+                            <div class="col-6 d-flex align-items-center">
+                                <i class="fas fa-calendar me-2" style="color: #7c3aed;"></i>
+                                <span class="text-secondary">{{ item.mascota.edad_mascota }}</span>
+                            </div>
                             </div>
                             
-                            <p class="text-secondary-600 text-sm line-clamp-2">{{ item.mascota.descripcion }}</p>
+                            <p class="card-text small text-secondary mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ item.mascota.descripcion }}</p>
                             
                             <!-- Razones de compatibilidad -->
-                            <div class="space-y-2">
-                                <h4 class="text-sm font-semibold text-primary-700">¿Por qué es perfecta para ti?</h4>
-                                <div class="space-y-1">
+                            <div class="mb-3">
+                                <h6 class="fw-semibold" style="color: #7c3aed; font-size: 0.875rem;">¿Por qué es perfecta para ti?</h6>
+                                <div class="mt-2">
                                     {% for razon in item.razones %}
-                                    <div class="flex items-center space-x-2 text-xs text-green-600">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span>{{ razon }}</span>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fas fa-check-circle me-2 text-success"></i>
+                                        <span class="small text-success">{{ razon }}</span>
                                     </div>
                                     {% endfor %}
                                 </div>
                             </div>
-                        </div>
                         
-                        <!-- Botón siempre en la parte inferior -->
-                        <div class="mt-4 pt-4">
-                            <a href="{% url 'detalle_mascota_asistente' item.mascota.id %}" 
-                               class="btn-primary text-white w-full py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 text-center block">
-                                <i class="fas fa-eye mr-2"></i>Ver Detalles
-                            </a>
+                            <!-- Botón siempre en la parte inferior -->
+                            <div class="mt-auto pt-3">
+                                <a href="{% url 'detalle_mascota_asistente' item.mascota.id %}" 
+                                   class="btn btn-primary w-100">
+                                    <i class="fas fa-eye me-2"></i>Ver Detalles
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -342,59 +331,60 @@
 
         <!-- Mensaje cuando no hay resultados -->
         {% if mostrar_resultados and not mascotas_recomendadas %}
-        <div class="animate-fade-in-up mt-16">
-            <div class="text-center bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-12 border border-blue-200">
-                <div class="mb-6">
-                    <i class="fas fa-search text-6xl text-blue-400 mb-4"></i>
-                    <h3 class="text-2xl font-bold text-blue-800 mb-2">No encontramos mascotas que coincidan</h3>
-                    <p class="text-blue-600 text-lg">No hay mascotas disponibles que coincidan exactamente con tus preferencias actuales.</p>
+        <div class="mt-5">
+            <div class="text-center p-5 rounded-4 border shadow-sm" style="background: linear-gradient(135deg, #e0f2fe, #e0e7ff);">
+                <div class="mb-4">
+                    <i class="fas fa-search display-4 mb-3" style="color: #60a5fa;"></i>
+                    <h3 class="fs-2 fw-bold mb-2" style="color: #1e40af;">No encontramos mascotas que coincidan</h3>
+                    <p class="fs-5" style="color: #3b82f6;">No hay mascotas disponibles que coincidan exactamente con tus preferencias actuales.</p>
                 </div>
                 
-                <div class="space-y-4">
-                    <p class="text-blue-700 font-medium">Te sugerimos:</p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-200">
-                            <i class="fas fa-edit text-blue-500 mr-2"></i>
-                            <span class="text-blue-700">Modificar tus preferencias</span>
+                <div class="mt-4">
+                    <p class="fw-medium" style="color: #1e3a8a;">Te sugerimos:</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+                        <div class="bg-white rounded-3 p-3 shadow-sm border">
+                            <i class="fas fa-edit me-2" style="color: #3b82f6;"></i>
+                            <span style="color: #1e40af;">Modificar tus preferencias</span>
                         </div>
-                        <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-200">
-                            <i class="fas fa-heart text-blue-500 mr-2"></i>
-                            <span class="text-blue-700">Explorar todas las mascotas</span>
+                        <div class="bg-white rounded-3 p-3 shadow-sm border">
+                            <i class="fas fa-heart me-2" style="color: #3b82f6;"></i>
+                            <span style="color: #1e40af;">Explorar todas las mascotas</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="mt-8">
-                    <a href="{% url 'home' %}" class="btn-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-block">
-                        <i class="fas fa-paw mr-3"></i>Ver Todas las Mascotas
+                <div class="mt-4">
+                    <a href="{% url 'home' %}" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-paw me-2"></i>Ver Todas las Mascotas
                     </a>
                 </div>
             </div>
         </div>
         {% endif %}
     </div>
+    {% include 'footer.html' %}
 
     <script>
         // Estilos personalizados para los campos del formulario
         document.querySelectorAll('.form-select').forEach(select => {
-            select.className = 'w-full px-4 py-3 border-2 border-secondary-200 rounded-xl text-secondary-700 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-300 appearance-none cursor-pointer';
+            select.className = 'form-select rounded-3 border-2';
         });
 
         // Estado de loading del formulario
         document.getElementById('preferencias-form').addEventListener('submit', function() {
             const button = this.querySelector('button[type="submit"]');
             const buttonText = button.querySelector('.btn-text');
-            const spinner = button.querySelector('.loading-spinner');
+            const spinner = button.querySelector('.spinner-border');
             
             button.disabled = true;
             buttonText.textContent = 'Buscando...';
-            spinner.classList.remove('hidden');
+            spinner.classList.remove('d-none');
             
             // Simular delay para mostrar el loading
             setTimeout(() => {
                 button.disabled = false;
                 buttonText.textContent = 'Encontrar Mascotas';
-                spinner.classList.add('hidden');
+                spinner.classList.add('d-none');
             }, 2000);
         });
 
@@ -414,29 +404,27 @@
         }, observerOptions);
 
         // Observar elementos para animaciones
-        document.querySelectorAll('.animate-fade-in-up, .animate-scale-in').forEach(el => {
+        document.querySelectorAll('.card, .form-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
 
-        // Efectos hover mejorados para las tarjetas
+        // Efectos hover para las tarjetas (usando las clases de Bootstrap en lugar de estilos inline)
         document.querySelectorAll('.mascota-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-8px) scale(1.02)';
-                this.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+                this.classList.add('shadow-lg');
             });
             
             card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-                this.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                this.classList.remove('shadow-lg');
             });
         });
 
-        // Animación de entrada escalonada para las tarjetas
+        // Aplicar retrasos escalonados a las tarjetas para animación
         document.querySelectorAll('.mascota-card').forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.transitionDelay = `${index * 0.1}s`;
         });
 
         // Smooth scroll para enlaces internos
@@ -453,5 +441,8 @@
             });
         });
     </script>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
