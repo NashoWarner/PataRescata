@@ -340,8 +340,16 @@ def login_adoptante(request):
             if mascota_id:
                 # Limpiar la sesión
                 del request.session['mascota_pendiente_adopcion']
-                # Redirigir a generar la solicitud
-                return redirect('generar_solicitud_adopcion', mascota_id=mascota_id)
+                
+                # Verificar si viene del asistente virtual
+                desde_asistente = request.session.get('mascota_desde_asistente', False)
+                if desde_asistente:
+                    del request.session['mascota_desde_asistente']
+                    # Redirigir a adoptar desde asistente
+                    return redirect('adoptar_desde_asistente', mascota_id=mascota_id)
+                else:
+                    # Redirigir a generar la solicitud normal
+                    return redirect('generar_solicitud_adopcion', mascota_id=mascota_id)
             
             return redirect('perfil_adoptante')
         else:
@@ -1734,6 +1742,22 @@ def detalle_mascota_asistente(request, mascota_id):
         messages.error(request, 'La mascota no está disponible para adopción.')
         return redirect('asistente_virtual')
 
+
+def preparar_adopcion_desde_asistente(request, mascota_id):
+    """Vista para preparar adopción desde asistente virtual (usuario no autenticado)"""
+    try:
+        mascota = Mascota.objects.get(id=mascota_id, disponible=True)
+        
+        # Guardar la mascota en la sesión para procesar después del login
+        request.session['mascota_pendiente_adopcion'] = mascota_id
+        request.session['mascota_desde_asistente'] = True
+        
+        messages.info(request, f'Has seleccionado a {mascota.nombre_mascota} para adoptar desde el asistente virtual. Por favor inicia sesión para continuar.')
+        return redirect('login_adoptante')
+        
+    except Mascota.DoesNotExist:
+        messages.error(request, 'La mascota no está disponible para adopción.')
+        return redirect('asistente_virtual')
 
 def adoptar_desde_asistente(request, mascota_id):
     """Vista para adoptar una mascota directamente desde el asistente virtual"""

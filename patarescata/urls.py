@@ -13,7 +13,7 @@ from apppatarescata.views import (
     perfil_adoptante, generar_solicitud_adopcion, preparar_adopcion,
     aprobar_solicitud_adopcion, rechazar_solicitud_adopcion, eliminar_solicitud_adopcion, eliminar_solicitud_fundacion, cuidado_animal, eventos,
     cambiar_imagen_perfil, eliminar_imagen_perfil, cambiar_estado_solicitud, asistente_virtual,
-    detalle_mascota_asistente, adoptar_desde_asistente,
+    detalle_mascota_asistente, adoptar_desde_asistente, preparar_adopcion_desde_asistente,
 
 )
 from django.conf import settings
@@ -31,6 +31,7 @@ urlpatterns = [
     path('eventos/', eventos, name='eventos'),
     path('asistente/', asistente_virtual, name='asistente_virtual'),
     path('asistente/mascota/<int:mascota_id>/', detalle_mascota_asistente, name='detalle_mascota_asistente'),
+    path('asistente/preparar-adopcion/<int:mascota_id>/', preparar_adopcion_desde_asistente, name='preparar_adopcion_desde_asistente'),
     path('asistente/adoptar/<int:mascota_id>/', adoptar_desde_asistente, name='adoptar_desde_asistente'),
     path('realizar_adopcion/<int:animal_id>/', realizar_adopcion, name='realizar_adopcion'),
     path('preparar-adopcion/<int:mascota_id>/', preparar_adopcion, name='preparar_adopcion'),
