@@ -20,6 +20,7 @@ services:
     depends_on:
       - db
     volumes:
+      - .:/app
       - ./media:/app/media
   db:
     image: postgres:latest
