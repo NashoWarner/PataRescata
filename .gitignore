@@ -1,4 +1,4 @@
 jmeter.log
 staticfiles/
-venv/
 .DS_Store
+.venv/
