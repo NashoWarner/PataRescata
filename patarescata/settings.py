@@ -62,7 +62,6 @@ WSGI_APPLICATION = 'patarescata.wsgi.application'
 
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

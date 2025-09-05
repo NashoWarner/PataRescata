@@ -1574,114 +1574,150 @@ def asistente_virtual(request):
             # Sistema de puntuación mejorado usando los nuevos campos de compatibilidad
             mascotas_con_puntuacion = []
             
-            for mascota in mascotas_base:
-                puntuacion = 0
-                razones = []
+            # Contar cuántos criterios se seleccionaron para ajustar la puntuación
+            criterios_seleccionados = sum([
+                1 for campo in [tipo_vivienda, espacios_disponibles, tiempo_libre, tamaño_preferido] 
+                if campo and campo != 'sin_preferencia'
+            ])
+            
+            # Si no hay criterios, mostrar todas las mascotas
+            if criterios_seleccionados == 0:
+                mascotas_con_puntuacion = [{'mascota': mascota, 'puntuacion': 100, 'razones': ["Mascota disponible"]} for mascota in mascotas_base]
+            else:
+                for mascota in mascotas_base:
+                    puntuacion = 0
+                    razones = []
+                    
+                    # Puntuación por tamaño (25% del peso si se seleccionó)
+                    if tamaño_preferido and tamaño_preferido != 'sin_preferencia':
+                        if mascota.tamaño_mascota == tamaño_preferido:
+                            puntuacion += 25
+                            razones.append("Tamaño perfecto")
+                        else:
+                            # Puntuación parcial por tamaños similares
+                            tamaño_map = {
+                                'miniatura': ['pequeno'],
+                                'pequeno': ['miniatura', 'mediano'],
+                                'mediano': ['pequeno', 'grande'],
+                                'grande': ['mediano', 'gigante'],
+                                'gigante': ['grande']
+                            }
+                            if mascota.tamaño_mascota in tamaño_map.get(tamaño_preferido, []):
+                                puntuacion += 15
+                                razones.append("Tamaño compatible")
                 
-                # Puntuación por tamaño (25% del peso)
-                if tamaño_preferido and tamaño_preferido != 'sin_preferencia':
-                    if mascota.tamaño_mascota == tamaño_preferido:
-                        puntuacion += 25
-                        razones.append("Tamaño perfecto")
-                    else:
-                        # Puntuación parcial por tamaños similares
-                        tamaño_map = {
-                            'miniatura': ['pequeno'],
-                            'pequeno': ['miniatura', 'mediano'],
-                            'mediano': ['pequeno', 'grande'],
-                            'grande': ['mediano', 'gigante'],
-                            'gigante': ['grande']
-                        }
-                        if mascota.tamaño_mascota in tamaño_map.get(tamaño_preferido, []):
-                            puntuacion += 15
-                            razones.append("Tamaño compatible")
-                
-                # Puntuación por compatibilidad con departamento (25% del peso)
-                if tipo_vivienda in ['departamento', 'departamento_pequeño']:
-                    if mascota.compatible_departamento == 'si':
-                        puntuacion += 25
-                        razones.append("Ideal para departamento")
-                    elif mascota.compatible_departamento == 'con_restricciones' and espacios_disponibles == 'interior_y_balcon':
-                        puntuacion += 20
-                        razones.append("Perfecto para departamento con balcón")
-                    elif mascota.compatible_departamento == 'no':
-                        puntuacion += 5  # Puntuación muy baja
-                        razones.append("No recomendado para departamento")
-                elif tipo_vivienda in ['casa', 'casa_con_patio']:
-                    if mascota.compatible_departamento == 'no':
-                        puntuacion += 25
-                        razones.append("Excelente para casa con patio")
-                    else:
-                        puntuacion += 20
-                        razones.append("Bueno para casa")
-                
-                # Puntuación por requisitos de espacio (20% del peso)
-                if espacios_disponibles == 'solo_interior':
-                    if mascota.requisitos_espacio == 'poco_espacio':
-                        puntuacion += 20
-                        razones.append("Perfecto para poco espacio")
-                    elif mascota.requisitos_espacio == 'espacio_moderado':
-                        puntuacion += 15
-                        razones.append("Aceptable para poco espacio")
-                elif espacios_disponibles in ['interior_y_balcon', 'interior_y_patio_pequeno']:
-                    if mascota.requisitos_espacio in ['poco_espacio', 'espacio_moderado']:
-                        puntuacion += 20
-                        razones.append("Ideal para espacios moderados")
-                elif espacios_disponibles in ['interior_y_patio_grande', 'mucho_espacio_exterior']:
-                    if mascota.requisitos_espacio == 'mucho_espacio':
-                        puntuacion += 20
-                        razones.append("Perfecto para mucho espacio")
-                    else:
-                        puntuacion += 15
-                        razones.append("Bueno para espacios amplios")
-                
-                # Puntuación por tiempo libre y necesidad de atención (20% del peso)
-                if tiempo_libre == 'poco_tiempo':
-                    if mascota.necesidad_atencion == 'baja':
-                        puntuacion += 20
-                        razones.append("Independiente, ideal para poco tiempo")
-                    elif mascota.necesidad_atencion == 'media':
+                    # Puntuación por compatibilidad con departamento (solo si se seleccionó tipo de vivienda)
+                    if tipo_vivienda and tipo_vivienda != 'sin_preferencia':
+                        if tipo_vivienda in ['departamento', 'departamento_pequeño']:
+                            if mascota.compatible_departamento == 'si':
+                                puntuacion += 25
+                                razones.append("Ideal para departamento")
+                            elif mascota.compatible_departamento == 'con_restricciones' and espacios_disponibles == 'interior_y_balcon':
+                                puntuacion += 20
+                                razones.append("Perfecto para departamento con balcón")
+                            elif mascota.compatible_departamento == 'no':
+                                puntuacion += 5  # Puntuación muy baja
+                                razones.append("No recomendado para departamento")
+                        elif tipo_vivienda in ['casa', 'casa_con_patio']:
+                            if mascota.compatible_departamento == 'no':
+                                puntuacion += 25
+                                razones.append("Excelente para casa con patio")
+                            else:
+                                puntuacion += 20
+                                razones.append("Bueno para casa")
+                    
+                    # Puntuación por requisitos de espacio (solo si se seleccionó espacios disponibles)
+                    if espacios_disponibles and espacios_disponibles != 'sin_preferencia':
+                        if espacios_disponibles == 'solo_interior':
+                            if mascota.requisitos_espacio == 'poco_espacio':
+                                puntuacion += 25
+                                razones.append("Perfecto para poco espacio")
+                            elif mascota.requisitos_espacio == 'espacio_moderado':
+                                puntuacion += 15
+                                razones.append("Aceptable para poco espacio")
+                        elif espacios_disponibles in ['interior_y_balcon', 'interior_y_patio_pequeno']:
+                            if mascota.requisitos_espacio in ['poco_espacio', 'espacio_moderado']:
+                                puntuacion += 25
+                                razones.append("Ideal para espacios moderados")
+                        elif espacios_disponibles in ['interior_y_patio_grande', 'mucho_espacio_exterior']:
+                            if mascota.requisitos_espacio == 'mucho_espacio':
+                                puntuacion += 25
+                                razones.append("Perfecto para mucho espacio")
+                            else:
+                                puntuacion += 15
+                                razones.append("Bueno para espacios amplios")
+                    
+                    # Puntuación por tiempo libre y necesidad de atención (solo si se seleccionó tiempo libre)
+                    if tiempo_libre and tiempo_libre != 'sin_preferencia':
+                        if tiempo_libre == 'poco_tiempo':
+                            if mascota.necesidad_atencion == 'baja':
+                                puntuacion += 25
+                                razones.append("Independiente, ideal para poco tiempo")
+                            elif mascota.necesidad_atencion == 'media':
+                                puntuacion += 10
+                                razones.append("Aceptable para poco tiempo")
+                        elif tiempo_libre == 'tiempo_moderado':
+                            if mascota.necesidad_atencion in ['media', 'alta']:
+                                puntuacion += 25
+                                razones.append("Ideal para tiempo moderado")
+                            else:
+                                puntuacion += 15
+                                razones.append("Bueno para tiempo moderado")
+                        elif tiempo_libre == 'mucho_tiempo':
+                            if mascota.necesidad_atencion == 'alta':
+                                puntuacion += 25
+                                razones.append("Ideal para mucho tiempo disponible")
+                            else:
+                                puntuacion += 15
+                                razones.append("Bueno para mucho tiempo")
+                        elif tiempo_libre == 'solo_fines_semana':
+                            if mascota.necesidad_atencion == 'baja':
+                                puntuacion += 25
+                                razones.append("Ideal para fines de semana")
+                            else:
+                                puntuacion += 10
+                                razones.append("Aceptable para fines de semana")
+                    
+                    # Puntuación por nivel de energía y tiempo de ejercicio (solo si se seleccionó tiempo libre)
+                    if tiempo_libre and tiempo_libre != 'sin_preferencia':
+                        if tiempo_libre == 'poco_tiempo':
+                            if mascota.nivel_energia == 'bajo' and mascota.tiempo_ejercicio == 'poco':
+                                puntuacion += 10
+                                razones.append("Bajo mantenimiento")
+                        elif tiempo_libre == 'tiempo_moderado':
+                            if mascota.nivel_energia in ['bajo', 'medio'] and mascota.tiempo_ejercicio in ['poco', 'moderado']:
+                                puntuacion += 10
+                                razones.append("Energía equilibrada")
+                        elif tiempo_libre == 'mucho_tiempo':
+                            if mascota.nivel_energia == 'alto' and mascota.tiempo_ejercicio == 'mucho':
+                                puntuacion += 10
+                                razones.append("Muy activo, perfecto para mucho tiempo")
+                    
+                    # Puntuación por sociabilidad (siempre aplica)
+                    if mascota.sociabilidad == 'muy_sociable':
                         puntuacion += 10
-                        razones.append("Aceptable para poco tiempo")
-                elif tiempo_libre == 'tiempo_moderado':
-                    if mascota.necesidad_atencion in ['media', 'alta']:
-                        puntuacion += 20
-                        razones.append("Ideal para tiempo moderado")
-                    else:
-                        puntuacion += 15
-                        razones.append("Bueno para tiempo moderado")
-                elif tiempo_libre == 'mucho_tiempo':
-                    puntuacion += 20
-                    razones.append("Perfecto para mucho tiempo disponible")
-                elif tiempo_libre == 'solo_fines_semana':
-                    if mascota.necesidad_atencion == 'baja':
-                        puntuacion += 20
-                        razones.append("Ideal para fines de semana")
-                    elif mascota.necesidad_atencion == 'media':
-                        puntuacion += 15
-                        razones.append("Bueno para fines de semana")
-                
-                # Puntuación por nivel de energía y tiempo de ejercicio (10% del peso)
-                if tiempo_libre == 'poco_tiempo':
-                    if mascota.nivel_energia == 'bajo' and mascota.tiempo_ejercicio == 'poco':
-                        puntuacion += 10
-                        razones.append("Bajo mantenimiento")
-                elif tiempo_libre == 'tiempo_moderado':
-                    if mascota.nivel_energia in ['bajo', 'medio'] and mascota.tiempo_ejercicio in ['poco', 'moderado']:
-                        puntuacion += 10
-                        razones.append("Energía equilibrada")
-                elif tiempo_libre == 'mucho_tiempo':
-                    if mascota.nivel_energia == 'alto' and mascota.tiempo_ejercicio == 'mucho':
-                        puntuacion += 10
-                        razones.append("Muy activo, perfecto para mucho tiempo")
-                
-                # Solo incluir mascotas con puntuación > 0
-                if puntuacion > 0:
-                    mascotas_con_puntuacion.append({
-                        'mascota': mascota,
-                        'puntuacion': puntuacion,
-                        'razones': razones
-                    })
+                        razones.append("Muy sociable y cariñoso")
+                    elif mascota.sociabilidad == 'sociable':
+                        puntuacion += 8
+                        razones.append("Sociable y amigable")
+                    elif mascota.sociabilidad == 'independiente':
+                        puntuacion += 6
+                        razones.append("Independiente pero cariñoso")
+                    
+                    # Normalizar puntuación basada en criterios seleccionados
+                    if criterios_seleccionados > 0:
+                        puntuacion = (puntuacion / (criterios_seleccionados * 25 + 10)) * 100  # +10 por sociabilidad
+                    
+                    # Redondear puntuación a número entero
+                    puntuacion = round(puntuacion)
+                    
+                    # Solo incluir mascotas con puntuación > 0
+                    if puntuacion > 0:
+                        mascotas_con_puntuacion.append({
+                            'mascota': mascota,
+                            'puntuacion': puntuacion,
+                            'razones': razones
+                        })
             
             # Ordenar por puntuación (mayor a menor)
             mascotas_con_puntuacion.sort(key=lambda x: x['puntuacion'], reverse=True)

@@ -504,23 +504,40 @@ class AsistenteVirtualForm(forms.Form):
     tipo_vivienda = forms.ChoiceField(
         choices=TIPO_VIVIENDA_CHOICES,
         label="Tipo de vivienda",
+        required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
     espacios_disponibles = forms.ChoiceField(
         choices=ESPACIOS_DISPONIBLES_CHOICES,
         label="Espacios disponibles",
+        required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
     tiempo_libre = forms.ChoiceField(
         choices=TIEMPO_LIBRE_CHOICES,
         label="Tiempo libre disponible",
+        required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     
     tamaño_preferido = forms.ChoiceField(
         choices=TAMAÑO_PREFERIDO_CHOICES,
         label="Tamaño preferido",
+        required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo_vivienda = cleaned_data.get('tipo_vivienda')
+        espacios_disponibles = cleaned_data.get('espacios_disponibles')
+        tiempo_libre = cleaned_data.get('tiempo_libre')
+        tamaño_preferido = cleaned_data.get('tamaño_preferido')
+        
+        # Verificar que al menos un campo esté seleccionado
+        if not any([tipo_vivienda, espacios_disponibles, tiempo_libre, tamaño_preferido]):
+            raise forms.ValidationError("Por favor selecciona al menos una preferencia para recibir recomendaciones personalizadas.")
+        
+        return cleaned_data
