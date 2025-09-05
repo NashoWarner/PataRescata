@@ -413,14 +413,384 @@ class ActualizarPerfilForm(forms.ModelForm):
 
 
 class MascotaForm(forms.ModelForm):
+    # Opciones para edad (igual que MascotaUpdateForm)
+    opciones_edades = [
+        ('', 'Selecciona una edad'),
+        ('1M', '1 mes'),
+        ('2M', '2 meses'),
+        ('3M', '3 meses'),
+        ('4M', '4 meses'),
+        ('5M', '5 meses'),
+        ('6M', '6 meses'),
+        ('7M', '7 meses'),
+        ('8M', '8 meses'),
+        ('9M', '9 meses'),
+        ('10M', '10 meses'),
+        ('11M', '11 meses'),
+        ('1A', '1 año'),
+        ('2A', '2 años'),
+        ('3A', '3 años'),
+        ('4A', '4 años'),
+        ('5A', '5 años'),
+        ('6A', '6 años'),
+        ('7A', '7 años'),
+        ('8A', '8 años'),
+        ('9A', '9 años'),
+        ('10A', '10 años'),
+        ('11A', '11 años'),
+        ('12A', '12 años'),
+        ('13A', '13 años'),
+        ('14A', '14 años'),
+        ('15A', '15 años'),
+        ('16A', '16 años'),
+        ('17A', '17 años'),
+        ('18A', '18 años'),
+        ('19A', '19 años'),
+        ('20A', '20 años'),
+    ]
+
+    # Opciones para tamaño (igual que MascotaUpdateForm)
+    opciones_tamaños = [
+        ('', 'Selecciona un tamaño'),
+        ('miniatura', 'Miniatura'),
+        ('pequeño', 'Pequeño'),
+        ('mediano', 'Mediano'),
+        ('grande', 'Grande'),
+        ('gigante', 'Gigante'),
+    ]
+
+    # Opciones para región (igual que MascotaUpdateForm)
+    opciones_regiones = [
+        ('', 'Selecciona una región'),
+        ('RM', 'Región Metropolitana'),
+    ]
+
+    # Opciones para tipo de mascota
+    opciones_tipo_mascota = [
+        ('', 'Selecciona un tipo'),
+        ('perro', 'Perro'),
+        ('gato', 'Gato'),
+    ]
+
+    # Opciones para comuna (igual que MascotaUpdateForm)
+    opciones_comunas = [
+        ('', 'Selecciona una comuna'),
+        ('SANTIAGO', 'Santiago'),
+        ('INDEPENDENCIA', 'Independencia'),
+        ('ÑUÑOA', 'Ñuñoa'),
+        ('MACUL', 'Macul'),
+        ('PROVIDENCIA', 'Providencia'),
+        ('LAS CONDES', 'Las Condes'),
+        ('VITACURA', 'Vitacura'),
+        ('LO BARNECHEA', 'Lo Barnechea'),
+        ('HUECHURABA', 'Huechuraba'),
+        ('RECOLETA', 'Recoleta'),
+        ('QUINTA NORMAL', 'Quinta Normal'),
+        ('CERRILLOS', 'Cerrillos'),
+        ('MAIPÚ', 'Maipú'),
+        ('PUDAHUEL', 'Pudahuel'),
+        ('ESTACIÓN CENTRAL', 'Estación Central'),
+        ('LO PRADO', 'Lo Prado'),
+        ('QUILICURA', 'Quilicura'),
+        ('LAMPA', 'Lampa'),
+        ('COLINA', 'Colina'),
+        ('TILTIL', 'Tiltil'),
+        ('SAN BERNARDO', 'San Bernardo'),
+        ('BUIN', 'Buin'),
+        ('PAINE', 'Paine'),
+        ('CALERA DE TANGO', 'Calera de Tango'),
+        ('EL BOSQUE', 'El Bosque'),
+        ('LA CISTERNA', 'La Cisterna'),
+        ('SAN RAMÓN', 'San Ramón'),
+        ('LA GRANJA', 'La Granja'),
+        ('SAN MIGUEL', 'San Miguel'),
+        ('LA PINTANA', 'La Pintana'),
+        ('PEDRO AGUIRRE CERDA', 'Pedro Aguirre Cerda'),
+        ('LO ESPEJO', 'Lo Espejo'),
+        ('PUENTE ALTO', 'Puente Alto'),
+        ('PIRQUE', 'Pirque'),
+        ('SAN JOSÉ DE MAIPO', 'San José de Maipo'),
+    ]
+
+    edad_mascota = forms.ChoiceField(
+        choices=opciones_edades,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    tipo_mascota = forms.ChoiceField(
+        choices=opciones_tipo_mascota,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    tamaño_mascota = forms.ChoiceField(
+        choices=opciones_tamaños,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    region = forms.ChoiceField(
+        choices=opciones_regiones,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    comuna_mascota = forms.ChoiceField(
+        choices=opciones_comunas,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    # Campos de compatibilidad
+    compatible_departamento = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('si', 'Sí, ideal para departamento'),
+            ('con_restricciones', 'Sí, con restricciones (balcón necesario)'),
+            ('no', 'No, requiere casa con patio'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Compatible con departamento'
+    )
+
+    nivel_energia = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('bajo', 'Bajo - Tranquilo y relajado'),
+            ('medio', 'Medio - Activo pero moderado'),
+            ('alto', 'Alto - Muy activo y enérgico'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Nivel de energía'
+    )
+
+    necesidad_atencion = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('baja', 'Baja - Independiente'),
+            ('media', 'Media - Necesita compañía moderada'),
+            ('alta', 'Alta - Requiere mucha atención'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Necesidad de atención'
+    )
+
+    requisitos_espacio = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('poco_espacio', 'Poco espacio - Interior pequeño'),
+            ('espacio_moderado', 'Espacio moderado - Interior amplio'),
+            ('mucho_espacio', 'Mucho espacio - Requiere patio o jardín'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Requisitos de espacio'
+    )
+
+    tiempo_ejercicio = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('poco', 'Poco - 30 minutos o menos'),
+            ('moderado', 'Moderado - 1-2 horas'),
+            ('mucho', 'Mucho - 2+ horas diarias'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Tiempo de ejercicio necesario'
+    )
+
+    sociabilidad = forms.ChoiceField(
+        choices=[
+            ('', 'Selecciona una opción'),
+            ('independiente', 'Independiente - Prefiere estar solo'),
+            ('sociable', 'Sociable - Le gusta la compañía'),
+            ('muy_sociable', 'Muy sociable - Necesita interacción constante'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        }),
+        label='Nivel de sociabilidad'
+    )
+
+    class Meta:
+        model = Mascota
+        fields = ['nombre_mascota', 'edad_mascota', 'tipo_mascota', 'tamaño_mascota', 'comuna_mascota', 'region', 'descripcion', 'imagen', 'compatible_departamento', 'nivel_energia', 'necesidad_atencion', 'requisitos_espacio', 'tiempo_ejercicio', 'sociabilidad']
+        widgets = {
+            'nombre_mascota': forms.TextInput(attrs={
+                'class': 'form-input',
+                'style': 'font-family: inherit;'
+            }),
+            'descripcion': forms.Textarea(attrs={
+                'rows': 6,
+                'class': 'form-textarea',
+                'placeholder': 'Describe la personalidad, características especiales, necesidades de cuidado y cualquier información importante sobre esta mascota...',
+                'style': 'resize: both; min-height: 120px; font-family: inherit;'
+            }),
+        }
+
+class MascotaUpdateForm(forms.ModelForm):
+    # Opciones para edad
+    opciones_edades = [
+        ('', 'Selecciona una edad'),
+        ('1M', '1 mes'),
+        ('2M', '2 meses'),
+        ('3M', '3 meses'),
+        ('4M', '4 meses'),
+        ('5M', '5 meses'),
+        ('6M', '6 meses'),
+        ('7M', '7 meses'),
+        ('8M', '8 meses'),
+        ('9M', '9 meses'),
+        ('10M', '10 meses'),
+        ('11M', '11 meses'),
+        ('1A', '1 año'),
+        ('2A', '2 años'),
+        ('3A', '3 años'),
+        ('4A', '4 años'),
+        ('5A', '5 años'),
+        ('6A', '6 años'),
+        ('7A', '7 años'),
+        ('8A', '8 años'),
+        ('9A', '9 años'),
+        ('10A', '10 años'),
+        ('11A', '11 años'),
+        ('12A', '12 años'),
+        ('13A', '13 años'),
+        ('14A', '14 años'),
+        ('15A', '15 años'),
+        ('16A', '16 años'),
+        ('17A', '17 años'),
+        ('18A', '18 años'),
+        ('19A', '19 años'),
+        ('20A', '20 años'),
+    ]
+
+    # Opciones para tamaño
+    opciones_tamaños = [
+        ('', 'Selecciona un tamaño'),
+        ('miniatura', 'Miniatura'),
+        ('pequeño', 'Pequeño'),
+        ('mediano', 'Mediano'),
+        ('grande', 'Grande'),
+        ('gigante', 'Gigante'),
+    ]
+
+    # Opciones para región
+    opciones_regiones = [
+        ('', 'Selecciona una región'),
+        ('RM', 'Región Metropolitana'),
+    ]
+
+    # Opciones para comuna
+    opciones_comunas = [
+        ('', 'Selecciona una comuna'),
+        ('SANTIAGO', 'Santiago'),
+        ('INDEPENDENCIA', 'Independencia'),
+        ('ÑUÑOA', 'Ñuñoa'),
+        ('MACUL', 'Macul'),
+        ('PROVIDENCIA', 'Providencia'),
+        ('LAS CONDES', 'Las Condes'),
+        ('VITACURA', 'Vitacura'),
+        ('LO BARNECHEA', 'Lo Barnechea'),
+        ('HUECHURABA', 'Huechuraba'),
+        ('RECOLETA', 'Recoleta'),
+        ('QUINTA NORMAL', 'Quinta Normal'),
+        ('CERRILLOS', 'Cerrillos'),
+        ('MAIPÚ', 'Maipú'),
+        ('PUDAHUEL', 'Pudahuel'),
+        ('ESTACIÓN CENTRAL', 'Estación Central'),
+        ('LO PRADO', 'Lo Prado'),
+        ('QUILICURA', 'Quilicura'),
+        ('LAMPA', 'Lampa'),
+        ('COLINA', 'Colina'),
+        ('TILTIL', 'Tiltil'),
+        ('SAN BERNARDO', 'San Bernardo'),
+        ('BUIN', 'Buin'),
+        ('PAINE', 'Paine'),
+        ('CALERA DE TANGO', 'Calera de Tango'),
+        ('EL BOSQUE', 'El Bosque'),
+        ('LA CISTERNA', 'La Cisterna'),
+        ('SAN RAMÓN', 'San Ramón'),
+        ('LA GRANJA', 'La Granja'),
+        ('SAN MIGUEL', 'San Miguel'),
+        ('LA PINTANA', 'La Pintana'),
+        ('PEDRO AGUIRRE CERDA', 'Pedro Aguirre Cerda'),
+        ('LO ESPEJO', 'Lo Espejo'),
+        ('PUENTE ALTO', 'Puente Alto'),
+        ('PIRQUE', 'Pirque'),
+        ('SAN JOSÉ DE MAIPO', 'San José de Maipo'),
+    ]
+
+    edad_mascota = forms.ChoiceField(
+        choices=opciones_edades,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    tamaño_mascota = forms.ChoiceField(
+        choices=opciones_tamaños,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    region = forms.ChoiceField(
+        choices=opciones_regiones,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
+    comuna_mascota = forms.ChoiceField(
+        choices=opciones_comunas,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'font-family: inherit;'
+        })
+    )
+
     class Meta:
         model = Mascota
         fields = ['nombre_mascota', 'edad_mascota', 'tamaño_mascota', 'comuna_mascota', 'region', 'descripcion', 'imagen']
         widgets = {
             'descripcion': forms.Textarea(attrs={
-                'rows': 4,
+                'rows': 6,
                 'class': 'form-textarea',
-                'placeholder': 'Describe la personalidad, características especiales, necesidades de cuidado y cualquier información importante sobre esta mascota...'
+                'placeholder': 'Describe la personalidad, características especiales, necesidades de cuidado y cualquier información importante sobre esta mascota...',
+                'style': 'resize: both; min-height: 120px; font-family: inherit;'
+            }),
+            'imagen': forms.ClearableFileInput(attrs={
+                'class': 'file-input-hidden',
+                'style': 'display: none;'
             }),
         }
 

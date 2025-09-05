@@ -129,7 +129,6 @@
 
         .form-group:focus-within .form-label {
             color: #8b5cf6;
-            transform: translateY(-2px);
             transition: all 0.3s ease;
         }
 
@@ -190,7 +189,6 @@
             border-color: #8b5cf6 !important;
             background: white !important;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 12px rgba(139, 92, 246, 0.15) !important;
-            transform: translateY(-1px) !important;
         }
 
         .form-input:hover, .form-select:hover, .form-textarea:hover,
@@ -199,7 +197,6 @@
             border-color: #a78bfa !important;
             background: #f8fafc !important;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
-            transform: translateY(-1px) !important;
         }
 
         .form-select, select {
@@ -222,26 +219,102 @@
         }
 
         .form-textarea, textarea {
-            resize: vertical !important;
-            min-height: 150px !important;
-            line-height: 1.6 !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            border-radius: 25px !important;
+            resize: both;
+            min-height: 120px;
+            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-radius: 25px;
+            padding: 20px;
+            font-size: 1rem;
+            overflow: auto;
         }
 
         .form-textarea:focus, textarea:focus {
-            min-height: 200px !important;
+            min-height: 150px;
+            outline: none;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
         .form-textarea::placeholder, textarea::placeholder {
-            color: #9ca3af !important;
-            font-style: italic !important;
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        /* Estilos específicos para el campo de descripción */
+        .form-group textarea[name="descripcion"] {
+            resize: both;
+            min-height: 120px;
+            min-width: 100%;
+            max-height: 400px;
+            width: 100%;
+            border: 2px solid #d1d5db;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+            overflow: auto;
+            display: block;
+        }
+
+        .form-group textarea[name="descripcion"]:focus {
+            min-height: 150px;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group textarea[name="descripcion"]:hover {
+            border-color: #a78bfa;
+            background: #f8fafc;
+        }
+
+        /* Estilos para el handle de redimensionar */
+        .form-group textarea[name="descripcion"]::-webkit-resizer {
+            background: #8b5cf6;
+            border-radius: 0 0 25px 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-group textarea[name="descripcion"]::-moz-resizer {
+            background: #8b5cf6;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Forzar que el textarea sea redimensionable */
+        textarea[name="descripcion"] {
+            resize: both !important;
+            min-height: 120px !important;
+            max-height: 400px !important;
+            width: 100% !important;
+            border: 2px solid #d1d5db !important;
+            border-radius: 25px !important;
+            padding: 20px !important;
+            background: #f9fafb !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            overflow: auto !important;
+            display: block !important;
+        }
+
+        textarea[name="descripcion"]:focus {
+            border-color: #8b5cf6 !important;
+            background: white !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+            outline: none !important;
+        }
+
+        textarea[name="descripcion"]:hover {
+            border-color: #a78bfa !important;
+            background: #f8fafc !important;
         }
 
         /* Estilos adicionales para forzar el redondeado */
         .form-container input,
-        .form-container select,
-        .form-container textarea {
+        .form-container select {
             border-radius: 25px !important;
             padding: 16px 20px !important;
             border: 2px solid #d1d5db !important;
@@ -251,8 +324,7 @@
         }
 
         .form-container input:focus,
-        .form-container select:focus,
-        .form-container textarea:focus {
+        .form-container select:focus {
             border-color: #8b5cf6 !important;
             background: white !important;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
@@ -287,7 +359,6 @@
         .image-upload-container:hover {
             border-color: #8b5cf6;
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
         }
 
@@ -336,7 +407,6 @@
 
         .image-upload-container:hover .image-upload-icon {
             color: #8b5cf6;
-            transform: scale(1.15) translateY(-2px);
         }
 
         .image-upload-text {
@@ -522,7 +592,6 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
             box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
         }
 
@@ -534,7 +603,6 @@
 
         .btn-secondary:hover {
             background: #4b5563;
-            transform: translateY(-3px);
             box-shadow: 0 12px 35px rgba(107, 114, 128, 0.4);
         }
 
@@ -1012,15 +1080,7 @@
 
         // Efectos hover para botones
         const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-3px)';
-            });
-            
-            button.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
+        // Botones sin animaciones de transformación
 
         // Animación de entrada para los campos
         const formGroups = document.querySelectorAll('.form-group');
@@ -1028,14 +1088,12 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
                 }
             });
         });
 
         formGroups.forEach(group => {
             group.style.opacity = '0';
-            group.style.transform = 'translateY(20px)';
             group.style.transition = 'all 0.6s ease';
             observer.observe(group);
         });

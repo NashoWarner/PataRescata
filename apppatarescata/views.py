@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 
 from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto, NewsletterSubscription
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm, AsistenteVirtualForm, NewsletterSubscriptionForm
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm, MascotaUpdateForm, AsistenteVirtualForm, NewsletterSubscriptionForm
 
 def faq(request):
     preguntas = FAQ.objects.all()
@@ -45,28 +45,19 @@ def agregarMascota(request):
     mascotas = Mascota.objects.all()
 
     if request.method == 'POST':
-        form2 = Formulario2(request.POST, request.FILES)
+        form2 = MascotaForm(request.POST, request.FILES)
         print("POST data:", request.POST)  # Debug
         print("Form is valid:", form2.is_valid())  # Debug
         if form2.is_valid():
             print("Cleaned data:", form2.cleaned_data)  # Debug
-            nueva_mascota = Mascota(
-                nombre_mascota=form2.cleaned_data['nombre_mascota'],
-                edad_mascota=form2.cleaned_data['edad_mascota'],
-                tipo_mascota=form2.cleaned_data['tipo_mascota'],
-                tamaño_mascota=form2.cleaned_data['tamaño_mascota'],
-                comuna_mascota=form2.cleaned_data['comuna_mascota'],
-                region=form2.cleaned_data['region'],
-                descripcion=form2.cleaned_data['descripcion'],
-                imagen=form2.cleaned_data['imagen'],
-                # Nuevos campos para compatibilidad
-                compatible_departamento=form2.cleaned_data.get('compatible_departamento', 'si'),
-                nivel_energia=form2.cleaned_data.get('nivel_energia', 'medio'),
-                necesidad_atencion=form2.cleaned_data.get('necesidad_atencion', 'media'),
-                requisitos_espacio=form2.cleaned_data.get('requisitos_espacio', 'espacio_moderado'),
-                tiempo_ejercicio=form2.cleaned_data.get('tiempo_ejercicio', 'moderado'),
-                sociabilidad=form2.cleaned_data.get('sociabilidad', 'sociable'),
-            )
+            nueva_mascota = form2.save(commit=False)
+            # Asignar campos de compatibilidad con valores por defecto
+            nueva_mascota.compatible_departamento = 'si'
+            nueva_mascota.nivel_energia = 'medio'
+            nueva_mascota.necesidad_atencion = 'media'
+            nueva_mascota.requisitos_espacio = 'espacio_moderado'
+            nueva_mascota.tiempo_ejercicio = 'moderado'
+            nueva_mascota.sociabilidad = 'sociable'
             print("Mascota object:", nueva_mascota.__dict__)  # Debug
             nueva_mascota.save()
 
@@ -77,7 +68,7 @@ def agregarMascota(request):
             messages.success(request, f"La mascota '{nueva_mascota.nombre_mascota}' ha sido agregada exitosamente.")
             return redirect('listar_mascotas')
     else:
-        form2 = Formulario2()
+        form2 = MascotaForm()
 
     data = {'mascotas': mascotas, 'form2': form2}
     return render(request, 'nuevamascota.html', data)
@@ -1212,7 +1203,7 @@ def actualizar_mascota(request, mascota_id):
 
     if request.method == 'POST':
 
-        form = MascotaForm(request.POST, request.FILES, instance=mascota)
+        form = MascotaUpdateForm(request.POST, request.FILES, instance=mascota)
 
         if form.is_valid():
 
@@ -1224,7 +1215,7 @@ def actualizar_mascota(request, mascota_id):
 
     else:
 
-        form = MascotaForm(instance=mascota)
+        form = MascotaUpdateForm(instance=mascota)
 
     
 
