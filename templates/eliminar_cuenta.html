@@ -567,10 +567,40 @@
                 <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
             </ul>
             
-                            <a href="{% url 'seleccionar_tipo_cuenta' %}" class="login-btn">
+            {% if user.is_authenticated %}
+                <!-- Usuario autenticado -->
+                <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            {% if user.rut_empresa %}
+                                <i class="fas fa-building"></i>
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: white; font-size: 14px;">{{ user.nombre }}</div>
+                            <div style="font-size: 12px; color: #e5e7eb;">
+                                {% if user.rut_empresa %}Fundación{% else %}Adoptante{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{% if user.rut_empresa %}{% url 'home_perfil' %}{% else %}{% url 'perfil_adoptante' %}{% endif %}" 
+                       style="background: rgba(255, 255, 255, 0.2); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.3);">
+                        <i class="fas fa-user-circle" style="margin-right: 5px;"></i>Mi Perfil
+                    </a>
+                    <a href="{% url 'logout' %}" 
+                       style="background: rgba(255, 255, 255, 0.1); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i>Cerrar Sesión
+                    </a>
+                </div>
+            {% else %}
+                <!-- Usuario no autenticado -->
+                <a href="{% url 'seleccionar_tipo_cuenta' %}" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i>
                     Iniciar Sesión
                 </a>
+            {% endif %}
         </nav>
     </header>
 
