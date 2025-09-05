@@ -14,8 +14,8 @@ from django.http import HttpResponse, JsonResponse
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 
-from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto
-from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm, AsistenteVirtualForm
+from .models import FAQ, Mascota, MascotaFundacion, Usuario, ArticuloBlog, Adopcion, Producto, NewsletterSubscription
+from .forms import FAQForm, Formulario2, RegistroUsuarioForm, RegistroFundacionForm, ActualizarPerfilForm, ArticuloBlogForm, MascotaForm, AsistenteVirtualForm, NewsletterSubscriptionForm
 
 def faq(request):
     preguntas = FAQ.objects.all()
@@ -1743,6 +1743,108 @@ def asistente_virtual(request):
     }
     
     return render(request, 'asistente.html', context)
+
+
+# Vistas para el newsletter
+def suscribir_newsletter(request):
+    """Vista para manejar la suscripción al newsletter"""
+    if request.method == 'POST':
+        form = NewsletterSubscriptionForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            
+            # Crear o actualizar suscripción
+            subscription, created = NewsletterSubscription.objects.get_or_create(
+                email=email,
+                defaults={
+                    'activo': True,
+                    'confirmado': False
+                }
+            )
+            
+            if not created and subscription.activo:
+                # Si ya existe y está activa, mostrar mensaje
+                messages.info(request, 'Este correo ya está suscrito a nuestro newsletter.')
+            else:
+                # Si es nueva o estaba inactiva, reactivar
+                subscription.activo = True
+                subscription.save()
+                
+                # Enviar email de confirmación
+                try:
+                    enviar_email_confirmacion_newsletter(request, subscription)
+                    messages.success(request, '¡Te has suscrito exitosamente! Revisa tu correo para confirmar la suscripción.')
+                except Exception as e:
+                    messages.warning(request, 'Suscripción creada, pero no se pudo enviar el email de confirmación.')
+        else:
+            messages.error(request, 'Por favor, corrige los errores en el formulario.')
+    
+    # Redirigir a la página anterior o al home
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def confirmar_newsletter(request, token):
+    """Vista para confirmar la suscripción al newsletter"""
+    try:
+        subscription = NewsletterSubscription.objects.get(token_confirmacion=token)
+        subscription.confirmado = True
+        subscription.save()
+        messages.success(request, '¡Tu suscripción al newsletter ha sido confirmada exitosamente!')
+    except NewsletterSubscription.DoesNotExist:
+        messages.error(request, 'Token de confirmación inválido o expirado.')
+    
+    return redirect('index')
+
+
+def desuscribir_newsletter(request, token):
+    """Vista para desuscribirse del newsletter"""
+    try:
+        subscription = NewsletterSubscription.objects.get(token_confirmacion=token)
+        subscription.activo = False
+        subscription.save()
+        messages.success(request, 'Te has desuscrito exitosamente de nuestro newsletter.')
+    except NewsletterSubscription.DoesNotExist:
+        messages.error(request, 'Token de desuscripción inválido.')
+    
+    return redirect('index')
+
+
+def enviar_email_confirmacion_newsletter(request, subscription):
+    """Envía email de confirmación para el newsletter"""
+    current_site = get_current_site(request)
+    domain = current_site.domain
+    
+    # URLs de confirmación y desuscripción
+    confirm_url = f"http://{domain}/newsletter/confirmar/{subscription.token_confirmacion}/"
+    unsubscribe_url = f"http://{domain}/newsletter/desuscribir/{subscription.token_confirmacion}/"
+    
+    subject = 'Confirma tu suscripción al newsletter de PataRescata'
+    
+    message = f"""
+    ¡Hola!
+    
+    Gracias por suscribirte a nuestro newsletter de PataRescata.
+    
+    Para confirmar tu suscripción y comenzar a recibir noticias sobre mascotas disponibles y consejos de cuidado, haz clic en el siguiente enlace:
+    
+    {confirm_url}
+    
+    Si no te suscribiste a este newsletter, puedes ignorar este mensaje.
+    
+    Para desuscribirte en cualquier momento, visita: {unsubscribe_url}
+    
+    ¡Gracias por ser parte de nuestra comunidad!
+    
+    Equipo PataRescata
+    """
+    
+    send_mail(
+        subject,
+        message,
+        'pata.rescata1@gmail.com',
+        [subscription.email],
+        fail_silently=False,
+    )
 
 
 def detalle_mascota_asistente(request, mascota_id):

@@ -37,7 +37,7 @@ class Formulario2(forms.Form):
     tamaño_mascota = [
         ('', ''),
         ('miniatura', 'Miniatura'),
-        ('pequeno', 'Pequeño'),
+        ('pequeño', 'Pequeño'),
         ('mediano', 'Mediano'),
         ('grande', 'Grande'),
         ('gigante', 'Gigante'),
@@ -417,7 +417,11 @@ class MascotaForm(forms.ModelForm):
         model = Mascota
         fields = ['nombre_mascota', 'edad_mascota', 'tamaño_mascota', 'comuna_mascota', 'region', 'descripcion', 'imagen']
         widgets = {
-            'descripcion': forms.Textarea(attrs={'rows': 3}),
+            'descripcion': forms.Textarea(attrs={
+                'rows': 4,
+                'class': 'form-textarea',
+                'placeholder': 'Describe la personalidad, características especiales, necesidades de cuidado y cualquier información importante sobre esta mascota...'
+            }),
         }
 
 
@@ -494,7 +498,7 @@ class AsistenteVirtualForm(forms.Form):
     TAMAÑO_PREFERIDO_CHOICES = [
         ('', 'Selecciona una opción'),
         ('miniatura', 'Miniatura'),
-        ('pequeno', 'Pequeño'),
+        ('pequeño', 'Pequeño'),
         ('mediano', 'Mediano'),
         ('grande', 'Grande'),
         ('gigante', 'Gigante'),
@@ -541,3 +545,24 @@ class AsistenteVirtualForm(forms.Form):
             raise forms.ValidationError("Por favor selecciona al menos una preferencia para recibir recomendaciones personalizadas.")
         
         return cleaned_data
+
+
+# Formulario para suscripción al newsletter
+class NewsletterSubscriptionForm(forms.Form):
+    email = forms.EmailField(
+        label="Correo electrónico",
+        widget=forms.EmailInput(attrs={
+            'class': 'newsletter-input',
+            'placeholder': 'Tu correo electrónico',
+            'required': True
+        })
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            # Verificar si ya existe una suscripción activa
+            from .models import NewsletterSubscription
+            if NewsletterSubscription.objects.filter(email=email, activo=True).exists():
+                raise forms.ValidationError("Este correo ya está suscrito a nuestro newsletter.")
+        return email

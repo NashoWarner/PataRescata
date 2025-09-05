@@ -123,7 +123,14 @@
         }
 
         .form-group {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .form-group:focus-within .form-label {
+            color: #8b5cf6;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
         }
 
         .form-label {
@@ -133,6 +140,7 @@
             margin-bottom: 10px;
             font-size: 1rem;
             position: relative;
+            transition: all 0.3s ease;
         }
 
         .required::after {
@@ -142,58 +150,161 @@
         }
 
         .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 20px 25px;
-            border: 2px solid #e5e7eb;
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-            color: #374151;
-            font-family: inherit;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            width: 100% !important;
+            padding: 16px 20px !important;
+            border: 2px solid #d1d5db !important;
+            border-radius: 25px !important;
+            font-size: 1rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            background: #f9fafb !important;
+            color: #374151 !important;
+            font-family: inherit !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+            position: relative !important;
         }
 
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
-            transform: translateY(-1px);
+        /* Estilos específicos para todos los inputs del formulario */
+        input[type="text"], 
+        input[type="email"], 
+        input[type="password"], 
+        input[type="number"],
+        select,
+        textarea {
+            width: 100% !important;
+            padding: 16px 20px !important;
+            border: 2px solid #d1d5db !important;
+            border-radius: 25px !important;
+            font-size: 1rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            background: #f9fafb !important;
+            color: #374151 !important;
+            font-family: inherit !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+            position: relative !important;
         }
 
-        .form-select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 16px center;
-            background-repeat: no-repeat;
-            background-size: 16px;
-            padding-right: 50px;
+        .form-input:focus, .form-select:focus, .form-textarea:focus,
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, 
+        input[type="number"]:focus, select:focus, textarea:focus {
+            outline: none !important;
+            border-color: #8b5cf6 !important;
+            background: white !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 12px rgba(139, 92, 246, 0.15) !important;
+            transform: translateY(-1px) !important;
         }
 
-        .form-textarea {
-            resize: vertical;
-            min-height: 120px;
-            line-height: 1.6;
+        .form-input:hover, .form-select:hover, .form-textarea:hover,
+        input[type="text"]:hover, input[type="email"]:hover, input[type="password"]:hover, 
+        input[type="number"]:hover, select:hover, textarea:hover {
+            border-color: #a78bfa !important;
+            background: #f8fafc !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .form-select, select {
+            cursor: pointer !important;
+            appearance: none !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+            background-position: right 18px center !important;
+            background-repeat: no-repeat !important;
+            background-size: 18px !important;
+            padding-right: 50px !important;
+            position: relative !important;
+        }
+
+        .form-select:hover, select:hover {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%237c3aed' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+        }
+
+        .form-select:focus, select:focus {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236d28d9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+        }
+
+        .form-textarea, textarea {
+            resize: vertical !important;
+            min-height: 150px !important;
+            line-height: 1.6 !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            border-radius: 25px !important;
+        }
+
+        .form-textarea:focus, textarea:focus {
+            min-height: 200px !important;
+        }
+
+        .form-textarea::placeholder, textarea::placeholder {
+            color: #9ca3af !important;
+            font-style: italic !important;
+        }
+
+        /* Estilos adicionales para forzar el redondeado */
+        .form-container input,
+        .form-container select,
+        .form-container textarea {
+            border-radius: 25px !important;
+            padding: 16px 20px !important;
+            border: 2px solid #d1d5db !important;
+            background: #f9fafb !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus,
+        .form-container textarea:focus {
+            border-color: #8b5cf6 !important;
+            background: white !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+            outline: none !important;
+        }
+
+        /* Estilos para iconos en labels */
+        .form-group {
+            position: relative;
+        }
+
+        .form-label .field-icon {
+            margin-right: 8px;
+            color: #8b5cf6;
+            font-size: 1.1rem;
         }
 
         /* Campo de imagen mejorado */
         .image-upload-container {
             border: 2px dashed #d1d5db;
-            border-radius: 30px;
-            padding: 50px 30px;
+            border-radius: 20px;
+            padding: 60px 40px;
             text-align: center;
-            transition: all 0.3s ease;
-            background: #f9fafb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             cursor: pointer;
             position: relative;
+            overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .image-upload-container:hover {
             border-color: #8b5cf6;
-            background: #f3f4f6;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+        }
+
+        .image-upload-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-upload-container:hover::before {
+            opacity: 1;
         }
 
         .image-upload-container.dragover {
@@ -215,27 +326,41 @@
         }
 
         .image-upload-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: #9ca3af;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
         }
 
         .image-upload-container:hover .image-upload-icon {
             color: #8b5cf6;
-            transform: scale(1.1);
+            transform: scale(1.15) translateY(-2px);
         }
 
         .image-upload-text {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #6b7280;
-            margin-bottom: 10px;
-            font-weight: 500;
+            margin-bottom: 12px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
 
         .image-upload-hint {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #9ca3af;
+            position: relative;
+            z-index: 1;
+        }
+
+        .image-upload-container:hover .image-upload-text {
+            color: #8b5cf6;
+        }
+
+        .image-upload-container:hover .image-upload-hint {
+            color: #7c3aed;
         }
 
         .image-preview {
@@ -279,12 +404,13 @@
         /* Sección de compatibilidad */
         .compatibility-section {
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 40px;
             margin: 40px 0;
             border: 2px solid rgba(139, 92, 246, 0.1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .compatibility-section::before {
@@ -295,6 +421,27 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, #8b5cf6, #7c3aed, #6d28d9);
+        }
+
+        /* Estilos específicos para campos de compatibilidad */
+        .compatibility-section .form-input,
+        .compatibility-section .form-select {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .compatibility-section .form-input:focus,
+        .compatibility-section .form-select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .compatibility-section .form-input:hover,
+        .compatibility-section .form-select:hover {
+            border-color: #a78bfa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .section-title {
@@ -484,6 +631,7 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="{{ form2.nombre_mascota.id_for_label }}" class="form-label required">
+                            <i class="fas fa-tag field-icon"></i>
                             Nombre de la Mascota
                         </label>
                         {{ form2.nombre_mascota }}
@@ -497,6 +645,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.edad_mascota.id_for_label }}" class="form-label required">
+                            <i class="fas fa-birthday-cake field-icon"></i>
                             Edad
                         </label>
                         {{ form2.edad_mascota }}
@@ -510,6 +659,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.tipo_mascota.id_for_label }}" class="form-label required">
+                            <i class="fas fa-paw field-icon"></i>
                             Tipo de Mascota
                         </label>
                         {{ form2.tipo_mascota }}
@@ -523,6 +673,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.tamaño_mascota.id_for_label }}" class="form-label required">
+                            <i class="fas fa-ruler field-icon"></i>
                             Tamaño
                         </label>
                         {{ form2.tamaño_mascota }}
@@ -536,6 +687,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.region.id_for_label }}" class="form-label required">
+                            <i class="fas fa-map-marker-alt field-icon"></i>
                             Región
                         </label>
                         {{ form2.region }}
@@ -549,6 +701,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.comuna_mascota.id_for_label }}" class="form-label required">
+                            <i class="fas fa-building field-icon"></i>
                             Comuna
                         </label>
                         {{ form2.comuna_mascota }}
@@ -562,6 +715,7 @@
 
                     <div class="form-group">
                         <label for="{{ form2.imagen.id_for_label }}" class="form-label required">
+                            <i class="fas fa-camera field-icon"></i>
                             Imagen de la Mascota
                         </label>
                         <div class="image-upload-container" id="imageUploadContainer">
@@ -584,6 +738,7 @@
                     
                 <div class="form-group">
                     <label for="{{ form2.descripcion.id_for_label }}" class="form-label required">
+                        <i class="fas fa-align-left field-icon"></i>
                         Descripción
                     </label>
                     {{ form2.descripcion }}

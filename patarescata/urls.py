@@ -14,6 +14,7 @@ from apppatarescata.views import (
     aprobar_solicitud_adopcion, rechazar_solicitud_adopcion, eliminar_solicitud_adopcion, eliminar_solicitud_fundacion, cuidado_animal, eventos,
     cambiar_imagen_perfil, eliminar_imagen_perfil, cambiar_estado_solicitud, asistente_virtual,
     detalle_mascota_asistente, adoptar_desde_asistente, preparar_adopcion_desde_asistente,
+    suscribir_newsletter, confirmar_newsletter, desuscribir_newsletter,
 
 )
 from django.conf import settings
@@ -33,6 +34,10 @@ urlpatterns = [
     path('asistente/mascota/<int:mascota_id>/', detalle_mascota_asistente, name='detalle_mascota_asistente'),
     path('asistente/preparar-adopcion/<int:mascota_id>/', preparar_adopcion_desde_asistente, name='preparar_adopcion_desde_asistente'),
     path('asistente/adoptar/<int:mascota_id>/', adoptar_desde_asistente, name='adoptar_desde_asistente'),
+    # URLs del newsletter
+    path('newsletter/suscribir/', suscribir_newsletter, name='suscribir_newsletter'),
+    path('newsletter/confirmar/<str:token>/', confirmar_newsletter, name='confirmar_newsletter'),
+    path('newsletter/desuscribir/<str:token>/', desuscribir_newsletter, name='desuscribir_newsletter'),
     path('realizar_adopcion/<int:animal_id>/', realizar_adopcion, name='realizar_adopcion'),
     path('preparar-adopcion/<int:mascota_id>/', preparar_adopcion, name='preparar_adopcion'),
     path('mis_solicitudes/', mis_solicitudes, name='mis_solicitudes'),

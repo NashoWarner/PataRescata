@@ -71,8 +71,9 @@
             <div class="newsletter-content">
                 <h4>¡Únete a nuestra comunidad!</h4>
                 <p>Recibe noticias sobre mascotas disponibles y consejos de cuidado</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Tu correo electrónico" required>
+                <form class="newsletter-form" method="post" action="{% url 'suscribir_newsletter' %}">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Tu correo electrónico" required>
                     <button type="submit">
                         <i class="fas fa-paper-plane"></i>
                         Suscribirse

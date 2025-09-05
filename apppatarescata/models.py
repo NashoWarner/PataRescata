@@ -266,6 +266,23 @@ class ArticuloBlog(models.Model):
         self.save(update_fields=['visitas'])
 
 
+# Modelo para suscripciones al newsletter
+class NewsletterSubscription(models.Model):
+    email = models.EmailField(unique=True, verbose_name="Correo electrónico")
+    fecha_suscripcion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de suscripción")
+    activo = models.BooleanField(default=True, verbose_name="Suscripción activa")
+    token_confirmacion = models.CharField(max_length=40, unique=True, default=generar_token, verbose_name="Token de confirmación")
+    confirmado = models.BooleanField(default=False, verbose_name="Email confirmado")
+    
+    class Meta:
+        verbose_name = "Suscripción al Newsletter"
+        verbose_name_plural = "Suscripciones al Newsletter"
+        ordering = ['-fecha_suscripcion']
+    
+    def __str__(self):
+        return f"{self.email} - {'Activo' if self.activo else 'Inactivo'}"
+
+
 
 
 
