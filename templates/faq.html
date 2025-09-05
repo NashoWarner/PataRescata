@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntas Frecuentes - PataRescata</title>
+    <!-- CSS del navegador -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/navegador.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,18 +21,14 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             line-height: 1.6;
         }
 
-        
-
-
-
         .container {
             max-width: 1000px;
-            margin: 3rem auto;
+            margin: 6rem auto 3rem;
             padding: 0 2rem;
         }
 
@@ -164,7 +167,8 @@
             flex-wrap: wrap;
         }
 
-        .btn {
+        /* Estilos específicos para botones dentro de las secciones de FAQ */
+        .contact-section .btn {
             padding: 1rem 2rem;
             border: none;
             border-radius: 12px;
@@ -176,23 +180,23 @@
             gap: 0.5rem;
         }
 
-        .btn-primary {
+        .contact-section .btn-primary {
             background: white;
             color: #1e1b4b;
         }
 
-        .btn-primary:hover {
+        .contact-section .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
         }
 
-        .btn-secondary {
+        .contact-section .btn-secondary {
             background: transparent;
             color: white;
             border: 2px solid white;
         }
 
-        .btn-secondary:hover {
+        .contact-section .btn-secondary:hover {
             background: white;
             color: #1e1b4b;
             transform: translateY(-3px);
@@ -266,9 +270,7 @@
 </head>
 <body>
     {% include 'navegador.html' %}
-
     <div class="container">
-        <!-- Header de la Página -->
         <div class="page-header">
             <h1 class="page-title">Preguntas Frecuentes</h1>
             <p class="page-subtitle">
@@ -276,8 +278,6 @@
                 procesos y cuidados necesarios para darle un hogar amoroso a tu nuevo compañero.
             </p>
         </div>
-
-        <!-- Sección de FAQ -->
         <div class="faq-section">
             <h2 class="section-title">Preguntas sobre Adopción</h2>
             <div class="faq-grid">
@@ -431,7 +431,10 @@
         });
     </script>
     
-    <!-- Asistente Virtual Flotante -->
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     {% include 'floating_assistant.html' %}
+    {% include 'footer.html' %}
 </body>
 </html>
